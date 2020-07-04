@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public extension Plist {
     init(string: String) {
         self.rawValue = plist_new_string(string)

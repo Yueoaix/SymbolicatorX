@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public struct PlistArrayIterator: IteratorProtocol {
     private let node: PlistArray?
     public private(set) var rawValue:plist_array_iter? = nil

@@ -20,6 +20,20 @@
 		542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B946F24B0E18B00D73B5A /* PlistArray.swift */; };
 		542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B947124B0E1CB00D73B5A /* PlistDict.swift */; };
 		542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B947324B0E1F500D73B5A /* PlistValue.swift */; };
+		542B949224B0E4A100D73B5A /* AppleServiceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949124B0E4A100D73B5A /* AppleServiceIdentifier.swift */; };
+		542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949324B0E4EB00D73B5A /* AfcClient.swift */; };
+		542B949624B0E53000D73B5A /* DebugServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949524B0E53000D73B5A /* DebugServer.swift */; };
+		542B949824B0E54C00D73B5A /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949724B0E54C00D73B5A /* Device.swift */; };
+		542B949A24B0E74400D73B5A /* DeviceConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949924B0E74400D73B5A /* DeviceConnection.swift */; };
+		542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949B24B0E76900D73B5A /* FileRelay.swift */; };
+		542B949E24B0E78400D73B5A /* HouseArrest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949D24B0E78400D73B5A /* HouseArrest.swift */; };
+		542B94A024B0E7A400D73B5A /* InstallationProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B949F24B0E7A400D73B5A /* InstallationProxy.swift */; };
+		542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A124B0E7D800D73B5A /* LockdownClient.swift */; };
+		542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A324B0E7EF00D73B5A /* MobileDevice.swift */; };
+		542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A524B0E80000D73B5A /* ScreenshotService.swift */; };
+		542B94A824B0E81400D73B5A /* SpringboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A724B0E81400D73B5A /* SpringboardService.swift */; };
+		542B94AA24B0E82C00D73B5A /* String+Unsafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A924B0E82C00D73B5A /* String+Unsafe.swift */; };
+		542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94AB24B0E84300D73B5A /* SyslogRelay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +97,20 @@
 		542B946F24B0E18B00D73B5A /* PlistArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistArray.swift; sourceTree = "<group>"; };
 		542B947124B0E1CB00D73B5A /* PlistDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistDict.swift; sourceTree = "<group>"; };
 		542B947324B0E1F500D73B5A /* PlistValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistValue.swift; sourceTree = "<group>"; };
+		542B949124B0E4A100D73B5A /* AppleServiceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleServiceIdentifier.swift; sourceTree = "<group>"; };
+		542B949324B0E4EB00D73B5A /* AfcClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfcClient.swift; sourceTree = "<group>"; };
+		542B949524B0E53000D73B5A /* DebugServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugServer.swift; sourceTree = "<group>"; };
+		542B949724B0E54C00D73B5A /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		542B949924B0E74400D73B5A /* DeviceConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConnection.swift; sourceTree = "<group>"; };
+		542B949B24B0E76900D73B5A /* FileRelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRelay.swift; sourceTree = "<group>"; };
+		542B949D24B0E78400D73B5A /* HouseArrest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseArrest.swift; sourceTree = "<group>"; };
+		542B949F24B0E7A400D73B5A /* InstallationProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallationProxy.swift; sourceTree = "<group>"; };
+		542B94A124B0E7D800D73B5A /* LockdownClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockdownClient.swift; sourceTree = "<group>"; };
+		542B94A324B0E7EF00D73B5A /* MobileDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileDevice.swift; sourceTree = "<group>"; };
+		542B94A524B0E80000D73B5A /* ScreenshotService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotService.swift; sourceTree = "<group>"; };
+		542B94A724B0E81400D73B5A /* SpringboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringboardService.swift; sourceTree = "<group>"; };
+		542B94A924B0E82C00D73B5A /* String+Unsafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Unsafe.swift"; sourceTree = "<group>"; };
+		542B94AB24B0E84300D73B5A /* SyslogRelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyslogRelay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +260,20 @@
 		542B944724B0DE6C00D73B5A /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				542B949324B0E4EB00D73B5A /* AfcClient.swift */,
+				542B949124B0E4A100D73B5A /* AppleServiceIdentifier.swift */,
+				542B949524B0E53000D73B5A /* DebugServer.swift */,
+				542B949724B0E54C00D73B5A /* Device.swift */,
+				542B949924B0E74400D73B5A /* DeviceConnection.swift */,
+				542B949B24B0E76900D73B5A /* FileRelay.swift */,
+				542B949D24B0E78400D73B5A /* HouseArrest.swift */,
+				542B949F24B0E7A400D73B5A /* InstallationProxy.swift */,
+				542B94A124B0E7D800D73B5A /* LockdownClient.swift */,
+				542B94A324B0E7EF00D73B5A /* MobileDevice.swift */,
+				542B94A524B0E80000D73B5A /* ScreenshotService.swift */,
+				542B94A724B0E81400D73B5A /* SpringboardService.swift */,
+				542B94AB24B0E84300D73B5A /* SyslogRelay.swift */,
+				542B94A924B0E82C00D73B5A /* String+Unsafe.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -318,12 +360,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				542B94A024B0E7A400D73B5A /* InstallationProxy.swift in Sources */,
+				542B949A24B0E74400D73B5A /* DeviceConnection.swift in Sources */,
+				542B949224B0E4A100D73B5A /* AppleServiceIdentifier.swift in Sources */,
 				542B946E24B0E0C400D73B5A /* Plist.swift in Sources */,
+				542B949624B0E53000D73B5A /* DebugServer.swift in Sources */,
+				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
+				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
+				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
+				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
 				542B93EC24B0D8D000D73B5A /* ViewController.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
+				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
+				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
+				542B949E24B0E78400D73B5A /* HouseArrest.swift in Sources */,
+				542B949824B0E54C00D73B5A /* Device.swift in Sources */,
+				542B94A824B0E81400D73B5A /* SpringboardService.swift in Sources */,
+				542B94AA24B0E82C00D73B5A /* String+Unsafe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public struct PlistError: Error {
     public enum PlistErrorType {
         case invalidArgument
