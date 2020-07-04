@@ -16,6 +16,10 @@
 		542B943F24B0DB3E00D73B5A /* libusbmuxd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B943924B0DB3E00D73B5A /* libusbmuxd.a */; };
 		542B944024B0DB3E00D73B5A /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B943B24B0DB3E00D73B5A /* libcrypto.a */; };
 		542B944124B0DB3E00D73B5A /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B943C24B0DB3E00D73B5A /* libssl.a */; };
+		542B946E24B0E0C400D73B5A /* Plist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B946D24B0E0C400D73B5A /* Plist.swift */; };
+		542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B946F24B0E18B00D73B5A /* PlistArray.swift */; };
+		542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B947124B0E1CB00D73B5A /* PlistDict.swift */; };
+		542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B947324B0E1F500D73B5A /* PlistValue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +79,10 @@
 		542B943B24B0DB3E00D73B5A /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		542B943C24B0DB3E00D73B5A /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
 		542B944224B0DB8300D73B5A /* SymbolicatorX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SymbolicatorX-Bridging-Header.h"; sourceTree = "<group>"; };
+		542B946D24B0E0C400D73B5A /* Plist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plist.swift; sourceTree = "<group>"; };
+		542B946F24B0E18B00D73B5A /* PlistArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistArray.swift; sourceTree = "<group>"; };
+		542B947124B0E1CB00D73B5A /* PlistDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistDict.swift; sourceTree = "<group>"; };
+		542B947324B0E1F500D73B5A /* PlistValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistValue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +239,10 @@
 		542B944824B0DE8900D73B5A /* Plist */ = {
 			isa = PBXGroup;
 			children = (
+				542B946D24B0E0C400D73B5A /* Plist.swift */,
+				542B946F24B0E18B00D73B5A /* PlistArray.swift */,
+				542B947124B0E1CB00D73B5A /* PlistDict.swift */,
+				542B947324B0E1F500D73B5A /* PlistValue.swift */,
 			);
 			path = Plist;
 			sourceTree = "<group>";
@@ -306,7 +318,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				542B946E24B0E0C400D73B5A /* Plist.swift in Sources */,
+				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
+				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				542B93EC24B0D8D000D73B5A /* ViewController.swift in Sources */,
+				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
