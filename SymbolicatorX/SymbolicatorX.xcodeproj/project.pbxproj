@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B93E924B0D8D000D73B5A /* AppDelegate.swift */; };
-		542B93EC24B0D8D000D73B5A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B93EB24B0D8D000D73B5A /* ViewController.swift */; };
 		542B93EE24B0D8D300D73B5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 542B93ED24B0D8D200D73B5A /* Assets.xcassets */; };
 		542B93F124B0D8D300D73B5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 542B93EF24B0D8D300D73B5A /* Main.storyboard */; };
 		542B943D24B0DB3E00D73B5A /* libplist-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B940A24B0DB3E00D73B5A /* libplist-2.0.a */; };
@@ -34,12 +33,33 @@
 		542B94A824B0E81400D73B5A /* SpringboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A724B0E81400D73B5A /* SpringboardService.swift */; };
 		542B94AA24B0E82C00D73B5A /* String+Unsafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94A924B0E82C00D73B5A /* String+Unsafe.swift */; };
 		542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B94AB24B0E84300D73B5A /* SyslogRelay.swift */; };
+		542C171024B21B41009A4219 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C170F24B21B41009A4219 /* MainViewController.swift */; };
+		542C171224B21B54009A4219 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C171124B21B54009A4219 /* MainWindowController.swift */; };
+		542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C171924B21E6C009A4219 /* BaseWindowController.swift */; };
+		542C171C24B21E7B009A4219 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C171B24B21E7B009A4219 /* BaseViewController.swift */; };
+		542C171F24B221CF009A4219 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 542C171E24B221CF009A4219 /* SnapKit.framework */; };
+		542C172024B221CF009A4219 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 542C171E24B221CF009A4219 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		542C172524B2288B009A4219 /* MacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172424B2288B009A4219 /* MacViewController.swift */; };
+		542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172624B2289A009A4219 /* DeviceViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		542C172124B221CF009A4219 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				542C172024B221CF009A4219 /* SnapKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		542B93E624B0D8D000D73B5A /* SymbolicatorX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SymbolicatorX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		542B93E924B0D8D000D73B5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		542B93EB24B0D8D000D73B5A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		542B93ED24B0D8D200D73B5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		542B93F024B0D8D300D73B5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		542B93F224B0D8D300D73B5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,6 +131,13 @@
 		542B94A724B0E81400D73B5A /* SpringboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringboardService.swift; sourceTree = "<group>"; };
 		542B94A924B0E82C00D73B5A /* String+Unsafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Unsafe.swift"; sourceTree = "<group>"; };
 		542B94AB24B0E84300D73B5A /* SyslogRelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyslogRelay.swift; sourceTree = "<group>"; };
+		542C170F24B21B41009A4219 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		542C171124B21B54009A4219 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		542C171924B21E6C009A4219 /* BaseWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWindowController.swift; sourceTree = "<group>"; };
+		542C171B24B21E7B009A4219 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		542C171E24B221CF009A4219 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = SymbolicatorX/Frameworks/SnapKit.framework; sourceTree = "<group>"; };
+		542C172424B2288B009A4219 /* MacViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacViewController.swift; sourceTree = "<group>"; };
+		542C172624B2289A009A4219 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +148,7 @@
 				542B944124B0DB3E00D73B5A /* libssl.a in Frameworks */,
 				542B943F24B0DB3E00D73B5A /* libusbmuxd.a in Frameworks */,
 				542B943D24B0DB3E00D73B5A /* libplist-2.0.a in Frameworks */,
+				542C171F24B221CF009A4219 /* SnapKit.framework in Frameworks */,
 				542B944024B0DB3E00D73B5A /* libcrypto.a in Frameworks */,
 				542B943E24B0DB3E00D73B5A /* libimobiledevice.a in Frameworks */,
 			);
@@ -134,6 +162,7 @@
 			children = (
 				542B93E824B0D8D000D73B5A /* SymbolicatorX */,
 				542B93E724B0D8D000D73B5A /* Products */,
+				542C171D24B221CF009A4219 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -148,11 +177,11 @@
 		542B93E824B0D8D000D73B5A /* SymbolicatorX */ = {
 			isa = PBXGroup;
 			children = (
+				542C171324B21E43009A4219 /* Base */,
 				542B944624B0DE5400D73B5A /* Adaptor */,
+				542C170D24B21B21009A4219 /* Main */,
 				542B93E924B0D8D000D73B5A /* AppDelegate.swift */,
-				542B93EB24B0D8D000D73B5A /* ViewController.swift */,
 				542B93ED24B0D8D200D73B5A /* Assets.xcassets */,
-				542B93EF24B0D8D300D73B5A /* Main.storyboard */,
 				542B93F224B0D8D300D73B5A /* Info.plist */,
 				542B93F324B0D8D300D73B5A /* SymbolicatorX.entitlements */,
 				542B944224B0DB8300D73B5A /* SymbolicatorX-Bridging-Header.h */,
@@ -289,6 +318,67 @@
 			path = Plist;
 			sourceTree = "<group>";
 		};
+		542C170D24B21B21009A4219 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				542C172324B22873009A4219 /* Device */,
+				542C172224B2286F009A4219 /* Mac */,
+				542B93EF24B0D8D300D73B5A /* Main.storyboard */,
+				542C170E24B21B24009A4219 /* Controller */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		542C170E24B21B24009A4219 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				542C171124B21B54009A4219 /* MainWindowController.swift */,
+				542C170F24B21B41009A4219 /* MainViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		542C171324B21E43009A4219 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				542C171424B21E47009A4219 /* Controller */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		542C171424B21E47009A4219 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				542C171924B21E6C009A4219 /* BaseWindowController.swift */,
+				542C171B24B21E7B009A4219 /* BaseViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		542C171D24B221CF009A4219 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				542C171E24B221CF009A4219 /* SnapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		542C172224B2286F009A4219 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				542C172424B2288B009A4219 /* MacViewController.swift */,
+			);
+			path = Mac;
+			sourceTree = "<group>";
+		};
+		542C172324B22873009A4219 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				542C172624B2289A009A4219 /* DeviceViewController.swift */,
+			);
+			path = Device;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -299,6 +389,7 @@
 				542B93E224B0D8D000D73B5A /* Sources */,
 				542B93E324B0D8D000D73B5A /* Frameworks */,
 				542B93E424B0D8D000D73B5A /* Resources */,
+				542C172124B221CF009A4219 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -360,18 +451,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				542C171024B21B41009A4219 /* MainViewController.swift in Sources */,
 				542B94A024B0E7A400D73B5A /* InstallationProxy.swift in Sources */,
 				542B949A24B0E74400D73B5A /* DeviceConnection.swift in Sources */,
+				542C171C24B21E7B009A4219 /* BaseViewController.swift in Sources */,
 				542B949224B0E4A100D73B5A /* AppleServiceIdentifier.swift in Sources */,
 				542B946E24B0E0C400D73B5A /* Plist.swift in Sources */,
 				542B949624B0E53000D73B5A /* DebugServer.swift in Sources */,
+				542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */,
 				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
+				542C171224B21B54009A4219 /* MainWindowController.swift in Sources */,
+				542C172524B2288B009A4219 /* MacViewController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
+				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
-				542B93EC24B0D8D000D73B5A /* ViewController.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
@@ -447,7 +543,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -501,7 +597,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -520,6 +616,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T9YZGE9D5U;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SymbolicatorX/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = SymbolicatorX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -552,6 +652,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T9YZGE9D5U;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SymbolicatorX/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = SymbolicatorX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
