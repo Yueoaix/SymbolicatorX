@@ -11,7 +11,7 @@ import SnapKit
 
 class MainViewController: BaseViewController {
     
-    var tabView = NSTabView(frame: NSRect.init(x: 0, y: 0, width: 100, height: 100))
+    var tabView = NSTabView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,13 +24,15 @@ class MainViewController: BaseViewController {
 // MARK: - UI
 extension MainViewController {
     
-    func setupUI() {
+    private func setupUI() {
         
         view.frame = NSRect(x: 0, y: 0, width: 600, height: 300)
         
-        tabView.tabViewType = .noTabsBezelBorder
+//        tabView.tabViewType = .noTabsBezelBorder
         let macItem = NSTabViewItem(viewController: MacViewController())
+        macItem.label = "Mac"
         let deviceItem = NSTabViewItem(viewController: DeviceViewController())
+        deviceItem.label = "Device"
         tabView.addTabViewItem(macItem)
         tabView.addTabViewItem(deviceItem)
         view.addSubview(tabView)
