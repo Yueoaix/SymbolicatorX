@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
+		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
+		5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17E24B4CC2D004AC47A /* Architecture.swift */; };
+		5428B18124B4CC37004AC47A /* BinaryUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B18024B4CC37004AC47A /* BinaryUUID.swift */; };
+		5428B18324B4D2BD004AC47A /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B18224B4D2BD004AC47A /* String+Extension.swift */; };
+		5428B18524B4D3DD004AC47A /* CrashFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B18424B4D3DD004AC47A /* CrashFile.swift */; };
 		542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B93E924B0D8D000D73B5A /* AppDelegate.swift */; };
 		542B93EE24B0D8D300D73B5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 542B93ED24B0D8D200D73B5A /* Assets.xcassets */; };
 		542B93F124B0D8D300D73B5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 542B93EF24B0D8D300D73B5A /* Main.storyboard */; };
@@ -62,6 +67,11 @@
 /* Begin PBXFileReference section */
 		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
+		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
+		5428B17E24B4CC2D004AC47A /* Architecture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Architecture.swift; sourceTree = "<group>"; };
+		5428B18024B4CC37004AC47A /* BinaryUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryUUID.swift; sourceTree = "<group>"; };
+		5428B18224B4D2BD004AC47A /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		5428B18424B4D3DD004AC47A /* CrashFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashFile.swift; sourceTree = "<group>"; };
 		542B93E624B0D8D000D73B5A /* SymbolicatorX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SymbolicatorX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		542B93E924B0D8D000D73B5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		542B93ED24B0D8D200D73B5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -173,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				5428218324B36D7A00DFC62F /* NSColor+Hex.swift */,
+				5428B18224B4D2BD004AC47A /* String+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -183,6 +194,17 @@
 				5428218624B371F600DFC62F /* DropZoneView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		5428B17924B4CAD5004AC47A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5428B17C24B4CB2B004AC47A /* DSYMFile.swift */,
+				5428B17E24B4CC2D004AC47A /* Architecture.swift */,
+				5428B18024B4CC37004AC47A /* BinaryUUID.swift */,
+				5428B18424B4D3DD004AC47A /* CrashFile.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		542B93DD24B0D8D000D73B5A = {
@@ -355,6 +377,7 @@
 				542B93EF24B0D8D300D73B5A /* Main.storyboard */,
 				542C170E24B21B24009A4219 /* Controller */,
 				5428218524B371A400DFC62F /* View */,
+				5428B17924B4CAD5004AC47A /* Model */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -488,6 +511,7 @@
 				542B949224B0E4A100D73B5A /* AppleServiceIdentifier.swift in Sources */,
 				542B946E24B0E0C400D73B5A /* Plist.swift in Sources */,
 				542B949624B0E53000D73B5A /* DebugServer.swift in Sources */,
+				5428B18324B4D2BD004AC47A /* String+Extension.swift in Sources */,
 				542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */,
 				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
@@ -497,13 +521,17 @@
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
+				5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */,
 				5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */,
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
+				5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */,
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
 				5428218724B371F600DFC62F /* DropZoneView.swift in Sources */,
+				5428B18124B4CC37004AC47A /* BinaryUUID.swift in Sources */,
+				5428B18524B4D3DD004AC47A /* CrashFile.swift in Sources */,
 				542B949E24B0E78400D73B5A /* HouseArrest.swift in Sources */,
 				542B949824B0E54C00D73B5A /* Device.swift in Sources */,
 				542B94A824B0E81400D73B5A /* SpringboardService.swift in Sources */,

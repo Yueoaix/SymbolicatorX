@@ -20,10 +20,30 @@ class DropZoneView: NSView {
     private let textTextField = NSTextField()
     private let detailTextTextField = NSTextField()
     
+    weak var delegate: DropZoneViewDelegate?
     private var isHoveringFile = false
     private var fileTypes = [String]()
     private var file: URL?
         
+    var fileTypesPredicate: NSPredicate {
+        let predicateFormat = (0..<fileTypes.count).map { (index) -> String in
+            return "SELF ENDSWITH[c] %@"
+        }.joined(separator: " OR ")
+        return NSPredicate(format: predicateFormat, argumentArray: fileTypes)
+    }
+    
+    init(fileTypes: [String], text: String? = nil, detailText: String? = nil) {
+        super.init(frame: .zero)
+        setFileTypes(fileTypes)
+        setText(text)
+        setDetailText(detailText)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public func setHoveringFile(_ isHoveringFile: Bool) {
         
         self.isHoveringFile = isHoveringFile
@@ -86,25 +106,95 @@ class DropZoneView: NSView {
         fileTypeTextField.attributedStringValue = NSAttributedString(string: primaryFileType, attributes: Style.textAttributes(size: 16, color: .labelColor))
     }
     
-    var fileTypesPredicate: NSPredicate {
-        let predicateFormat = (0..<fileTypes.count).map { (index) -> String in
-            return "SELF ENDSWITH[c] %@"
-        }.joined(separator: " OR ")
-        return NSPredicate(format: predicateFormat, argumentArray: fileTypes)
+    public func acceptFile(url fileURL: URL) -> Bool {
+        
+        guard validFileURL(fileURL) else { return false }
+
+        self.file = fileURL
+        delegate?.receivedFile(dropZoneView: self, fileURL: fileURL)
+
+        return true
+    }
+}
+
+// MARK: - NSDraggingDestination
+extension DropZoneView {
+    
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        
+        let isHoveringFile = (validDraggedFileURL(from: sender) != nil)
+        setHoveringFile(isHoveringFile)
+        return isHoveringFile ? .copy : []
+    }
+
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+
+        setHoveringFile(false)
     }
     
-    init(fileTypes: [String], text: String? = nil, detailText: String? = nil) {
-        super.init(frame: .zero)
-        setFileTypes(fileTypes)
-        setText(text)
-        setDetailText(detailText)
-        setupUI()
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        
+        return true
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        
+        defer { setHoveringFile(false) }
+        
+        guard let draggedFileURL = validDraggedFileURL(from: sender) else { return false }
+        
+        file = draggedFileURL
+        delegate?.receivedFile(dropZoneView: self, fileURL: draggedFileURL)
+
+        return true
     }
 
+    private func validDraggedFileURL(from draggingInfo: NSDraggingInfo) -> URL? {
+        
+        guard
+            let draggedFile = draggingInfo.draggingPasteboard.string(forType: kUTTypeFileURL as NSPasteboard.PasteboardType),
+            let draggedFileURL = URL(string: draggedFile)
+        else {
+            return nil
+        }
+
+        return validFileURL(draggedFileURL) ? draggedFileURL : nil
+    }
+
+    private func validFileURL(_ url: URL) -> Bool {
+        
+        return fileTypesPredicate.evaluate(with: url.path)
+    }
+}
+
+// MARK: - Helpers
+extension DropZoneView {
+    
+    private struct Colors {
+        static let gray1 = NSColor(calibratedWhite: 0.7, alpha: 1)
+        static let gray2 = NSColor(calibratedWhite: 0.4, alpha: 1)
+        static let shade = NSColor(calibratedWhite: 0.0, alpha: 0.025)
+    }
+
+    private struct Style {
+        
+        static func textAttributes(size: CGFloat, color: NSColor) -> [NSAttributedString.Key: Any] {
+            
+            let centeredTextStyle = (NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle)
+            centeredTextStyle.alignment = .center
+            
+            return [
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: size),
+                NSAttributedString.Key.foregroundColor: color,
+                NSAttributedString.Key.paragraphStyle: centeredTextStyle
+            ]
+        }
+    }
+}
+
+// MARK: - UI
+extension DropZoneView {
+    
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
@@ -126,11 +216,6 @@ class DropZoneView: NSView {
         }
         roundedRectanglePath.stroke()
     }
-    
-}
-
-// MARK: - UI
-extension DropZoneView {
     
     private func setupUI() {
         
@@ -188,31 +273,6 @@ extension DropZoneView {
             make.centerX.bottom.equalToSuperview()
             make.top.equalTo(textTextField.snp.bottom)
             make.height.lessThanOrEqualTo(70)
-        }
-    }
-}
-
-// MARK: - Helpers
-extension DropZoneView {
-    
-    private struct Colors {
-        static let gray1 = NSColor(calibratedWhite: 0.7, alpha: 1)
-        static let gray2 = NSColor(calibratedWhite: 0.4, alpha: 1)
-        static let shade = NSColor(calibratedWhite: 0.0, alpha: 0.025)
-    }
-
-    private struct Style {
-        
-        static func textAttributes(size: CGFloat, color: NSColor) -> [NSAttributedString.Key: Any] {
-            
-            let centeredTextStyle = (NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle)
-            centeredTextStyle.alignment = .center
-            
-            return [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: size),
-                NSAttributedString.Key.foregroundColor: color,
-                NSAttributedString.Key.paragraphStyle: centeredTextStyle
-            ]
         }
     }
 }
