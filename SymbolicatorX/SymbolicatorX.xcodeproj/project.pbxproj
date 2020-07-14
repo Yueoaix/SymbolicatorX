@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E76C24BDA6D8005E6028 /* SpotlightSearch.swift */; };
+		5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E76E24BDB20C005E6028 /* FileSearch.swift */; };
+		5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77324BDB5F7005E6028 /* DSYMSearch.swift */; };
 		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
 		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
@@ -65,6 +68,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5406E76C24BDA6D8005E6028 /* SpotlightSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightSearch.swift; sourceTree = "<group>"; };
+		5406E76E24BDB20C005E6028 /* FileSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSearch.swift; sourceTree = "<group>"; };
+		5406E77324BDB5F7005E6028 /* DSYMSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMSearch.swift; sourceTree = "<group>"; };
 		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
 		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
@@ -171,9 +177,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5406E76A24BDA2D6005E6028 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				5406E76C24BDA6D8005E6028 /* SpotlightSearch.swift */,
+				5406E76E24BDB20C005E6028 /* FileSearch.swift */,
+				5406E77324BDB5F7005E6028 /* DSYMSearch.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		5428218124B36D1B00DFC62F /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5406E76A24BDA2D6005E6028 /* Search */,
 				5428218224B36D2800DFC62F /* Extension */,
 			);
 			path = Tools;
@@ -505,6 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				542C171024B21B41009A4219 /* MainViewController.swift in Sources */,
+				5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */,
 				542B94A024B0E7A400D73B5A /* InstallationProxy.swift in Sources */,
 				542B949A24B0E74400D73B5A /* DeviceConnection.swift in Sources */,
 				542C171C24B21E7B009A4219 /* BaseViewController.swift in Sources */,
@@ -519,8 +537,10 @@
 				542C172524B2288B009A4219 /* MacViewController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
+				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
+				5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */,
 				5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */,
 				5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */,
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
