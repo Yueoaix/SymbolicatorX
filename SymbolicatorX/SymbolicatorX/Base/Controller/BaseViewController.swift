@@ -13,12 +13,11 @@ class BaseViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
-//        view.wantsLayer = true
-//        view.layer?.backgroundColor = NSColor.white.cgColor
+        
     }
     
     override func loadView() {
-        view = NSView()
+        view = NSView(frame: NSRect.init(x: 0, y: 0, width: 600, height: 300))
     }
     
 }

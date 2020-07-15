@@ -14,6 +14,22 @@ class BaseWindowController: NSWindowController {
         super.windowDidLoad()
     
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+        center()
     }
 
+    func center() {
+        
+        guard
+            let screen = NSScreen.main,
+            let window = window
+            else { return }
+        
+        let screenFrame = screen.frame
+        let windowSize = window.frame.size
+        let windowOrigin = CGPoint(
+            x: screenFrame.midX - windowSize.width / 2,
+            y: screenFrame.midY - windowSize.height / 2
+        )
+        window.setFrameOrigin(windowOrigin)
+    }
 }

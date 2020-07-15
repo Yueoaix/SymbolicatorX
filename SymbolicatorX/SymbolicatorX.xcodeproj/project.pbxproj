@@ -11,6 +11,8 @@
 		5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E76E24BDB20C005E6028 /* FileSearch.swift */; };
 		5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77324BDB5F7005E6028 /* DSYMSearch.swift */; };
 		5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77724BED11C005E6028 /* Symbolicator.swift */; };
+		5406E77E24BEE983005E6028 /* TextWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77C24BEE983005E6028 /* TextWindowController.swift */; };
+		5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E78124BEEC29005E6028 /* TextViewController.swift */; };
 		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
 		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
@@ -73,6 +75,8 @@
 		5406E76E24BDB20C005E6028 /* FileSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSearch.swift; sourceTree = "<group>"; };
 		5406E77324BDB5F7005E6028 /* DSYMSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMSearch.swift; sourceTree = "<group>"; };
 		5406E77724BED11C005E6028 /* Symbolicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Symbolicator.swift; sourceTree = "<group>"; };
+		5406E77C24BEE983005E6028 /* TextWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWindowController.swift; sourceTree = "<group>"; };
+		5406E78124BEEC29005E6028 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
 		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
@@ -195,6 +199,23 @@
 				5406E77724BED11C005E6028 /* Symbolicator.swift */,
 			);
 			path = Symbolicator;
+			sourceTree = "<group>";
+		};
+		5406E77924BEE683005E6028 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				5406E78024BEEC06005E6028 /* Controller */,
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
+		5406E78024BEEC06005E6028 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				5406E77C24BEE983005E6028 /* TextWindowController.swift */,
+				5406E78124BEEC29005E6028 /* TextViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		5428218124B36D1B00DFC62F /* Tools */ = {
@@ -400,6 +421,7 @@
 		542C170D24B21B21009A4219 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5406E77924BEE683005E6028 /* Text */,
 				542C172324B22873009A4219 /* Device */,
 				542C172224B2286F009A4219 /* Mac */,
 				542B93EF24B0D8D300D73B5A /* Main.storyboard */,
@@ -422,6 +444,7 @@
 		542C171324B21E43009A4219 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				549774EB24BEF56C00B576D0 /* Window */,
 				542C171424B21E47009A4219 /* Controller */,
 			);
 			path = Base;
@@ -458,6 +481,13 @@
 				542C172624B2289A009A4219 /* DeviceViewController.swift */,
 			);
 			path = Device;
+			sourceTree = "<group>";
+		};
+		549774EB24BEF56C00B576D0 /* Window */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Window;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -544,10 +574,12 @@
 				542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */,
 				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
+				5406E77E24BEE983005E6028 /* TextWindowController.swift in Sources */,
 				542C171224B21B54009A4219 /* MainWindowController.swift in Sources */,
 				542C172524B2288B009A4219 /* MacViewController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
+				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
 				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,

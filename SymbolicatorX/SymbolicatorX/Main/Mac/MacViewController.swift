@@ -32,6 +32,9 @@ extension MacViewController {
     
     @objc private func didClickSymbolicateBtn(_ sender: NSButton) {
         
+        let textWindow = TextWindowController(window: NSWindow.init(contentViewController: TextViewController()))
+        textWindow.showWindow(nil)
+        return
         guard
             !isSymbolicating,
             let crashFile = crashFile,

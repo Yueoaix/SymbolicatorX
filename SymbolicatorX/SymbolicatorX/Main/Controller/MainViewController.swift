@@ -26,8 +26,6 @@ extension MainViewController {
     
     private func setupUI() {
         
-        view.frame = NSRect(x: 0, y: 0, width: 600, height: 300)
-        
 //        tabView.tabViewType = .noTabsBezelBorder
         let macItem = NSTabViewItem(viewController: MacViewController())
         macItem.label = "Mac"
