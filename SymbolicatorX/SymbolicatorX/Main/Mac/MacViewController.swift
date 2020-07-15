@@ -16,6 +16,8 @@ class MacViewController: BaseViewController {
     private let crashFileDropZoneView = DropZoneView(fileTypes: [".crash", ".txt"], text: "Drop Crash Report or Sample")
     private let dsymFileDropZoneView = DropZoneView(fileTypes: [".dSYM"], text: "Drop App DSYM")
     
+    private let symbolicateButton = NSButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -34,12 +36,35 @@ extension MacViewController: DropZoneViewDelegate {
             crashFile = CrashFile(path: fileURL)
             if let crashFile = crashFile, dsymFile?.canSymbolicate(crashFile) != true {
                 
-//                startSearchForDSYM()
+                startSearchForDSYM()
             }
         } else if dropZoneView == dsymFileDropZoneView {
             
             dsymFile = DSYMFile(path: fileURL)
-//            updateDSYMDetailText()
+            dsymFileDropZoneView.setDetailText(dsymFile?.path.path)
+        }
+    }
+}
+
+// MARK: - Search
+extension MacViewController {
+    
+    private func startSearchForDSYM() {
+        
+        guard let crashFile = crashFile, let crashFileUUID = crashFile.uuid
+            else { return }
+        
+        dsymFileDropZoneView.setDetailText("Searching…")
+        
+        DSYMSearch.search(forUUID: crashFileUUID.pretty, crashFileDirectory: crashFile.path.deletingLastPathComponent().path, errorHandler: { (error) in
+            
+            print("DSYM Search Error: \(error)")
+        }) { [weak self] (result) in
+            guard let `self` = self, let foundDSYMPath = result else { return }
+            
+            let foundDSYMURL = URL(fileURLWithPath: foundDSYMPath)
+            self.dsymFile = DSYMFile(path: foundDSYMURL)
+            self.dsymFileDropZoneView.setFile(foundDSYMURL)
         }
     }
 }
@@ -63,6 +88,7 @@ extension MacViewController {
             make.top.right.equalToSuperview()
             make.width.height.equalTo(crashFileDropZoneView)
         }
+        
+        
     }
-    
 }
