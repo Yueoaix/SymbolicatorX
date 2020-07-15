@@ -9,6 +9,7 @@
 import Cocoa
 
 class DSYMSearch {
+    
     typealias CompletionHandler = (String?) -> Void
     typealias ErrorHandler = ([String]) -> Void
     
@@ -32,6 +33,9 @@ class DSYMSearch {
             } else if let results = FileSearch.search(fileExtension: "dsym", directory: "~/Library/Developer/Xcode/Archives/", recursive: true), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
                 
                 completion(foundUUID)
+            } else {
+                
+                completion(nil)
             }
         }
     }

@@ -15,11 +15,11 @@ class SpotlightSearch {
     static let shared  = SpotlightSearch()
     private init() {}
     
-    private var query: NSMetadataQuery?
+    private var query = NSMetadataQuery()
     private var completion: CompletionHandler?
     
     func search(forPredicate predicate: NSPredicate, completion: @escaping CompletionHandler) {
-        query?.stop()
+        query.stop()
 
         NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidFinishGathering, object: nil)
 
@@ -32,16 +32,15 @@ class SpotlightSearch {
 
         self.completion = completion
         
-        query = NSMetadataQuery()
-        query?.predicate = predicate
+        query.predicate = predicate
 
-        if query?.start() == false {
+        if query.start() == false {
             completion(nil)
         }
     }
     
     @objc private func didFinishGathering() {
-        query?.stop()
-        completion?(query?.results as? [NSMetadataItem])
+        query.stop()
+        completion?(query.results as? [NSMetadataItem])
     }
 }

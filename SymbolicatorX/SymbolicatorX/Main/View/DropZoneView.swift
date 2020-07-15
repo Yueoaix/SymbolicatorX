@@ -59,7 +59,7 @@ class DropZoneView: NSView {
     
     public func setFile(_ file: URL?) {
         
-        guard let value = file, value != file else { return }
+        guard let value = file, value != self.file else { return }
         self.file = value
         setText(value.lastPathComponent)
         display()
@@ -143,7 +143,7 @@ extension DropZoneView {
         
         guard let draggedFileURL = validDraggedFileURL(from: sender) else { return false }
         
-        file = draggedFileURL
+        setFile(draggedFileURL)
         delegate?.receivedFile(dropZoneView: self, fileURL: draggedFileURL)
 
         return true
@@ -259,6 +259,7 @@ extension DropZoneView {
         textTextField.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalTo(fileTypeTextField.snp.bottom).offset(12)
+            make.width.equalToSuperview().multipliedBy(0.9)
             make.height.lessThanOrEqualTo(70)
         }
         
@@ -272,6 +273,7 @@ extension DropZoneView {
         detailTextTextField.snp.makeConstraints { (make) in
             make.centerX.bottom.equalToSuperview()
             make.top.equalTo(textTextField.snp.bottom)
+            make.width.equalToSuperview().multipliedBy(0.9)
             make.height.lessThanOrEqualTo(70)
         }
     }

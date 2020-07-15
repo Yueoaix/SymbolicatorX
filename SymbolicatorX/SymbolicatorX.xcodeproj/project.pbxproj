@@ -10,6 +10,7 @@
 		5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E76C24BDA6D8005E6028 /* SpotlightSearch.swift */; };
 		5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E76E24BDB20C005E6028 /* FileSearch.swift */; };
 		5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77324BDB5F7005E6028 /* DSYMSearch.swift */; };
+		5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77724BED11C005E6028 /* Symbolicator.swift */; };
 		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
 		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
@@ -71,6 +72,7 @@
 		5406E76C24BDA6D8005E6028 /* SpotlightSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightSearch.swift; sourceTree = "<group>"; };
 		5406E76E24BDB20C005E6028 /* FileSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSearch.swift; sourceTree = "<group>"; };
 		5406E77324BDB5F7005E6028 /* DSYMSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMSearch.swift; sourceTree = "<group>"; };
+		5406E77724BED11C005E6028 /* Symbolicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Symbolicator.swift; sourceTree = "<group>"; };
 		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
 		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
@@ -187,9 +189,18 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
+		5406E77624BECE65005E6028 /* Symbolicator */ = {
+			isa = PBXGroup;
+			children = (
+				5406E77724BED11C005E6028 /* Symbolicator.swift */,
+			);
+			path = Symbolicator;
+			sourceTree = "<group>";
+		};
 		5428218124B36D1B00DFC62F /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5406E77624BECE65005E6028 /* Symbolicator */,
 				5406E76A24BDA2D6005E6028 /* Search */,
 				5428218224B36D2800DFC62F /* Extension */,
 			);
@@ -546,6 +557,7 @@
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
 				5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */,
+				5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */,
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
