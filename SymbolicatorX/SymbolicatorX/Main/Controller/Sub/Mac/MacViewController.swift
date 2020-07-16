@@ -12,7 +12,12 @@ class MacViewController: BaseViewController {
     
     private var crashFile: CrashFile?
     private var dsymFile: DSYMFile?
-    private var isSymbolicating = false
+    private var isSymbolicating = false {
+        didSet {
+            symbolicateButton.isEnabled = !isSymbolicating
+            symbolicateButton.title = isSymbolicating ? "Symbolicating…" : "Symbolicate"
+        }
+    }
     
     private let textWindowController = TextWindowController()
     private let crashFileDropZoneView = DropZoneView(fileTypes: [".crash", ".txt"], text: "Drop Crash Report or Sample")
@@ -31,24 +36,27 @@ class MacViewController: BaseViewController {
 // MARK: - Action
 extension MacViewController {
     
-    @objc private func didClickSymbolicateBtn(_ sender: NSButton) {
-        textWindowController.showWindow(nil)
+    @objc private func didClickSymbolicateBtn() {
         guard
             !isSymbolicating,
             let crashFile = crashFile,
             let dsymFile = dsymFile
-        else { return }
+            else { return }
         
         isSymbolicating = true
         
         Symbolicator.symbolicate(crashFile: crashFile, dsymFile: dsymFile, errorHandler: { [weak self] (error) in
             
-            self?.isSymbolicating = false
-            print(error)
+            DispatchQueue.main.async {
+                self?.isSymbolicating = false
+            }
         }) { [weak self] (content) in
             
-            self?.isSymbolicating = false
-            print(content)
+            DispatchQueue.main.async {
+                self?.isSymbolicating = false
+                self?.textWindowController.showWindow(nil)
+                self?.textWindowController.setText(content)
+            }
         }
     }
 }
@@ -128,7 +136,7 @@ extension MacViewController {
         symbolicateButton.bezelStyle = .rounded
         symbolicateButton.focusRingType = .none
         symbolicateButton.target = self
-        symbolicateButton.action = #selector(didClickSymbolicateBtn(_:))
+        symbolicateButton.action = #selector(didClickSymbolicateBtn)
         view.addSubview(symbolicateButton)
         symbolicateButton.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()

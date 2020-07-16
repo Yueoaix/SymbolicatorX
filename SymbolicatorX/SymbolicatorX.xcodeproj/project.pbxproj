@@ -14,6 +14,8 @@
 		5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E78124BEEC29005E6028 /* TextViewController.swift */; };
 		5420D92424C05D85009E7CED /* TextWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5420D92224C05D85009E7CED /* TextWindowController.swift */; };
 		5420D92524C05D85009E7CED /* TextWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* TextWindowController.xib */; };
+		54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */; };
+		54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */; };
 		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
 		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
@@ -79,6 +81,8 @@
 		5406E78124BEEC29005E6028 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		5420D92224C05D85009E7CED /* TextWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWindowController.swift; sourceTree = "<group>"; };
 		5420D92324C05D85009E7CED /* TextWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextWindowController.xib; sourceTree = "<group>"; };
+		54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
+		54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextView+LineNumber.swift"; sourceTree = "<group>"; };
 		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
 		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
@@ -230,9 +234,19 @@
 			path = Sub;
 			sourceTree = "<group>";
 		};
+		54273AC324C0A7C600B184D2 /* LineNumber */ = {
+			isa = PBXGroup;
+			children = (
+				54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */,
+				54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */,
+			);
+			path = LineNumber;
+			sourceTree = "<group>";
+		};
 		5428218124B36D1B00DFC62F /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				54273AC324C0A7C600B184D2 /* LineNumber */,
 				5406E77624BECE65005E6028 /* Symbolicator */,
 				5406E76A24BDA2D6005E6028 /* Search */,
 				5428218224B36D2800DFC62F /* Extension */,
@@ -583,6 +597,7 @@
 				542B946E24B0E0C400D73B5A /* Plist.swift in Sources */,
 				542B949624B0E53000D73B5A /* DebugServer.swift in Sources */,
 				5428B18324B4D2BD004AC47A /* String+Extension.swift in Sources */,
+				54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */,
 				542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */,
 				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
@@ -592,6 +607,7 @@
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
 				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,
+				54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
 				5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */,

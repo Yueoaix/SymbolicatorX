@@ -10,13 +10,18 @@ import Cocoa
 
 class TextViewController: BaseViewController {
     
-    let scrollView = NSScrollView()
+    private let scrollView = NSScrollView()
+    private let textView = NSTextView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
         
         setupUI()
+    }
+    
+    public func setText(_ text: String) {
+        textView.string = text
     }
 }
 
@@ -25,19 +30,17 @@ extension TextViewController {
     
     private func setupUI() {
         
+        view.setFrameSize(NSSize(width: 1100, height: 800))
+        
         scrollView.hasVerticalScroller = true
+        scrollView.documentView = textView
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         
-        let textView = NSTextView()
-        scrollView.addSubview(textView)
-        textView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
-        
-        scrollView.documentView = textView
-        
+        textView.autoresizingMask = .width
+        textView.font = NSFont.systemFont(ofSize: NSFont.systemFontSize, weight: .regular)
+        textView.setupLineNumberView()
     }
 }
