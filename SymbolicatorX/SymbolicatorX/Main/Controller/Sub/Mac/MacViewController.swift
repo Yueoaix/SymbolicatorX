@@ -14,7 +14,7 @@ class MacViewController: BaseViewController {
     private var dsymFile: DSYMFile?
     private var isSymbolicating = false
     
-    private let textWindow = TextWindowController()
+    private let textWindowController = TextWindowController()
     private let crashFileDropZoneView = DropZoneView(fileTypes: [".crash", ".txt"], text: "Drop Crash Report or Sample")
     private let dsymFileDropZoneView = DropZoneView(fileTypes: [".dSYM"], text: "Drop App DSYM")
     
@@ -32,7 +32,7 @@ class MacViewController: BaseViewController {
 extension MacViewController {
     
     @objc private func didClickSymbolicateBtn(_ sender: NSButton) {
-        
+        textWindowController.showWindow(nil)
         guard
             !isSymbolicating,
             let crashFile = crashFile,
