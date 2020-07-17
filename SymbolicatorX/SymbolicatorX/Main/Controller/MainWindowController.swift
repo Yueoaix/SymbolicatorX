@@ -24,6 +24,12 @@ extension MainWindowController {
     
     @objc private func didClickDeviceBtn() {
         
+        let devicePannel = DevicePannel(size: NSSize(width: 600, height: 282))
+        devicePannel.parent = window
+        window?.beginSheet(devicePannel, completionHandler: { (respone) in
+            
+        })
+        
     }
     
     @objc private func didClickSymbolicateBtn() {
