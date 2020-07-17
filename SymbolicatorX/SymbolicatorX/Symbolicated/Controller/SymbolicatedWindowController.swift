@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class TextWindowController: BaseWindowController {
+class SymbolicatedWindowController: BaseWindowController {
     
     private var textViewController = TextViewController()
     private let savePanel = NSSavePanel()
@@ -32,16 +32,17 @@ class TextWindowController: BaseWindowController {
     
     override var windowNibName: NSNib.Name? {
         get {
-            NSNib.Name("TextWindowController")
+            NSNib.Name("SymbolicatedWindowController")
         }
     }
 }
 
 // MARK: - Action
-extension TextWindowController {
+extension SymbolicatedWindowController {
     
     @objc private func didClickLocationBtn() {
         
+        textViewController.location(pattern: "(?:^Thread \\d+.*\n)*^Thread \\d+ Crashed:\\s*\n(?:^\\s*\\d{1,3}.*\n)+")
     }
     
     @objc private func didClickSaveBtn() {
@@ -69,7 +70,7 @@ extension TextWindowController {
 }
 
 // MARK: - NSToolbarDelegate
-extension TextWindowController: NSToolbarDelegate {
+extension SymbolicatedWindowController: NSToolbarDelegate {
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         
@@ -98,15 +99,15 @@ extension NSToolbarItem.Identifier {
     static let save = NSToolbarItem.Identifier(rawValue: "Save")
 }
 
-
 // MARK: - UI
-extension TextWindowController {
+extension SymbolicatedWindowController {
     
     private func setupUI() {
         
-        self.contentViewController = textViewController
+        window?.title = "Symbolicated Content"
+        contentViewController = textViewController
         
-        let toolbar = NSToolbar(identifier: "TextWindowControllerToolbar")
+        let toolbar = NSToolbar(identifier: self.className)
         toolbar.delegate = self
         toolbar.displayMode = .iconOnly
         window?.toolbar = toolbar

@@ -34,9 +34,7 @@ extension String {
         )
     }
 
-    func scan(
-        pattern: String, options: NSRegularExpression.Options = [.caseInsensitive, .anchorsMatchLines]
-    ) -> [[String]] {
+    func scan(pattern: String, options: NSRegularExpression.Options = [.caseInsensitive, .anchorsMatchLines]) -> [[String]] {
         
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: options)
         let matches = regularExpression.matches(in: self, options: [], range: NSRange(self.startIndex..., in: self))
