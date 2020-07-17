@@ -55,8 +55,6 @@
 		542C171C24B21E7B009A4219 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C171B24B21E7B009A4219 /* BaseViewController.swift */; };
 		542C171F24B221CF009A4219 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 542C171E24B221CF009A4219 /* SnapKit.framework */; };
 		542C172024B221CF009A4219 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 542C171E24B221CF009A4219 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		542C172524B2288B009A4219 /* MacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172424B2288B009A4219 /* MacViewController.swift */; };
-		542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172624B2289A009A4219 /* DeviceViewController.swift */; };
 		542C659224C151BE000DCC08 /* String+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659124C151BE000DCC08 /* String+Text.swift */; };
 		542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -170,8 +168,6 @@
 		542C171924B21E6C009A4219 /* BaseWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWindowController.swift; sourceTree = "<group>"; };
 		542C171B24B21E7B009A4219 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		542C171E24B221CF009A4219 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = SymbolicatorX/Frameworks/SnapKit.framework; sourceTree = "<group>"; };
-		542C172424B2288B009A4219 /* MacViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacViewController.swift; sourceTree = "<group>"; };
-		542C172624B2289A009A4219 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 		542C659124C151BE000DCC08 /* String+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Text.swift"; sourceTree = "<group>"; };
 		542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -226,15 +222,6 @@
 				5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		5420D92624C05E57009E7CED /* Sub */ = {
-			isa = PBXGroup;
-			children = (
-				542C172324B22873009A4219 /* Device */,
-				542C172224B2286F009A4219 /* Mac */,
-			);
-			path = Sub;
 			sourceTree = "<group>";
 		};
 		54273AC324C0A7C600B184D2 /* LineNumber */ = {
@@ -465,7 +452,6 @@
 		542C170E24B21B24009A4219 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				5420D92624C05E57009E7CED /* Sub */,
 				542C170F24B21B41009A4219 /* MainViewController.swift */,
 				542C171124B21B54009A4219 /* MainWindowController.swift */,
 			);
@@ -495,22 +481,6 @@
 				542C171E24B221CF009A4219 /* SnapKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		542C172224B2286F009A4219 /* Mac */ = {
-			isa = PBXGroup;
-			children = (
-				542C172424B2288B009A4219 /* MacViewController.swift */,
-			);
-			path = Mac;
-			sourceTree = "<group>";
-		};
-		542C172324B22873009A4219 /* Device */ = {
-			isa = PBXGroup;
-			children = (
-				542C172624B2289A009A4219 /* DeviceViewController.swift */,
-			);
-			path = Device;
 			sourceTree = "<group>";
 		};
 		542C659024C151A2000DCC08 /* Text */ = {
@@ -612,11 +582,9 @@
 				542B949624B0E53000D73B5A /* DebugServer.swift in Sources */,
 				5428B18324B4D2BD004AC47A /* String+Extension.swift in Sources */,
 				54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */,
-				542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */,
 				542B94A424B0E7EF00D73B5A /* MobileDevice.swift in Sources */,
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
 				542C171224B21B54009A4219 /* MainWindowController.swift in Sources */,
-				542C172524B2288B009A4219 /* MacViewController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
