@@ -76,9 +76,9 @@ extension SymbolicatedWindowController: NSToolbarDelegate {
         
         switch itemIdentifier {
         case .location:
-            return makeToolbarItem(identifier: .location, action: #selector(didClickLocationBtn))
+            return NSToolbar.makeToolbarItem(identifier: .location, target: self, action: #selector(didClickLocationBtn))
         case .save:
-            return makeToolbarItem(identifier: .save, action: #selector(didClickSaveBtn))
+            return NSToolbar.makeToolbarItem(identifier: .save, target: self, action: #selector(didClickSaveBtn))
         default:
             return nil
         }
@@ -111,25 +111,5 @@ extension SymbolicatedWindowController {
         toolbar.delegate = self
         toolbar.displayMode = .iconOnly
         window?.toolbar = toolbar
-    }
-    
-    private func makeToolbarItem(identifier: NSToolbarItem.Identifier, action: Selector) -> NSToolbarItem {
-        
-        let title = identifier.rawValue
-        
-        let toolbarItem = NSToolbarItem(itemIdentifier: .save)
-        toolbarItem.label = title
-        toolbarItem.paletteLabel = title
-        toolbarItem.target = self
-        toolbarItem.action = action
-
-        let button = NSButton()
-        button.bezelStyle = .texturedRounded
-        button.title = title
-        button.target = self
-        button.action = action
-        toolbarItem.view = button
-
-        return toolbarItem
     }
 }

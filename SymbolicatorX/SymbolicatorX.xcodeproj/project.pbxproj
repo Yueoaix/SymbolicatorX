@@ -58,6 +58,7 @@
 		542C172524B2288B009A4219 /* MacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172424B2288B009A4219 /* MacViewController.swift */; };
 		542C172724B2289A009A4219 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C172624B2289A009A4219 /* DeviceViewController.swift */; };
 		542C659224C151BE000DCC08 /* String+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659124C151BE000DCC08 /* String+Text.swift */; };
+		542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -172,6 +173,7 @@
 		542C172424B2288B009A4219 /* MacViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacViewController.swift; sourceTree = "<group>"; };
 		542C172624B2289A009A4219 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 		542C659124C151BE000DCC08 /* String+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Text.swift"; sourceTree = "<group>"; };
+		542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +263,7 @@
 			children = (
 				5428218324B36D7A00DFC62F /* NSColor+Hex.swift */,
 				5428B18224B4D2BD004AC47A /* String+Extension.swift */,
+				542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				5428218124B36D1B00DFC62F /* Tools */,
 				542B944624B0DE5400D73B5A /* Adaptor */,
 				5406E77924BEE683005E6028 /* Symbolicated */,
+				542C659324C15692000DCC08 /* Device */,
 				542C170D24B21B21009A4219 /* Main */,
 				542B93E924B0D8D000D73B5A /* AppDelegate.swift */,
 				542B93ED24B0D8D200D73B5A /* Assets.xcassets */,
@@ -462,8 +466,8 @@
 			isa = PBXGroup;
 			children = (
 				5420D92624C05E57009E7CED /* Sub */,
-				542C171124B21B54009A4219 /* MainWindowController.swift */,
 				542C170F24B21B41009A4219 /* MainViewController.swift */,
+				542C171124B21B54009A4219 /* MainWindowController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -516,6 +520,13 @@
 				542C659124C151BE000DCC08 /* String+Text.swift */,
 			);
 			path = Text;
+			sourceTree = "<group>";
+		};
+		542C659324C15692000DCC08 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Device;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -624,6 +635,7 @@
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
+				542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */,
 				5428218724B371F600DFC62F /* DropZoneView.swift in Sources */,
 				5428B18124B4CC37004AC47A /* BinaryUUID.swift in Sources */,
 				5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */,
