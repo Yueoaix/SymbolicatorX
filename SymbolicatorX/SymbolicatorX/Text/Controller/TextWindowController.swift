@@ -9,7 +9,20 @@
 import Cocoa
 
 class TextWindowController: BaseWindowController {
-
+    
+    private var textViewController = TextViewController()
+    private let savePanel = NSSavePanel()
+    
+    public var saveUrl: URL?
+    public var text: String {
+        get {
+            return textViewController.text
+        }
+        set {
+            textViewController.text = newValue
+        }
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
 
@@ -22,15 +35,6 @@ class TextWindowController: BaseWindowController {
             NSNib.Name("TextWindowController")
         }
     }
-    
-    public func setText(_ text: String) {
-        
-        guard let textViewController = self.contentViewController as? TextViewController else {
-            return
-        }
-        
-        textViewController.setText(text)
-    }
 }
 
 // MARK: - Action
@@ -42,6 +46,25 @@ extension TextWindowController {
     
     @objc private func didClickSaveBtn() {
         
+        if let saveUrl = saveUrl {
+            
+            try? text.write(to: saveUrl, atomically: true, encoding: .utf8)
+            window?.orderOut(nil)
+            NSWorkspace.shared.activateFileViewerSelecting([saveUrl])
+        } else {
+            
+            savePanel.beginSheetModal(for: window!) { (response) in
+                
+                switch response {
+                case .OK:
+                    guard let url = self.savePanel.url else { return }
+                    try? self.text.write(to: url, atomically: true, encoding: .utf8)
+                    self.window?.orderOut(nil)
+                default:
+                    return
+                }
+            }
+        }
     }
 }
 
@@ -81,7 +104,7 @@ extension TextWindowController {
     
     private func setupUI() {
         
-        self.contentViewController = TextViewController()
+        self.contentViewController = textViewController
         
         let toolbar = NSToolbar(identifier: "TextWindowControllerToolbar")
         toolbar.delegate = self

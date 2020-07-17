@@ -37,6 +37,7 @@ class MacViewController: BaseViewController {
 extension MacViewController {
     
     @objc private func didClickSymbolicateBtn() {
+        
         guard
             !isSymbolicating,
             let crashFile = crashFile,
@@ -55,7 +56,8 @@ extension MacViewController {
             DispatchQueue.main.async {
                 self?.isSymbolicating = false
                 self?.textWindowController.showWindow(nil)
-                self?.textWindowController.setText(content)
+                self?.textWindowController.text = content
+                self?.textWindowController.saveUrl = crashFile.symbolicatedContentSaveURL
             }
         }
     }

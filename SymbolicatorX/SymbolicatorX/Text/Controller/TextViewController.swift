@@ -12,16 +12,21 @@ class TextViewController: BaseViewController {
     
     private let scrollView = NSScrollView()
     private let textView = NSTextView()
+    
+    public var text: String {
+        get {
+            return textView.string
+        }
+        set {
+            textView.string = newValue
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
         
         setupUI()
-    }
-    
-    public func setText(_ text: String) {
-        textView.string = text
     }
 }
 
