@@ -39,6 +39,24 @@ extension DeviceViewController {
     }
 }
 
+// MARK: - NSTableViewDataSource
+extension DeviceViewController: NSTableViewDataSource {
+    
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        
+        return 0
+    }
+}
+
+// MARK: - NSTableViewDelegate
+extension DeviceViewController: NSTableViewDelegate {
+    
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        
+        return nil
+    }
+}
+
 // MARK: - UI
 extension DeviceViewController {
     
@@ -77,8 +95,9 @@ extension DeviceViewController {
         
         let tableView = NSTableView()
         tableView.focusRingType = .none
+        tableView.rowHeight = 30
 //        tableView.delegate = self
-//        tableView.dataSource = self
+        tableView.dataSource = self
         
         let column1 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "name"))
         column1.title = "name"
