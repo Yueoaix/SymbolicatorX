@@ -13,6 +13,8 @@ class DeviceViewController: BaseViewController {
     private let devicePopBtn = NSPopUpButton()
     private let appPopBtn = NSPopUpButton()
     private let tableView = NSTableView()
+    private let emptyLab = NSTextField()
+    private var confirmBtn: NSButton!
     
     private var deviceList = [Device]() {
         willSet {
@@ -45,7 +47,6 @@ class DeviceViewController: BaseViewController {
     
     private var appInfoDict = [String:Plist]() {
         didSet {
-            
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
                 self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
@@ -56,7 +57,10 @@ class DeviceViewController: BaseViewController {
     
     private var crashFileList = [FileModel]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.emptyLab.isHidden = self.crashFileList.count > 0
+            }
         }
     }
     
@@ -130,37 +134,38 @@ extension DeviceViewController {
         let appInfo = appInfoDict[appPopBtn.selectedItem?.title ?? ""]
         let bundleExecutable = appInfo?["CFBundleExecutable"]?.string ?? ""
         
-        do {
-            let lockdownClient = try LockdownClient(device: device, withHandshake: true)
-            let lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
-            let afcClient = try AfcClient(device: device, service: lockdownService)
-            let crashFileList = try afcClient.readDirectory(path: ".")
-            let retiredFileList = try afcClient.readDirectory(path: "./Retired")
-            
-            let crashList = crashFileList.compactMap { (fileName) -> FileModel? in
+        DispatchQueue.global().async {
+            do {
+                let lockdownClient = try LockdownClient(device: device, withHandshake: true)
+                let lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
+                let afcClient = try AfcClient(device: device, service: lockdownService)
+                let crashFileList = try afcClient.readDirectory(path: ".")
+                let retiredFileList = try afcClient.readDirectory(path: "./Retired")
                 
-                guard
-                    fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
-                    let fileInfo = try? afcClient.getFileInfo(path: fileName)
-                else { return nil }
+                let crashList = crashFileList.compactMap { (fileName) -> FileModel? in
+                    
+                    guard
+                        fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
+                        let fileInfo = try? afcClient.getFileInfo(path: fileName)
+                    else { return nil }
+                    
+                    return FileModel(filePath: fileName, fileInfo: fileInfo, afcClient: afcClient)
+                }
                 
-                return FileModel(filePath: fileName, fileInfo: fileInfo)
+                let retiredList = retiredFileList.compactMap { (fileName) -> FileModel? in
+                    guard
+                        fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
+                        let fileInfo = try? afcClient.getFileInfo(path: "./Retired/\(fileName)")
+                    else { return nil }
+                    
+                    return FileModel(filePath: "./Retired/\(fileName)", fileInfo: fileInfo, afcClient: afcClient)
+                }
+                
+                self.crashFileList = crashList + retiredList
+            } catch {
+                print(error)
             }
-            
-            let retiredList = retiredFileList.compactMap { (fileName) -> FileModel? in
-                guard
-                    fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
-                    let fileInfo = try? afcClient.getFileInfo(path: "./Retired/\(fileName)")
-                else { return nil }
-                
-                return FileModel(filePath: "./Retired/\(fileName)", fileInfo: fileInfo)
-            }
-            
-            self.crashFileList = crashList + retiredList
-        } catch {
-            print(error)
         }
-        
     }
 }
 
@@ -169,7 +174,14 @@ extension DeviceViewController {
     
     @objc private func didClickConfirmBtn() {
         
-        didClickCancelBtn()
+        guard
+            tableView.selectedRow < crashFileList.count,
+            let data = crashFileList[tableView.selectedRow].data
+        else { return }
+        
+        let crashStr = String(data: data, encoding: .utf8)
+        print(crashStr ?? "")
+//        didClickCancelBtn()
     }
     
     @objc private func didClickCancelBtn() {
@@ -219,6 +231,10 @@ extension DeviceViewController: NSTableViewDelegate {
         return cell
     }
     
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        confirmBtn.isEnabled = tableView.selectedRowIndexes.count > 0
+    }
+    
     func makeCellView(identifier: NSUserInterfaceItemIdentifier) -> NSTableCellView {
         
         if let cellView = tableView.makeView(withIdentifier: identifier, owner: nil) as? NSTableCellView {
@@ -230,6 +246,8 @@ extension DeviceViewController: NSTableViewDelegate {
             cellView.identifier = identifier
             let textField =  NSTextField()
             textField.isEditable = false
+            textField.isBezeled = false
+            textField.bezelStyle = .roundedBezel
             cellView.addSubview(textField)
             textField.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
@@ -239,6 +257,7 @@ extension DeviceViewController: NSTableViewDelegate {
     }
 }
 
+// MARK: - Cell Identifier
 extension NSUserInterfaceItemIdentifier {
     static let process = NSUserInterfaceItemIdentifier("Process")
     static let date = NSUserInterfaceItemIdentifier("Date")
@@ -249,7 +268,8 @@ extension DeviceViewController {
     
     private func setupUI() {
         
-        let confirmBtn = makeButton(title: "Confirm", target: self, action: #selector(didClickConfirmBtn))
+        confirmBtn = makeButton(title: "Confirm", target: self, action: #selector(didClickConfirmBtn))
+        confirmBtn.isEnabled = false
         view.addSubview(confirmBtn)
         confirmBtn.snp.makeConstraints { (make) in
             make.right.equalToSuperview().offset(-10)
@@ -309,6 +329,15 @@ extension DeviceViewController {
             make.bottom.right.equalToSuperview().offset(-10)
             make.left.equalToSuperview().offset(10)
             make.top.equalTo(devicePopBtn.snp.bottom).offset(10)
+        }
+        
+        emptyLab.stringValue = "Data Empty"
+        emptyLab.isEditable = false
+        emptyLab.isBezeled = false
+        emptyLab.bezelStyle = .roundedBezel
+        view.addSubview(emptyLab)
+        emptyLab.snp.makeConstraints { (make) in
+            make.center.equalTo(scrollView)
         }
         
     }

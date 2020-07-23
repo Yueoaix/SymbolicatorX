@@ -15,15 +15,32 @@ struct FileModel {
     var date: Date?
     let name: String
     let `extension`: String
+    var afc: AfcClient?
+    var data: Data? {
+        
+        guard let afcClient = afc else { return nil }
+        
+        do {
+            let handle = try afcClient.fileOpen(filename: path, fileMode: .rdOnly)
+            let data = try afcClient.fileRead(handle: handle)
+            try afcClient.fileClose(handle: handle)
+            return data
+        } catch {
+            print(error)
+        }
+        
+        return nil
+    }
     
     
-    init(filePath: String, fileInfo: [String]) {
+    init(filePath: String, fileInfo: [String], afcClient: AfcClient) {
         
         var fileInfoDict = [String:String]()
         for i in stride(from: 0, to: fileInfo.count, by: 2) {
             fileInfoDict[fileInfo[i]] = fileInfo[i+1]
         }
         
+        afc = afcClient
         path = filePath
         name = (filePath as NSString).lastPathComponent
         `extension` = (filePath as NSString).pathExtension
