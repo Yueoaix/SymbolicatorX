@@ -46,10 +46,10 @@ class DeviceViewController: BaseViewController {
     private var appInfoDict = [String:Plist]() {
         didSet {
             
-            
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
                 self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
+                self.initCrashFileData()
             }
         }
     }
