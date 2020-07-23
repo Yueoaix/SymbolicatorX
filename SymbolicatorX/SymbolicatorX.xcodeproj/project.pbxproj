@@ -57,6 +57,7 @@
 		542C172024B221CF009A4219 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 542C171E24B221CF009A4219 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		542C659224C151BE000DCC08 /* String+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659124C151BE000DCC08 /* String+Text.swift */; };
 		542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */; };
+		5456FA9924C993E30005D6CA /* FileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5456FA9824C993E30005D6CA /* FileModel.swift */; };
 		545CD66F24C1742F004AE652 /* DevicePannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD66E24C1742F004AE652 /* DevicePannel.swift */; };
 		545CD67124C1758F004AE652 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD67024C1758F004AE652 /* DeviceViewController.swift */; };
 /* End PBXBuildFile section */
@@ -172,6 +173,7 @@
 		542C171E24B221CF009A4219 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = SymbolicatorX/Frameworks/SnapKit.framework; sourceTree = "<group>"; };
 		542C659124C151BE000DCC08 /* String+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Text.swift"; sourceTree = "<group>"; };
 		542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extension.swift"; sourceTree = "<group>"; };
+		5456FA9824C993E30005D6CA /* FileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileModel.swift; sourceTree = "<group>"; };
 		545CD66E24C1742F004AE652 /* DevicePannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePannel.swift; sourceTree = "<group>"; };
 		545CD67024C1758F004AE652 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -499,9 +501,18 @@
 		542C659324C15692000DCC08 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				5456FA9724C993C50005D6CA /* Model */,
 				545CD66D24C17416004AE652 /* Controller */,
 			);
 			path = Device;
+			sourceTree = "<group>";
+		};
+		5456FA9724C993C50005D6CA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5456FA9824C993E30005D6CA /* FileModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		545CD66D24C17416004AE652 /* Controller */ = {
@@ -617,6 +628,7 @@
 				5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */,
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
+				5456FA9924C993E30005D6CA /* FileModel.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
 				542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */,
 				5428218724B371F600DFC62F /* DropZoneView.swift in Sources */,
