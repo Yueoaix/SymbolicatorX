@@ -8,6 +8,8 @@
 
 import Cocoa
 
+typealias CrashFileHandler = (CrashFile) -> Void
+
 class DeviceViewController: BaseViewController {
     
     private let devicePopBtn = NSPopUpButton()
@@ -15,6 +17,8 @@ class DeviceViewController: BaseViewController {
     private let tableView = NSTableView()
     private let emptyLab = NSTextField()
     private var confirmBtn: NSButton!
+    
+    public var crashFileHandle: CrashFileHandler?
     
     private var deviceList = [Device]() {
         willSet {
@@ -32,15 +36,10 @@ class DeviceViewController: BaseViewController {
             }
             
             DispatchQueue.main.async {
-                let selectTitle = self.devicePopBtn.selectedItem?.title
                 self.devicePopBtn.removeAllItems()
                 self.devicePopBtn.addItems(withTitles: deviceNameList)
-                
-                if let title = selectTitle {
-                    self.devicePopBtn.selectItem(withTitle: title)
-                }else{
-                    self.initAppData()
-                }
+                self.selectLastDevice()
+                self.initAppData()
             }
         }
     }
@@ -49,7 +48,8 @@ class DeviceViewController: BaseViewController {
         didSet {
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
-                self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
+                self.appPopBtn.addItems(withTitles: ["All File"] + self.appInfoDict.keys.sorted())
+                self.selectLastProcess()
                 self.initCrashFileData()
             }
         }
@@ -57,6 +57,10 @@ class DeviceViewController: BaseViewController {
     
     private var crashFileList = [FileModel]() {
         didSet {
+            crashFileList.sort { (file1, file2) -> Bool in
+                return file1.date!.compare(file2.date!) == .orderedDescending
+            }
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.emptyLab.isHidden = self.crashFileList.count > 0
@@ -69,7 +73,6 @@ class DeviceViewController: BaseViewController {
         // Do view setup here.
         setupUI()
         initDeviceData()
-        
     }
 }
 
@@ -93,6 +96,7 @@ extension DeviceViewController {
             devicePopBtn.indexOfSelectedItem < deviceList.count
             else { return }
         let device = deviceList[devicePopBtn.indexOfSelectedItem]
+        lastSelectedDeviceUDID = try? device.getUDID()
         
         DispatchQueue.global().async {
             
@@ -128,11 +132,13 @@ extension DeviceViewController {
             deviceList.count > 0,
             devicePopBtn.indexOfSelectedItem < deviceList.count,
             appPopBtn.indexOfSelectedItem < appInfoDict.count
-            else { return }
+        else { return }
         
         let device = deviceList[devicePopBtn.indexOfSelectedItem]
-        let appInfo = appInfoDict[appPopBtn.selectedItem?.title ?? ""]
-        let bundleExecutable = appInfo?["CFBundleExecutable"]?.string ?? ""
+        let title = appPopBtn.selectedItem?.title ?? ""
+        let appInfo = appInfoDict[title]
+        let process = appInfo?["CFBundleExecutable"]?.string ?? ""
+        lastSelectedProcess = process
         
         DispatchQueue.global().async {
             do {
@@ -143,9 +149,10 @@ extension DeviceViewController {
                 let retiredFileList = try afcClient.readDirectory(path: "./Retired")
                 
                 let crashList = crashFileList.compactMap { (fileName) -> FileModel? in
-                    
+
                     guard
-                        fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
+                        fileName != "." && fileName != "..",
+                        title == "All File" || fileName.scan(pattern: "^(\(process))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
                         let fileInfo = try? afcClient.getFileInfo(path: fileName)
                     else { return nil }
                     
@@ -153,8 +160,10 @@ extension DeviceViewController {
                 }
                 
                 let retiredList = retiredFileList.compactMap { (fileName) -> FileModel? in
+                    
                     guard
-                        fileName.scan(pattern: "^(\(bundleExecutable))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
+                        fileName != "." && fileName != "..",
+                        title == "All File" || fileName.scan(pattern: "^(\(process))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
                         let fileInfo = try? afcClient.getFileInfo(path: "./Retired/\(fileName)")
                     else { return nil }
                     
@@ -176,12 +185,11 @@ extension DeviceViewController {
         
         guard
             tableView.selectedRow < crashFileList.count,
-            let data = crashFileList[tableView.selectedRow].data
+            let crashFile = CrashFile(file: crashFileList[tableView.selectedRow])
         else { return }
         
-        let crashStr = String(data: data, encoding: .utf8)
-        print(crashStr ?? "")
-//        didClickCancelBtn()
+        crashFileHandle?(crashFile)
+        didClickCancelBtn()
     }
     
     @objc private func didClickCancelBtn() {
@@ -212,6 +220,7 @@ extension DeviceViewController: NSTableViewDataSource {
         
         return crashFileList.count
     }
+    
 }
 
 // MARK: - NSTableViewDelegate
@@ -225,7 +234,7 @@ extension DeviceViewController: NSTableViewDelegate {
             (cell?.subviews[0] as! NSTextField).stringValue = crashFileList[row].name
         } else {
             cell = makeCellView(identifier: .date)
-            (cell?.subviews[0] as! NSTextField).stringValue = crashFileList[row].date?.description ?? ""
+            (cell?.subviews[0] as! NSTextField).stringValue = crashFileList[row].dateStr
         }
         
         return cell
@@ -263,11 +272,61 @@ extension NSUserInterfaceItemIdentifier {
     static let date = NSUserInterfaceItemIdentifier("Date")
 }
 
+// MARK: - Restory Last Selected
+extension DeviceViewController {
+    
+    var lastSelectedDeviceUDID: String? {
+        get {
+            UserDefaults.standard.string(forKey: "lastSelectedDeviceUDID")
+        }
+        set{
+            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedDeviceUDID")
+        }
+    }
+    
+    var lastSelectedProcess: String? {
+        get {
+            UserDefaults.standard.string(forKey: "lastSelectedProcess")
+        }
+        set{
+            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedProcess")
+        }
+    }
+    
+    private func selectLastDevice() {
+        
+        guard let lastUDID = lastSelectedDeviceUDID else { return }
+        
+        let index = deviceList.firstIndex { (device) -> Bool in
+            guard let udid = try? device.getUDID() else { return false }
+            
+            return udid == lastUDID
+        }
+        
+        devicePopBtn.selectItem(at: index ?? 0)
+    }
+    
+    private func selectLastProcess() {
+        
+        guard let lastProcess = lastSelectedProcess else { return }
+        
+        let appInfo = appInfoDict.values.first { (appInfo) -> Bool in
+            guard let process = appInfo["CFBundleExecutable"]?.string else { return false }
+            
+            return process == lastProcess
+        }
+        
+        if let appName = appInfo?["CFBundleDisplayName"]?.string {
+            appPopBtn.selectItem(withTitle: appName)
+        }
+    }
+}
+
 // MARK: - UI
 extension DeviceViewController {
     
     private func setupUI() {
-        
+
         confirmBtn = makeButton(title: "Confirm", target: self, action: #selector(didClickConfirmBtn))
         confirmBtn.isEnabled = false
         view.addSubview(confirmBtn)
