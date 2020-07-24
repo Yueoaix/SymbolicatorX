@@ -10,6 +10,12 @@ import Foundation
 
 public struct CrashFile {
     
+    enum CrashFileType {
+        case mobile
+        case mac
+    }
+    
+    var crashFileType: CrashFileType
     var path: URL?
     let filename: String
     var processName: String?
@@ -25,7 +31,7 @@ public struct CrashFile {
     var symbolicatedContent: String?
     var symbolicatedContentSaveURL: URL? {
         
-        guard let path = path else { return nil }
+        guard let path = path, crashFileType == .mac else { return nil }
         
         let originalPathExtension = path.pathExtension
         let extensionLessPath = path.deletingPathExtension()
@@ -44,6 +50,7 @@ public struct CrashFile {
         
         self.path = path
         self.filename = path.lastPathComponent
+        self.crashFileType = .mac
         config(content: content)
     }
     
@@ -58,6 +65,7 @@ public struct CrashFile {
         
         self.path = URL(fileURLWithPath: file.path)
         self.filename = file.name
+        self.crashFileType = .mobile
         config(content: content)
     }
     
