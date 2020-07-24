@@ -13,6 +13,12 @@ class SymbolicatedWindowController: BaseWindowController {
     private var textViewController = TextViewController()
     private let savePanel = NSSavePanel()
     
+    public var fileName: String? {
+        didSet {
+            guard let name = fileName else { return }
+            savePanel.nameFieldStringValue = name
+        }
+    }
     public var saveUrl: URL?
     public var text: String {
         get {
@@ -53,7 +59,7 @@ extension SymbolicatedWindowController {
             window?.orderOut(nil)
             NSWorkspace.shared.activateFileViewerSelecting([saveUrl])
         } else {
-            
+
             savePanel.beginSheetModal(for: window!) { (response) in
                 
                 switch response {
@@ -61,6 +67,7 @@ extension SymbolicatedWindowController {
                     guard let url = self.savePanel.url else { return }
                     try? self.text.write(to: url, atomically: true, encoding: .utf8)
                     self.window?.orderOut(nil)
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
                 default:
                     return
                 }

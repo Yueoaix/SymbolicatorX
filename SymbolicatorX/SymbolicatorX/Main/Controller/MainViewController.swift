@@ -65,6 +65,7 @@ extension MainViewController {
             DispatchQueue.main.async {
                 self?.isSymbolicating = false
                 self?.textWindowController.showWindow(nil)
+                self?.textWindowController.fileName = crashFile.filename
                 self?.textWindowController.text = content
                 self?.textWindowController.saveUrl = crashFile.symbolicatedContentSaveURL
             }

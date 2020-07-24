@@ -60,6 +60,7 @@
 		5456FA9924C993E30005D6CA /* FileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5456FA9824C993E30005D6CA /* FileModel.swift */; };
 		545CD66F24C1742F004AE652 /* DevicePannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD66E24C1742F004AE652 /* DevicePannel.swift */; };
 		545CD67124C1758F004AE652 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD67024C1758F004AE652 /* DeviceViewController.swift */; };
+		548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548B367324CACDE400838902 /* CrashFileTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -176,6 +177,7 @@
 		5456FA9824C993E30005D6CA /* FileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileModel.swift; sourceTree = "<group>"; };
 		545CD66E24C1742F004AE652 /* DevicePannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePannel.swift; sourceTree = "<group>"; };
 		545CD67024C1758F004AE652 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
+		548B367324CACDE400838902 /* CrashFileTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashFileTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -501,6 +503,7 @@
 		542C659324C15692000DCC08 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				548B367224CACDC300838902 /* View */,
 				5456FA9724C993C50005D6CA /* Model */,
 				545CD66D24C17416004AE652 /* Controller */,
 			);
@@ -522,6 +525,14 @@
 				545CD67024C1758F004AE652 /* DeviceViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		548B367224CACDC300838902 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				548B367324CACDE400838902 /* CrashFileTableView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -612,6 +623,7 @@
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
 				542C171224B21B54009A4219 /* MainWindowController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
+				548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
 				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,

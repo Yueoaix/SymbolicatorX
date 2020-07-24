@@ -14,9 +14,10 @@ class DeviceViewController: BaseViewController {
     
     private let devicePopBtn = NSPopUpButton()
     private let appPopBtn = NSPopUpButton()
-    private let tableView = NSTableView()
+    private let tableView = CrashFileTableView()
     private let emptyLab = NSTextField()
     private var confirmBtn: NSButton!
+    private let textWindowController = SymbolicatedWindowController()
     
     public var crashFileHandle: CrashFileHandler?
     
@@ -214,6 +215,39 @@ extension DeviceViewController {
 }
 
 // MARK: - NSTableViewDataSource
+extension DeviceViewController: CrashFileTableViewDelegate {
+    
+    func didClickMenu(type: MenuType, selectedRow: Int) {
+        
+        let fileInfo = crashFileList[selectedRow]
+        guard let data = fileInfo.data, let content = String(data: data, encoding: .utf8) else { return }
+        
+        switch type {
+        case .view:
+            textWindowController.showWindow(nil)
+            textWindowController.text = content
+            break
+        case .save:
+            let savePanel = NSSavePanel()
+            savePanel.nameFieldStringValue = fileInfo.name
+            savePanel.beginSheetModal(for: view.window!) { (response) in
+                
+                switch response {
+                case .OK:
+                    guard let url = savePanel.url else { return }
+                    try? content.write(to: url, atomically: true, encoding: .utf8)
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                default:
+                    return
+                }
+            }
+            break
+        }
+    }
+    
+}
+
+// MARK: - NSTableViewDataSource
 extension DeviceViewController: NSTableViewDataSource {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -365,6 +399,7 @@ extension DeviceViewController {
         tableView.rowHeight = 20
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.menuDelegate = self
         
         let column1 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "name"))
         column1.title = "name"
