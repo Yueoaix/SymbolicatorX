@@ -10,7 +10,7 @@ import Foundation
 
 public struct CrashFile {
     
-    let path: URL
+    var path: URL?
     let filename: String
     var processName: String?
     var responsible: String?
@@ -21,9 +21,11 @@ public struct CrashFile {
     var version: String?
     var buildVersion: String?
     var uuid: BinaryUUID?
-    let content: String
+    var content: String = ""
     var symbolicatedContent: String?
-    var symbolicatedContentSaveURL: URL {
+    var symbolicatedContentSaveURL: URL? {
+        
+        guard let path = path else { return nil }
         
         let originalPathExtension = path.pathExtension
         let extensionLessPath = path.deletingPathExtension()
@@ -40,9 +42,27 @@ public struct CrashFile {
             return nil
         }
         
-        self.content = content
         self.path = path
         self.filename = path.lastPathComponent
+        config(content: content)
+    }
+    
+    init?(file: FileModel) {
+        guard
+            let data = file.data,
+            let content = String(data: data, encoding: .utf8),
+            content.trimmingCharacters(in: .whitespacesAndNewlines) != ""
+        else {
+            return nil
+        }
+        
+        self.path = URL(fileURLWithPath: file.path)
+        self.filename = file.name
+        config(content: content)
+    }
+    
+    private mutating func config(content: String) {
+        self.content = content
         self.processName = content.scan(pattern: "^Process:\\s+(.+?)\\[").first?.first?.trimmed
         self.bundleIdentifier = content.scan(pattern: "^Identifier:\\s+(.+?)$").first?.first?.trimmed
         self.architecture = content.scan(pattern: "^Code Type:(.*?)(\\(.*\\))?$").first?.first?.trimmed
@@ -81,4 +101,5 @@ public struct CrashFile {
             options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
         ).first?.first?.trimmed).flatMap(BinaryUUID.init)
     }
+    
 }

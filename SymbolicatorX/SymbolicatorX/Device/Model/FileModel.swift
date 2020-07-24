@@ -13,6 +13,7 @@ struct FileModel {
     let path: String
     let isDirectory: Bool
     var date: Date?
+    var dateStr: String = ""
     let name: String
     let `extension`: String
     var afc: AfcClient?
@@ -48,6 +49,10 @@ struct FileModel {
         if let mtimeStr = fileInfoDict["st_mtime"], var mtime = TimeInterval(mtimeStr) {
             mtime /= 1000000000
             date = Date(timeIntervalSince1970: mtime)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateStr = dateFormatter.string(from: date!)
         }
     }
 }

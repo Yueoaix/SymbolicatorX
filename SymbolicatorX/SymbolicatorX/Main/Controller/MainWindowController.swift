@@ -26,10 +26,16 @@ extension MainWindowController {
         
         let devicePannel = DevicePannel(size: NSSize(width: 600, height: 282))
         devicePannel.parent = window
-        window?.beginSheet(devicePannel, completionHandler: { (respone) in
-            
-        })
+        window?.beginSheet(devicePannel, completionHandler: nil)
         
+        guard
+            let mainViewController = contentViewController as? MainViewController,
+            let deviceViewCotroller = devicePannel.contentViewController as? DeviceViewController
+        else { return }
+        
+        deviceViewCotroller.crashFileHandle = { [weak mainViewController] (crashFile) in
+            mainViewController?.crashFile = crashFile
+        }
     }
     
     @objc private func didClickSymbolicateBtn() {

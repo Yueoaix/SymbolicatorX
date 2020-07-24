@@ -13,7 +13,7 @@ class DSYMSearch {
     typealias CompletionHandler = (String?) -> Void
     typealias ErrorHandler = ([String]) -> Void
     
-    static func search(forUUID uuid: String, crashFileDirectory: String, errorHandler: @escaping ErrorHandler, completion: @escaping CompletionHandler) {
+    static func search(forUUID uuid: String, crashFileDirectory: String?, errorHandler: @escaping ErrorHandler, completion: @escaping CompletionHandler) {
         
         let predicate = NSPredicate(format: "com_apple_xcode_dsym_uuids == %@", uuid)
         SpotlightSearch.shared.search(forPredicate: predicate) { (results) in
@@ -27,7 +27,7 @@ class DSYMSearch {
             
             guard foundItem == nil else { return }
             
-            if let results = FileSearch.search(fileExtension: "dsym", directory: crashFileDirectory, recursive: false), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
+            if let crashFileDirectory = crashFileDirectory, let results = FileSearch.search(fileExtension: "dsym", directory: crashFileDirectory, recursive: false), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
                 
                 completion(foundUUID)
             } else if let results = FileSearch.search(fileExtension: "dsym", directory: "~/Library/Developer/Xcode/Archives/", recursive: true), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {

@@ -24,6 +24,9 @@ class DropZoneView: NSView {
     private var isHoveringFile = false
     private var fileTypes = [String]()
     private var file: URL?
+    
+    private var defaultText: String?
+    private var defaultDetailText: String?
         
     var fileTypesPredicate: NSPredicate {
         let predicateFormat = (0..<fileTypes.count).map { (index) -> String in
@@ -34,6 +37,8 @@ class DropZoneView: NSView {
     
     init(fileTypes: [String], text: String? = nil, detailText: String? = nil) {
         super.init(frame: .zero)
+        defaultText = text
+        defaultDetailText = detailText
         setFileTypes(fileTypes)
         setText(text)
         setDetailText(detailText)
@@ -42,6 +47,13 @@ class DropZoneView: NSView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func reset() {
+        setFile(nil)
+        setDetailText(nil)
+        setText(defaultText)
+        setDetailText(defaultDetailText)
     }
     
     public func setHoveringFile(_ isHoveringFile: Bool) {
@@ -59,9 +71,9 @@ class DropZoneView: NSView {
     
     public func setFile(_ file: URL?) {
         
-        guard let value = file, value != self.file else { return }
-        self.file = value
-        setText(value.lastPathComponent)
+        guard file != self.file else { return }
+        self.file = file
+        setText(file?.lastPathComponent)
         display()
     }
     
@@ -110,7 +122,7 @@ class DropZoneView: NSView {
         
         guard validFileURL(fileURL) else { return false }
 
-        self.file = fileURL
+        setFile(fileURL)
         delegate?.receivedFile(dropZoneView: self, fileURL: fileURL)
 
         return true

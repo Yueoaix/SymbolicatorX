@@ -11,8 +11,23 @@ import SnapKit
 
 class MainViewController: BaseViewController {
     
-    private var crashFile: CrashFile?
-    private var dsymFile: DSYMFile?
+    var crashFile: CrashFile? {
+        didSet {
+            if let crashFile = crashFile, dsymFile?.canSymbolicate(crashFile) != true {
+                
+                crashFileDropZoneView.setFile(crashFile.path)
+                dsymFileDropZoneView.reset()
+                startSearchForDSYM()
+            }
+        }
+    }
+    
+    private var dsymFile: DSYMFile? {
+        didSet {
+            dsymFileDropZoneView.setDetailText(dsymFile?.path.path)
+        }
+    }
+    
     private var isSymbolicating = false
     
     private let textWindowController = SymbolicatedWindowController()
@@ -65,14 +80,9 @@ extension MainViewController: DropZoneViewDelegate {
         if dropZoneView == crashFileDropZoneView {
             
             crashFile = CrashFile(path: fileURL)
-            if let crashFile = crashFile, dsymFile?.canSymbolicate(crashFile) != true {
-                
-                startSearchForDSYM()
-            }
         } else if dropZoneView == dsymFileDropZoneView {
             
             dsymFile = DSYMFile(path: fileURL)
-            dsymFileDropZoneView.setDetailText(dsymFile?.path.path)
         }
     }
 }
@@ -87,7 +97,7 @@ extension MainViewController {
         
         dsymFileDropZoneView.setDetailText("Searching…")
         
-        DSYMSearch.search(forUUID: crashFileUUID.pretty, crashFileDirectory: crashFile.path.deletingLastPathComponent().path, errorHandler: { (error) in
+        DSYMSearch.search(forUUID: crashFileUUID.pretty, crashFileDirectory: crashFile.path?.deletingLastPathComponent().path, errorHandler: { (error) in
             
             print("DSYM Search Error: \(error)")
         }) { [weak self] (result) in
