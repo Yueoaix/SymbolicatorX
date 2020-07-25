@@ -103,15 +103,17 @@ extension MainViewController {
             print("DSYM Search Error: \(error)")
         }) { [weak self] (result) in
             
-            defer {
-                self?.dsymFileDropZoneView.setDetailText(self?.dsymFile?.path.path)
+            DispatchQueue.main.async {
+                defer {
+                    self?.dsymFileDropZoneView.setDetailText(self?.dsymFile?.path.path)
+                }
+                
+                guard let `self` = self, let foundDSYMPath = result else { return }
+                
+                let foundDSYMURL = URL(fileURLWithPath: foundDSYMPath)
+                self.dsymFile = DSYMFile(path: foundDSYMURL)
+                self.dsymFileDropZoneView.setFile(foundDSYMURL)
             }
-            
-            guard let `self` = self, let foundDSYMPath = result else { return }
-            
-            let foundDSYMURL = URL(fileURLWithPath: foundDSYMPath)
-            self.dsymFile = DSYMFile(path: foundDSYMURL)
-            self.dsymFileDropZoneView.setFile(foundDSYMURL)
         }
     }
 }

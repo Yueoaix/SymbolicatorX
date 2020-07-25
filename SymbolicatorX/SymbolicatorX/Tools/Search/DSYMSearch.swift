@@ -27,15 +27,17 @@ class DSYMSearch {
             
             guard foundItem == nil else { return }
             
-            if let crashFileDirectory = crashFileDirectory, let results = FileSearch.search(fileExtension: "dsym", directory: crashFileDirectory, recursive: false), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
-                
-                completion(foundUUID)
-            } else if let results = FileSearch.search(fileExtension: "dsym", directory: "~/Library/Developer/Xcode/Archives/", recursive: true), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
-                
-                completion(foundUUID)
-            } else {
-                
-                completion(nil)
+            DispatchQueue.global().async {
+                if let crashFileDirectory = crashFileDirectory, let results = FileSearch.search(fileExtension: "dsym", directory: crashFileDirectory, recursive: false), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
+                    
+                    completion(foundUUID)
+                } else if let results = FileSearch.search(fileExtension: "dsym", directory: "~/Library/Developer/Xcode/Archives/", recursive: true), let foundUUID = firstMatching(paths: results, uuid: uuid, errorHandler: errorHandler) {
+                    
+                    completion(foundUUID)
+                } else {
+                    
+                    completion(nil)
+                }
             }
         }
     }

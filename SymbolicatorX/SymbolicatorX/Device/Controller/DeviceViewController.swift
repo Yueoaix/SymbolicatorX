@@ -264,11 +264,11 @@ extension DeviceViewController: NSTableViewDelegate {
         
         var cell: NSTableCellView?
         if tableColumn == tableView.tableColumns[0] {
-            cell = makeCellView(identifier: .process)
-            (cell?.subviews[0] as! NSTextField).stringValue = crashFileList[row].name
+            cell = makeCellView(tableView: tableView, identifier: .process)
+            cell?.textField?.stringValue = crashFileList[row].name
         } else {
-            cell = makeCellView(identifier: .date)
-            (cell?.subviews[0] as! NSTextField).stringValue = crashFileList[row].dateStr
+            cell = makeCellView(tableView: tableView, identifier: .date)
+            cell?.textField?.stringValue = crashFileList[row].dateStr
         }
         
         return cell
@@ -278,26 +278,6 @@ extension DeviceViewController: NSTableViewDelegate {
         confirmBtn.isEnabled = tableView.selectedRowIndexes.count > 0
     }
     
-    func makeCellView(identifier: NSUserInterfaceItemIdentifier) -> NSTableCellView {
-        
-        if let cellView = tableView.makeView(withIdentifier: identifier, owner: nil) as? NSTableCellView {
-            
-            return cellView
-        }else{
-            
-            let cellView = NSTableCellView()
-            cellView.identifier = identifier
-            let textField =  NSTextField()
-            textField.isEditable = false
-            textField.isBezeled = false
-            textField.bezelStyle = .roundedBezel
-            cellView.addSubview(textField)
-            textField.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
-            }
-            return cellView
-        }
-    }
 }
 
 // MARK: - Cell Identifier
@@ -446,5 +426,28 @@ extension DeviceViewController {
         button.action = action
         
         return button
+    }
+    
+    private func makeCellView(tableView: NSTableView, identifier: NSUserInterfaceItemIdentifier) -> NSTableCellView {
+        
+        if let cellView = tableView.makeView(withIdentifier: identifier, owner: nil) as? NSTableCellView {
+            
+            return cellView
+        }else{
+            
+            let cellView = NSTableCellView()
+            cellView.identifier = identifier
+            let textField =  NSTextField()
+            textField.isEditable = false
+            textField.isBezeled = false
+            cellView.textField = textField
+            textField.bezelStyle = .roundedBezel
+            cellView.addSubview(textField)
+            textField.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.left.equalToSuperview()
+            }
+            return cellView
+        }
     }
 }
