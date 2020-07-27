@@ -21,7 +21,7 @@
 		5420D92524C05D85009E7CED /* SymbolicatedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */; };
 		54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */; };
 		54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */; };
-		5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Hex.swift */; };
+		5428218424B36D7A00DFC62F /* NSColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Extension.swift */; };
 		5428218724B371F600DFC62F /* DropZoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218624B371F600DFC62F /* DropZoneView.swift */; };
 		5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17C24B4CB2B004AC47A /* DSYMFile.swift */; };
 		5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428B17E24B4CC2D004AC47A /* Architecture.swift */; };
@@ -97,7 +97,7 @@
 		5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SymbolicatedWindowController.xib; sourceTree = "<group>"; };
 		54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
 		54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextView+LineNumber.swift"; sourceTree = "<group>"; };
-		5428218324B36D7A00DFC62F /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
+		5428218324B36D7A00DFC62F /* NSColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extension.swift"; sourceTree = "<group>"; };
 		5428218624B371F600DFC62F /* DropZoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropZoneView.swift; sourceTree = "<group>"; };
 		5428B17C24B4CB2B004AC47A /* DSYMFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMFile.swift; sourceTree = "<group>"; };
 		5428B17E24B4CC2D004AC47A /* Architecture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Architecture.swift; sourceTree = "<group>"; };
@@ -292,7 +292,7 @@
 		5428218224B36D2800DFC62F /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				5428218324B36D7A00DFC62F /* NSColor+Hex.swift */,
+				5428218324B36D7A00DFC62F /* NSColor+Extension.swift */,
 				5428B18224B4D2BD004AC47A /* String+Extension.swift */,
 				542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */,
 				5415674124CE836C007B37E2 /* NSButton+Extension.swift */,
@@ -674,7 +674,7 @@
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
 				5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */,
 				5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */,
-				5428218424B36D7A00DFC62F /* NSColor+Hex.swift in Sources */,
+				5428218424B36D7A00DFC62F /* NSColor+Extension.swift in Sources */,
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
 				5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */,

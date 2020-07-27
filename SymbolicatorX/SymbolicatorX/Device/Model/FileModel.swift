@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FileModel {
+class FileModel {
     
     let path: String
     let isDirectory: Bool
@@ -33,12 +33,12 @@ struct FileModel {
         return nil
     }
     
-    lazy var children: [FileModel]? = {
+    lazy var children: [FileModel] = {
        
-        guard let afcClient = afc, isDirectory else { return nil }
+        guard isDirectory, let afcClient = afc else { return [] }
 
         let fileList = try? afcClient.readDirectory(path: path)
-        let children = fileList?.compactMap { (fileName) -> FileModel? in
+        var children = fileList?.compactMap { (fileName) -> FileModel? in
             
             let path = "\(self.path)/\(fileName)"
             guard
@@ -49,8 +49,10 @@ struct FileModel {
             
             return FileModel(filePath: path, fileInfo: fileInfo, afcClient: afcClient)
         }
-        
-        return children
+        children?.sort(by: { (file1, file2) -> Bool in
+            return file1.date!.compare(file2.date!) == .orderedDescending
+        })
+        return children ?? []
     }()
     
     
@@ -74,5 +76,27 @@ struct FileModel {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             dateStr = dateFormatter.string(from: date!)
         }
+           
+    }
+    
+    public func save(toPath path: URL) {
+        
+        if !isDirectory {
+            try? data?.write(to: path, options: .atomic)
+            return
+        }
+        
+        var isDirectory: ObjCBool = false
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(atPath: path.absoluteString, isDirectory: &isDirectory) || !isDirectory.boolValue {
+            
+            try? fileManager .createDirectory(at: path, withIntermediateDirectories: true, attributes: nil)
+        }
+        
+        children.forEach({ (file) in
+            let file = file
+            let subPath = path.appendingPathComponent(file.name)
+            file.save(toPath: subPath)
+        })
     }
 }

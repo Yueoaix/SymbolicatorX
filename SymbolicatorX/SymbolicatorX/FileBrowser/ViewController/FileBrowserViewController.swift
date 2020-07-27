@@ -167,6 +167,21 @@ extension FileBrowserViewController {
     
     @objc private func didClickExportBtn() {
         
+        guard let file = outlineView.item(atRow: outlineView.selectedRow) as? FileModel else { return }
+        
+        let savePanel = NSSavePanel()
+        savePanel.nameFieldStringValue = file.name
+        savePanel.beginSheetModal(for: view.window!) { (response) in
+            
+            switch response {
+            case .OK:
+                guard let url = savePanel.url else { return }
+                file.save(toPath: url)
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+            default:
+                return
+            }
+        }
     }
     
     @objc private func didChangeDevice(_ sender: NSPopUpButton) {
@@ -186,31 +201,31 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         
-        if var file = item as? FileModel {
+        if let file = item as? FileModel {
             
-            return file.children?.count ?? 0
+            return file.children.count
         } else {
             
-            return file?.children?.count ?? 0
+            return file?.children.count ?? 0
         }
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         
-        if var file = item as? FileModel {
+        if let file = item as? FileModel {
             
-            return file.children![index]
+            return file.children[index]
         } else {
             
-            return file!.children![index]
+            return file!.children[index]
         }
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         
-        var file = item as! FileModel
+        let file = item as! FileModel
         
-        return file.children?.count ?? 0 > 0
+        return file.children.count > 0
     }
 }
 
