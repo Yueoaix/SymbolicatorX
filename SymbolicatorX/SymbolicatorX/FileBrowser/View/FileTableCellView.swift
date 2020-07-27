@@ -16,6 +16,7 @@ class FileTableCellView: NSTableCellView {
     var model: FileModel? {
         didSet {
             title.stringValue = model?.name ?? ""
+            title.toolTip = title.stringValue
             if model?.isDirectory ?? false {
                 icon.image = NSImage.init(named: NSImage.folderName)
             }else{

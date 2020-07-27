@@ -287,7 +287,8 @@ extension DeviceCrashViewController: NSTableViewDelegate {
 extension NSUserInterfaceItemIdentifier {
     static let process = NSUserInterfaceItemIdentifier("Process")
     static let date = NSUserInterfaceItemIdentifier("Date")
-    static let file = NSUserInterfaceItemIdentifier("file")
+    static let file = NSUserInterfaceItemIdentifier("File")
+    static let name = NSUserInterfaceItemIdentifier(rawValue: "Name")
 }
 
 // MARK: - Restory Last Selected
@@ -386,14 +387,14 @@ extension DeviceCrashViewController {
         tableView.dataSource = self
         tableView.menuDelegate = self
         
-        let column1 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "name"))
+        let column1 = NSTableColumn(identifier: .name)
         column1.title = "name"
         column1.width = 420
         column1.maxWidth = 450
         column1.minWidth = 160
         tableView.addTableColumn(column1)
         
-        let column2 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "date"))
+        let column2 = NSTableColumn(identifier: .date)
         column2.title = "date"
         column2.width = 160
         tableView.addTableColumn(column2)

@@ -167,16 +167,26 @@ extension FileBrowserViewController {
     
     @objc private func didClickExportBtn() {
         
-        guard let file = outlineView.item(atRow: outlineView.selectedRow) as? FileModel else { return }
+        var selectedFile = [FileModel]()
+        outlineView.selectedRowIndexes.forEach { (row) in
+            guard let file = outlineView.item(atRow: row) as? FileModel else { return }
+            selectedFile.append(file)
+        }
+        
+        if selectedFile.count == 0 {
+            return
+        }
         
         let savePanel = NSSavePanel()
-        savePanel.nameFieldStringValue = file.name
+        savePanel.nameFieldStringValue = appPopBtn.selectedItem?.title ?? ""
         savePanel.beginSheetModal(for: view.window!) { (response) in
             
             switch response {
             case .OK:
                 guard let url = savePanel.url else { return }
-                file.save(toPath: url)
+                selectedFile.forEach { (file) in
+                    file.save(toPath: url.appendingPathComponent(file.name))
+                }
                 NSWorkspace.shared.activateFileViewerSelecting([url])
             default:
                 return
@@ -344,18 +354,20 @@ extension FileBrowserViewController {
             make.width.equalTo(285)
         }
         
-        let column1 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "name"))
+        let column1 = NSTableColumn(identifier: .name)
         column1.title = "name"
-        column1.width = 420
+        column1.width = 395
         column1.maxWidth = 450
         column1.minWidth = 160
         outlineView.addTableColumn(column1)
         
-        let column2 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "date"))
+        let column2 = NSTableColumn(identifier: .date)
         column2.title = "date"
-        column2.width = 160
+        column2.width = 185
+        column2.minWidth = 185
         outlineView.addTableColumn(column2)
         
+        outlineView.allowsMultipleSelection = true
         outlineView.usesAlternatingRowBackgroundColors = true
         outlineView.delegate = self;
         outlineView.dataSource = self;
