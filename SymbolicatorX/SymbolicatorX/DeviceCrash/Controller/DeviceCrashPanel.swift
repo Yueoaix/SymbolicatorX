@@ -1,5 +1,5 @@
 //
-//  DevicePannel.swift
+//  DeviceCrashPanel.swift
 //  SymbolicatorX
 //
 //  Created by 钟晓跃 on 2020/7/17.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class DevicePanel: NSPanel {
+class DeviceCrashPanel: NSPanel {
 
     convenience init(size: NSSize) {
         self.init()
@@ -17,11 +17,11 @@ class DevicePanel: NSPanel {
     
 }
 
-extension DevicePanel {
+extension DeviceCrashPanel {
     
     private func setupUI(size: NSSize) {
         
-        contentViewController = DeviceViewController()
+        contentViewController = DeviceCrashViewController()
         setFrame(NSRect(origin: CGPoint(x: 0, y: 0), size: size), display: true)
     }
 }

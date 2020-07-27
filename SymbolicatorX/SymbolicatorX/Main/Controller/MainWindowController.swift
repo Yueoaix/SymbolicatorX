@@ -31,13 +31,13 @@ extension MainWindowController {
     
     @objc private func didClickDeviceBtn() {
         
-        let devicePannel = DevicePanel(size: NSSize(width: 600, height: 282))
+        let devicePannel = DeviceCrashPanel(size: NSSize(width: 600, height: 282))
         devicePannel.parent = window
         window?.beginSheet(devicePannel, completionHandler: nil)
         
         guard
             let mainViewController = contentViewController as? MainViewController,
-            let deviceViewCotroller = devicePannel.contentViewController as? DeviceViewController
+            let deviceViewCotroller = devicePannel.contentViewController as? DeviceCrashViewController
         else { return }
         
         deviceViewCotroller.crashFileHandle = { [weak mainViewController] (crashFile) in
@@ -83,9 +83,9 @@ extension MainWindowController: NSToolbarDelegate {
 
 // MARK:  - Toolbar Identifier
 extension NSToolbarItem.Identifier {
-    static let device = NSToolbarItem.Identifier(rawValue: "Device")
+    static let device = NSToolbarItem.Identifier(rawValue: "Device Crash")
     static let symbolicate = NSToolbarItem.Identifier(rawValue: "Symbolicate")
-    static let fileBrowser = NSToolbarItem.Identifier(rawValue: "FileBrowser")
+    static let fileBrowser = NSToolbarItem.Identifier(rawValue: "File Browser")
 }
 
 // MARK: - UI

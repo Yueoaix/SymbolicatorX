@@ -1,5 +1,5 @@
 //
-//  DeviceViewController.swift
+//  DeviceCrashViewController.swift
 //  SymbolicatorX
 //
 //  Created by 钟晓跃 on 2020/7/17.
@@ -10,7 +10,7 @@ import Cocoa
 
 typealias CrashFileHandler = (CrashFile) -> Void
 
-class DeviceViewController: BaseViewController {
+class DeviceCrashViewController: BaseViewController {
     
     private let devicePopBtn = NSPopUpButton()
     private let appPopBtn = NSPopUpButton()
@@ -78,7 +78,7 @@ class DeviceViewController: BaseViewController {
 }
 
 // MARK: - init Data
-extension DeviceViewController {
+extension DeviceCrashViewController {
     
     private func initDeviceData() {
         DispatchQueue.global().async {
@@ -182,7 +182,7 @@ extension DeviceViewController {
 }
 
 // MARK: - Action
-extension DeviceViewController {
+extension DeviceCrashViewController {
     
     @objc private func didClickConfirmBtn() {
         
@@ -217,7 +217,7 @@ extension DeviceViewController {
 }
 
 // MARK: - CrashFileTableViewDelegate
-extension DeviceViewController: CrashFileTableViewDelegate {
+extension DeviceCrashViewController: CrashFileTableViewDelegate {
     
     func didClickMenu(type: MenuType, selectedRow: Int) {
         
@@ -251,7 +251,7 @@ extension DeviceViewController: CrashFileTableViewDelegate {
 }
 
 // MARK: - NSTableViewDataSource
-extension DeviceViewController: NSTableViewDataSource {
+extension DeviceCrashViewController: NSTableViewDataSource {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
         
@@ -261,7 +261,7 @@ extension DeviceViewController: NSTableViewDataSource {
 }
 
 // MARK: - NSTableViewDelegate
-extension DeviceViewController: NSTableViewDelegate {
+extension DeviceCrashViewController: NSTableViewDelegate {
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
@@ -291,7 +291,7 @@ extension NSUserInterfaceItemIdentifier {
 }
 
 // MARK: - Restory Last Selected
-extension DeviceViewController {
+extension DeviceCrashViewController {
     
     var lastSelectedDeviceUDID: String? {
         get {
@@ -341,7 +341,7 @@ extension DeviceViewController {
 }
 
 // MARK: - UI
-extension DeviceViewController {
+extension DeviceCrashViewController {
     
     private func setupUI() {
 
