@@ -169,7 +169,7 @@ extension DeviceCrashViewController {
                         let fileInfo = try? afcClient.getFileInfo(path: "./Retired/\(fileName)")
                     else { return nil }
                     
-                    let file = FileModel(filePath: fileName, fileInfo: fileInfo, afcClient: afcClient)
+                    let file = FileModel(filePath: "./Retired/\(fileName)", fileInfo: fileInfo, afcClient: afcClient)
                     return file.isDirectory ? nil : file
                 }
                 
