@@ -12,6 +12,11 @@
 		5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77324BDB5F7005E6028 /* DSYMSearch.swift */; };
 		5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E77724BED11C005E6028 /* Symbolicator.swift */; };
 		5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5406E78124BEEC29005E6028 /* TextViewController.swift */; };
+		5415673E24CE81C3007B37E2 /* FileBrowserPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415673D24CE81C3007B37E2 /* FileBrowserPanel.swift */; };
+		5415674024CE81DE007B37E2 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415673F24CE81DE007B37E2 /* FileBrowserViewController.swift */; };
+		5415674224CE836C007B37E2 /* NSButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674124CE836C007B37E2 /* NSButton+Extension.swift */; };
+		5415674524CEA274007B37E2 /* FileTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674424CEA274007B37E2 /* FileTableCellView.swift */; };
+		5415674724CEA806007B37E2 /* NSTableCellView+Extesnion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */; };
 		5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */; };
 		5420D92524C05D85009E7CED /* SymbolicatedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */; };
 		54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */; };
@@ -58,7 +63,7 @@
 		542C659224C151BE000DCC08 /* String+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659124C151BE000DCC08 /* String+Text.swift */; };
 		542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */; };
 		5456FA9924C993E30005D6CA /* FileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5456FA9824C993E30005D6CA /* FileModel.swift */; };
-		545CD66F24C1742F004AE652 /* DevicePannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD66E24C1742F004AE652 /* DevicePannel.swift */; };
+		545CD66F24C1742F004AE652 /* DevicePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD66E24C1742F004AE652 /* DevicePanel.swift */; };
 		545CD67124C1758F004AE652 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD67024C1758F004AE652 /* DeviceViewController.swift */; };
 		548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548B367324CACDE400838902 /* CrashFileTableView.swift */; };
 /* End PBXBuildFile section */
@@ -83,6 +88,11 @@
 		5406E77324BDB5F7005E6028 /* DSYMSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSYMSearch.swift; sourceTree = "<group>"; };
 		5406E77724BED11C005E6028 /* Symbolicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Symbolicator.swift; sourceTree = "<group>"; };
 		5406E78124BEEC29005E6028 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		5415673D24CE81C3007B37E2 /* FileBrowserPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserPanel.swift; sourceTree = "<group>"; };
+		5415673F24CE81DE007B37E2 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
+		5415674124CE836C007B37E2 /* NSButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Extension.swift"; sourceTree = "<group>"; };
+		5415674424CEA274007B37E2 /* FileTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTableCellView.swift; sourceTree = "<group>"; };
+		5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableCellView+Extesnion.swift"; sourceTree = "<group>"; };
 		5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolicatedWindowController.swift; sourceTree = "<group>"; };
 		5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SymbolicatedWindowController.xib; sourceTree = "<group>"; };
 		54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
@@ -175,7 +185,7 @@
 		542C659124C151BE000DCC08 /* String+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Text.swift"; sourceTree = "<group>"; };
 		542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extension.swift"; sourceTree = "<group>"; };
 		5456FA9824C993E30005D6CA /* FileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileModel.swift; sourceTree = "<group>"; };
-		545CD66E24C1742F004AE652 /* DevicePannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePannel.swift; sourceTree = "<group>"; };
+		545CD66E24C1742F004AE652 /* DevicePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePanel.swift; sourceTree = "<group>"; };
 		545CD67024C1758F004AE652 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 		548B367324CACDE400838902 /* CrashFileTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashFileTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -232,6 +242,32 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		5415673B24CE8188007B37E2 /* FileBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				5415674324CEA25D007B37E2 /* View */,
+				5415673C24CE81A0007B37E2 /* ViewController */,
+			);
+			path = FileBrowser;
+			sourceTree = "<group>";
+		};
+		5415673C24CE81A0007B37E2 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5415673D24CE81C3007B37E2 /* FileBrowserPanel.swift */,
+				5415673F24CE81DE007B37E2 /* FileBrowserViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		5415674324CEA25D007B37E2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5415674424CEA274007B37E2 /* FileTableCellView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		54273AC324C0A7C600B184D2 /* LineNumber */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +295,8 @@
 				5428218324B36D7A00DFC62F /* NSColor+Hex.swift */,
 				5428B18224B4D2BD004AC47A /* String+Extension.swift */,
 				542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */,
+				5415674124CE836C007B37E2 /* NSButton+Extension.swift */,
+				5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -306,6 +344,7 @@
 				5428218124B36D1B00DFC62F /* Tools */,
 				542B944624B0DE5400D73B5A /* Adaptor */,
 				5406E77924BEE683005E6028 /* Symbolicated */,
+				5415673B24CE8188007B37E2 /* FileBrowser */,
 				542C659324C15692000DCC08 /* Device */,
 				542C170D24B21B21009A4219 /* Main */,
 				542B93E924B0D8D000D73B5A /* AppDelegate.swift */,
@@ -521,7 +560,7 @@
 		545CD66D24C17416004AE652 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				545CD66E24C1742F004AE652 /* DevicePannel.swift */,
+				545CD66E24C1742F004AE652 /* DevicePanel.swift */,
 				545CD67024C1758F004AE652 /* DeviceViewController.swift */,
 			);
 			path = Controller;
@@ -609,6 +648,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				542C171024B21B41009A4219 /* MainViewController.swift in Sources */,
+				5415673E24CE81C3007B37E2 /* FileBrowserPanel.swift in Sources */,
 				5406E77424BDB5F7005E6028 /* DSYMSearch.swift in Sources */,
 				542B94A024B0E7A400D73B5A /* InstallationProxy.swift in Sources */,
 				542B949A24B0E74400D73B5A /* DeviceConnection.swift in Sources */,
@@ -628,6 +668,7 @@
 				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
 				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,
 				542C659224C151BE000DCC08 /* String+Text.swift in Sources */,
+				5415674524CEA274007B37E2 /* FileTableCellView.swift in Sources */,
 				54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,
@@ -639,13 +680,16 @@
 				5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */,
 				5406E77824BED11C005E6028 /* Symbolicator.swift in Sources */,
 				542B94A624B0E80000D73B5A /* ScreenshotService.swift in Sources */,
+				5415674724CEA806007B37E2 /* NSTableCellView+Extesnion.swift in Sources */,
 				542B93EA24B0D8D000D73B5A /* AppDelegate.swift in Sources */,
 				5456FA9924C993E30005D6CA /* FileModel.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
 				542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */,
+				5415674224CE836C007B37E2 /* NSButton+Extension.swift in Sources */,
 				5428218724B371F600DFC62F /* DropZoneView.swift in Sources */,
-				545CD66F24C1742F004AE652 /* DevicePannel.swift in Sources */,
+				545CD66F24C1742F004AE652 /* DevicePanel.swift in Sources */,
 				5428B18124B4CC37004AC47A /* BinaryUUID.swift in Sources */,
+				5415674024CE81DE007B37E2 /* FileBrowserViewController.swift in Sources */,
 				5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */,
 				5428B18524B4D3DD004AC47A /* CrashFile.swift in Sources */,
 				542B949E24B0E78400D73B5A /* HouseArrest.swift in Sources */,

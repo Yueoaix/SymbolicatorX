@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class DevicePannel: NSPanel {
+class DevicePanel: NSPanel {
 
     convenience init(size: NSSize) {
         self.init()
@@ -17,7 +17,7 @@ class DevicePannel: NSPanel {
     
 }
 
-extension DevicePannel {
+extension DevicePanel {
     
     private func setupUI(size: NSSize) {
         

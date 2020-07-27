@@ -1,25 +1,19 @@
 //
-//  DeviceViewController.swift
+//  FileBrowserViewController.swift
 //  SymbolicatorX
 //
-//  Created by 钟晓跃 on 2020/7/17.
+//  Created by 钟晓跃 on 2020/7/27.
 //  Copyright © 2020 钟晓跃. All rights reserved.
 //
 
 import Cocoa
 
-typealias CrashFileHandler = (CrashFile) -> Void
-
-class DeviceViewController: BaseViewController {
+class FileBrowserViewController: BaseViewController {
     
     private let devicePopBtn = NSPopUpButton()
     private let appPopBtn = NSPopUpButton()
-    private let tableView = CrashFileTableView()
-    private let emptyLab = NSTextField()
-    private var confirmBtn: NSButton!
-    private let textWindowController = SymbolicatedWindowController()
-    
-    public var crashFileHandle: CrashFileHandler?
+    private let outlineView = NSOutlineView()
+    private var exportBtn: NSButton!
     
     private var deviceList = [Device]() {
         willSet {
@@ -49,25 +43,14 @@ class DeviceViewController: BaseViewController {
         didSet {
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
-                self.appPopBtn.addItems(withTitles: ["All File"] + self.appInfoDict.keys.sorted())
+                self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
                 self.selectLastProcess()
-                self.initCrashFileData()
+                self.initFileData()
             }
         }
     }
     
-    private var crashFileList = [FileModel]() {
-        didSet {
-            crashFileList.sort { (file1, file2) -> Bool in
-                return file1.date!.compare(file2.date!) == .orderedDescending
-            }
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.emptyLab.isHidden = self.crashFileList.count > 0
-            }
-        }
-    }
+    private var file: FileModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,10 +58,11 @@ class DeviceViewController: BaseViewController {
         setupUI()
         initDeviceData()
     }
+    
 }
 
-// MARK: - init Data
-extension DeviceViewController {
+// MARK: - Init Data
+extension FileBrowserViewController {
     
     private func initDeviceData() {
         DispatchQueue.global().async {
@@ -109,11 +93,16 @@ extension DeviceViewController {
                 let appListPlist = try install.browse(options: options)
                 
                 var appInfoDict = [String:Plist]()
-                _ = appListPlist.array?.map({ (appInfoItem) -> Plist in
+                _ = appListPlist.array?.compactMap({ (appInfoItem) -> Plist? in
                     
-                    if let appName = appInfoItem["CFBundleDisplayName"]?.string {
-                        appInfoDict[appName] = appInfoItem
-                    }
+                    guard
+                        let signer = appInfoItem["SignerIdentity"]?.string,
+                        signer.contains("Developer") || signer.contains("Development"),
+                        let appName = appInfoItem["CFBundleDisplayName"]?.string
+                    else { return nil }
+                    
+                    appInfoDict[appName] = appInfoItem
+                    
                     return appInfoItem
                 })
                 self.appInfoDict = appInfoDict
@@ -127,7 +116,7 @@ extension DeviceViewController {
         }
     }
     
-    private func initCrashFileData() {
+    private func initFileData() {
         
         guard
             deviceList.count > 0,
@@ -141,39 +130,21 @@ extension DeviceViewController {
         let process = appInfo?["CFBundleExecutable"]?.string ?? ""
         lastSelectedProcess = process
         
+        guard let appID = appInfo?["CFBundleIdentifier"]?.string else { return }
+        
         DispatchQueue.global().async {
             do {
                 let lockdownClient = try LockdownClient(device: device, withHandshake: true)
-                let lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
-                let afcClient = try AfcClient(device: device, service: lockdownService)
-                let crashFileList = try afcClient.readDirectory(path: ".")
-                let retiredFileList = try afcClient.readDirectory(path: "./Retired")
-                
-                let crashList = crashFileList.compactMap { (fileName) -> FileModel? in
-
-                    guard
-                        fileName != "." && fileName != "..",
-                        title == "All File" || fileName.scan(pattern: "^(\(process))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
-                        let fileInfo = try? afcClient.getFileInfo(path: fileName)
-                    else { return nil }
-                    
-                    let file = FileModel(filePath: fileName, fileInfo: fileInfo, afcClient: afcClient)
-                    return file.isDirectory ? nil : file
+                let lockdownService = try lockdownClient.getService(service: .houseArrest)
+                let houseArrest = try HouseArrest(device: device, service: lockdownService)
+                try houseArrest.sendCommand(command: "VendContainer", appid: appID)
+                _ = try houseArrest.getResult()
+                let afcClient = try AfcClient(houseArrest: houseArrest)
+                let fileInfo = try afcClient.getFileInfo(path: ".")
+                self.file = FileModel(filePath: ".", fileInfo: fileInfo, afcClient: afcClient)
+                DispatchQueue.main.async {
+                    self.outlineView.reloadData()
                 }
-                
-                let retiredList = retiredFileList.compactMap { (fileName) -> FileModel? in
-                    
-                    guard
-                        fileName != "." && fileName != "..",
-                        title == "All File" || fileName.scan(pattern: "^(\(process))-\\d{4}-\\d{2}-\\d{2}-\\d{6}").count > 0,
-                        let fileInfo = try? afcClient.getFileInfo(path: "./Retired/\(fileName)")
-                    else { return nil }
-                    
-                    let file = FileModel(filePath: fileName, fileInfo: fileInfo, afcClient: afcClient)
-                    return file.isDirectory ? nil : file
-                }
-                
-                self.crashFileList = crashList + retiredList
             } catch {
                 print(error)
             }
@@ -182,20 +153,9 @@ extension DeviceViewController {
 }
 
 // MARK: - Action
-extension DeviceViewController {
+extension FileBrowserViewController {
     
-    @objc private func didClickConfirmBtn() {
-        
-        guard
-            tableView.selectedRow < crashFileList.count,
-            let crashFile = CrashFile(file: crashFileList[tableView.selectedRow])
-        else { return }
-        
-        crashFileHandle?(crashFile)
-        didClickCancelBtn()
-    }
-    
-    @objc private func didClickCancelBtn() {
+    @objc private func didClickBackBtn() {
         
         guard
             let window = view.window,
@@ -205,6 +165,10 @@ extension DeviceViewController {
         parent.endSheet(window)
     }
     
+    @objc private func didClickExportBtn() {
+        
+    }
+    
     @objc private func didChangeDevice(_ sender: NSPopUpButton) {
         
         initAppData()
@@ -212,86 +176,72 @@ extension DeviceViewController {
     
     @objc private func didChangeApp(_ sender: NSPopUpButton) {
         
-        initCrashFileData()
+        initFileData()
     }
+    
 }
 
-// MARK: - CrashFileTableViewDelegate
-extension DeviceViewController: CrashFileTableViewDelegate {
+// MARK: - NSOutlineViewDataSource
+extension FileBrowserViewController: NSOutlineViewDataSource {
     
-    func didClickMenu(type: MenuType, selectedRow: Int) {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         
-        let fileInfo = crashFileList[selectedRow]
-        guard let data = fileInfo.data, let content = String(data: data, encoding: .utf8) else { return }
-        
-        switch type {
-        case .view:
-            textWindowController.showWindow(nil)
-            textWindowController.fileName = fileInfo.name
-            textWindowController.text = content
-            break
-        case .save:
-            let savePanel = NSSavePanel()
-            savePanel.nameFieldStringValue = fileInfo.name
-            savePanel.beginSheetModal(for: view.window!) { (response) in
-                
-                switch response {
-                case .OK:
-                    guard let url = savePanel.url else { return }
-                    try? content.write(to: url, atomically: true, encoding: .utf8)
-                    NSWorkspace.shared.activateFileViewerSelecting([url])
-                default:
-                    return
-                }
-            }
-            break
+        if var file = item as? FileModel {
+            
+            return file.children?.count ?? 0
+        } else {
+            
+            return file?.children?.count ?? 0
         }
     }
     
-}
-
-// MARK: - NSTableViewDataSource
-extension DeviceViewController: NSTableViewDataSource {
-    
-    func numberOfRows(in tableView: NSTableView) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         
-        return crashFileList.count
+        if var file = item as? FileModel {
+            
+            return file.children![index]
+        } else {
+            
+            return file!.children![index]
+        }
     }
     
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        
+        var file = item as! FileModel
+        
+        return file.children?.count ?? 0 > 0
+    }
 }
 
-// MARK: - NSTableViewDelegate
-extension DeviceViewController: NSTableViewDelegate {
+// MARK: - NSOutlineViewDelegate
+extension FileBrowserViewController: NSOutlineViewDelegate {
     
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         
         var cell: NSTableCellView?
-        if tableColumn == tableView.tableColumns[0] {
-            cell = NSTableCellView.makeCellView(tableView: tableView, identifier: .process)
-            cell?.textField?.stringValue = crashFileList[row].name
+        let file = item as? FileModel
+        if tableColumn == outlineView.tableColumns[0] {
+            
+            cell = (outlineView.makeView(withIdentifier: .file, owner: nil) as? FileTableCellView) ?? FileTableCellView()
+            (cell as! FileTableCellView).model = file
         } else {
-            cell = NSTableCellView.makeCellView(tableView: tableView, identifier: .date)
-            cell?.textField?.stringValue = crashFileList[row].dateStr
+            
+            cell = NSTableCellView.makeCellView(tableView: outlineView, identifier: .date)
+            cell?.textField?.stringValue = file?.dateStr ?? ""
         }
         
         return cell
     }
     
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        confirmBtn.isEnabled = tableView.selectedRowIndexes.count > 0
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        exportBtn.isEnabled = outlineView.selectedRowIndexes.count > 0
     }
     
 }
 
-// MARK: - Cell Identifier
-extension NSUserInterfaceItemIdentifier {
-    static let process = NSUserInterfaceItemIdentifier("Process")
-    static let date = NSUserInterfaceItemIdentifier("Date")
-    static let file = NSUserInterfaceItemIdentifier("file")
-}
-
 // MARK: - Restory Last Selected
-extension DeviceViewController {
+extension FileBrowserViewController {
     
     var lastSelectedDeviceUDID: String? {
         get {
@@ -341,23 +291,23 @@ extension DeviceViewController {
 }
 
 // MARK: - UI
-extension DeviceViewController {
+extension FileBrowserViewController {
     
     private func setupUI() {
-
-        confirmBtn = NSButton.makeButton(title: "Confirm", target: self, action: #selector(didClickConfirmBtn))
-        confirmBtn.isEnabled = false
-        view.addSubview(confirmBtn)
-        confirmBtn.snp.makeConstraints { (make) in
+        
+        exportBtn = NSButton.makeButton(title: "Export", target: self, action: #selector(didClickExportBtn))
+        exportBtn.isEnabled = false
+        view.addSubview(exportBtn)
+        exportBtn.snp.makeConstraints { (make) in
             make.right.equalToSuperview().offset(-10)
             make.top.equalToSuperview().offset(10)
         }
         
-        let cancelBtn = NSButton.makeButton(title: "Cancel", target: self, action: #selector(didClickCancelBtn))
-        view.addSubview(cancelBtn)
-        cancelBtn.snp.makeConstraints { (make) in
-            make.right.equalTo(confirmBtn.snp.left).offset(-10)
-            make.top.equalTo(confirmBtn)
+        let back = NSButton.makeButton(title: "Back", target: self, action: #selector(didClickBackBtn))
+        view.addSubview(back)
+        back.snp.makeConstraints { (make) in
+            make.right.equalTo(exportBtn.snp.left).offset(-10)
+            make.top.equalTo(exportBtn)
         }
         
         devicePopBtn.target = self
@@ -379,46 +329,35 @@ extension DeviceViewController {
             make.width.equalTo(285)
         }
         
-        tableView.usesAlternatingRowBackgroundColors = true
-        tableView.focusRingType = .none
-        tableView.rowHeight = 20
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.menuDelegate = self
-        
         let column1 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "name"))
         column1.title = "name"
         column1.width = 420
         column1.maxWidth = 450
         column1.minWidth = 160
-        tableView.addTableColumn(column1)
+        outlineView.addTableColumn(column1)
         
         let column2 = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "date"))
         column2.title = "date"
         column2.width = 160
-        tableView.addTableColumn(column2)
+        outlineView.addTableColumn(column2)
+        
+        outlineView.usesAlternatingRowBackgroundColors = true
+        outlineView.delegate = self;
+        outlineView.dataSource = self;
+        outlineView.focusRingType = .none
+        outlineView.rowHeight = 20
+        outlineView.outlineTableColumn = column1
         
         let scrollView = NSScrollView()
         scrollView.focusRingType = .none
         scrollView.borderType = .bezelBorder
         scrollView.autohidesScrollers = true
-        scrollView.documentView = tableView
+        scrollView.documentView = outlineView
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { (make) in
             make.bottom.right.equalToSuperview().offset(-10)
             make.left.equalToSuperview().offset(10)
             make.top.equalTo(devicePopBtn.snp.bottom).offset(10)
         }
-        
-        emptyLab.stringValue = "Data Empty"
-        emptyLab.isEditable = false
-        emptyLab.isBezeled = false
-        emptyLab.bezelStyle = .roundedBezel
-        view.addSubview(emptyLab)
-        emptyLab.snp.makeConstraints { (make) in
-            make.center.equalTo(scrollView)
-        }
-        
     }
-    
 }

@@ -22,9 +22,16 @@ class MainWindowController: BaseWindowController {
 // MARK: - Action
 extension MainWindowController {
     
+    @objc private func didClickFileBrowserBtn() {
+        
+        let devicePannel = FileBrowserPanel(size: NSSize(width: 600, height: 282))
+        devicePannel.parent = window
+        window?.beginSheet(devicePannel, completionHandler: nil)
+    }
+    
     @objc private func didClickDeviceBtn() {
         
-        let devicePannel = DevicePannel(size: NSSize(width: 600, height: 282))
+        let devicePannel = DevicePanel(size: NSSize(width: 600, height: 282))
         devicePannel.parent = window
         window?.beginSheet(devicePannel, completionHandler: nil)
         
@@ -54,6 +61,8 @@ extension MainWindowController: NSToolbarDelegate {
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         
         switch itemIdentifier {
+        case .fileBrowser:
+            return NSToolbar.makeToolbarItem(identifier: .fileBrowser, target: self, action: #selector(didClickFileBrowserBtn))
         case .device:
             return NSToolbar.makeToolbarItem(identifier: .device, target: self, action: #selector(didClickDeviceBtn))
         case .symbolicate:
@@ -64,11 +73,11 @@ extension MainWindowController: NSToolbarDelegate {
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .device, .symbolicate]
+        return [.flexibleSpace, .fileBrowser, .device, .symbolicate]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .device, .symbolicate]
+        return [.flexibleSpace, .fileBrowser, .device, .symbolicate]
     }
 }
 
@@ -76,6 +85,7 @@ extension MainWindowController: NSToolbarDelegate {
 extension NSToolbarItem.Identifier {
     static let device = NSToolbarItem.Identifier(rawValue: "Device")
     static let symbolicate = NSToolbarItem.Identifier(rawValue: "Symbolicate")
+    static let fileBrowser = NSToolbarItem.Identifier(rawValue: "FileBrowser")
 }
 
 // MARK: - UI

@@ -33,6 +33,26 @@ struct FileModel {
         return nil
     }
     
+    lazy var children: [FileModel]? = {
+       
+        guard let afcClient = afc, isDirectory else { return nil }
+
+        let fileList = try? afcClient.readDirectory(path: path)
+        let children = fileList?.compactMap { (fileName) -> FileModel? in
+            
+            let path = "\(self.path)/\(fileName)"
+            guard
+                fileName != "." && fileName != "..",
+                fileName != ".com.apple.mobile_container_manager.metadata.plist",
+                let fileInfo = try? afcClient.getFileInfo(path: path)
+            else { return nil }
+            
+            return FileModel(filePath: path, fileInfo: fileInfo, afcClient: afcClient)
+        }
+        
+        return children
+    }()
+    
     
     init(filePath: String, fileInfo: [String], afcClient: AfcClient) {
         
