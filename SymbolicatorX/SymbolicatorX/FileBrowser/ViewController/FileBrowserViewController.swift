@@ -44,7 +44,7 @@ class FileBrowserViewController: BaseViewController {
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
                 self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
-                self.selectLastProcess()
+                self.selectLastApp()
                 self.initFileData()
             }
         }
@@ -127,10 +127,9 @@ extension FileBrowserViewController {
         let device = deviceList[devicePopBtn.indexOfSelectedItem]
         let title = appPopBtn.selectedItem?.title ?? ""
         let appInfo = appInfoDict[title]
-        let process = appInfo?["CFBundleExecutable"]?.string ?? ""
-        lastSelectedProcess = process
         
         guard let appID = appInfo?["CFBundleIdentifier"]?.string else { return }
+        lastSelectedAppID = appID
         
         DispatchQueue.global().async {
             do {
@@ -178,6 +177,7 @@ extension FileBrowserViewController {
         }
         
         let savePanel = NSSavePanel()
+        savePanel.canCreateDirectories = true
         savePanel.nameFieldStringValue = appPopBtn.selectedItem?.title ?? ""
         savePanel.beginSheetModal(for: view.window!) { (response) in
             
@@ -277,12 +277,12 @@ extension FileBrowserViewController {
         }
     }
     
-    var lastSelectedProcess: String? {
+    var lastSelectedAppID: String? {
         get {
-            UserDefaults.standard.string(forKey: "lastSelectedProcess")
+            UserDefaults.standard.string(forKey: "lastSelectedAppID")
         }
         set{
-            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedProcess")
+            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedAppID")
         }
     }
     
@@ -299,14 +299,14 @@ extension FileBrowserViewController {
         devicePopBtn.selectItem(at: index ?? 0)
     }
     
-    private func selectLastProcess() {
+    private func selectLastApp() {
         
-        guard let lastProcess = lastSelectedProcess else { return }
+        guard let lastAppID = lastSelectedAppID else { return }
         
         let appInfo = appInfoDict.values.first { (appInfo) -> Bool in
-            guard let process = appInfo["CFBundleExecutable"]?.string else { return false }
+            guard let appID = appInfo["CFBundleIdentifier"]?.string else { return false }
             
-            return process == lastProcess
+            return appID == lastAppID
         }
         
         if let appName = appInfo?["CFBundleDisplayName"]?.string {

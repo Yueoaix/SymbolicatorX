@@ -50,7 +50,7 @@ class DeviceCrashViewController: BaseViewController {
             DispatchQueue.main.async {
                 self.appPopBtn.removeAllItems()
                 self.appPopBtn.addItems(withTitles: ["All File"] + self.appInfoDict.keys.sorted())
-                self.selectLastProcess()
+                self.selectLastApp()
                 self.initCrashFileData()
             }
         }
@@ -139,7 +139,8 @@ extension DeviceCrashViewController {
         let title = appPopBtn.selectedItem?.title ?? ""
         let appInfo = appInfoDict[title]
         let process = appInfo?["CFBundleExecutable"]?.string ?? ""
-        lastSelectedProcess = process
+        
+        lastSelectedAppID = appInfo?["CFBundleIdentifier"]?.string
         
         DispatchQueue.global().async {
             do {
@@ -303,12 +304,12 @@ extension DeviceCrashViewController {
         }
     }
     
-    var lastSelectedProcess: String? {
+    var lastSelectedAppID: String? {
         get {
-            UserDefaults.standard.string(forKey: "lastSelectedProcess")
+            UserDefaults.standard.string(forKey: "lastSelectedAppID")
         }
         set{
-            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedProcess")
+            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedAppID")
         }
     }
     
@@ -325,14 +326,14 @@ extension DeviceCrashViewController {
         devicePopBtn.selectItem(at: index ?? 0)
     }
     
-    private func selectLastProcess() {
+    private func selectLastApp() {
         
-        guard let lastProcess = lastSelectedProcess else { return }
+        guard let lastAppID = lastSelectedAppID else { return }
         
         let appInfo = appInfoDict.values.first { (appInfo) -> Bool in
-            guard let process = appInfo["CFBundleExecutable"]?.string else { return false }
+            guard let appID = appInfo["CFBundleIdentifier"]?.string else { return false }
             
-            return process == lastProcess
+            return appID == lastAppID
         }
         
         if let appName = appInfo?["CFBundleDisplayName"]?.string {
