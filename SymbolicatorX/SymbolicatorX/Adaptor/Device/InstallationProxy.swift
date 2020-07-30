@@ -350,13 +350,13 @@ public struct InstallationProxy {
         return Plist(rawValue: result)
     }
     
-    public func install(pkgPath: String, options: Plist, callback: @escaping (Plist?, Plist?) -> Void) throws -> Disposable {
+    public func install(pkgPath: String, options: Plist?, callback: @escaping (Plist?, Plist?) -> Void) throws -> Disposable {
         guard let rawValue = self.rawValue else {
             throw InstallationProxyError.deallocatedClient
         }
         
         let userData = Unmanaged<Wrapper<(Plist?, Plist?) -> Void>>.passRetained(Wrapper(value: callback))
-        let rawError = instproxy_install(rawValue, pkgPath, options.rawValue, { (command, status, userData) in
+        let rawError = instproxy_install(rawValue, pkgPath, options?.rawValue, { (command, status, userData) in
             guard let userData = userData else {
                 return
             }

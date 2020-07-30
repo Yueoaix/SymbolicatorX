@@ -19,6 +19,8 @@ class DeviceCrashViewController: BaseViewController {
     private var confirmBtn: NSButton!
     private let textWindowController = SymbolicatedWindowController()
     
+    private var afcClient: AfcClient?
+    
     public var crashFileHandle: CrashFileHandler?
     
     private var deviceList = [Device]() {
@@ -74,6 +76,10 @@ class DeviceCrashViewController: BaseViewController {
         // Do view setup here.
         setupUI()
         initDeviceData()
+    }
+    
+    deinit {
+        afcClient?.free()
     }
 }
 
@@ -144,8 +150,8 @@ extension DeviceCrashViewController {
         
         DispatchQueue.global().async {
             do {
-                let lockdownClient = try LockdownClient(device: device, withHandshake: true)
-                let lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
+                var lockdownClient = try LockdownClient(device: device, withHandshake: true)
+                var lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
                 let afcClient = try AfcClient(device: device, service: lockdownService)
                 let crashFileList = try afcClient.readDirectory(path: ".")
                 let retiredFileList = try afcClient.readDirectory(path: "./Retired")
@@ -175,6 +181,9 @@ extension DeviceCrashViewController {
                 }
                 
                 self.crashFileList = crashList + retiredList
+                lockdownClient.free()
+                lockdownService.free()
+                self.afcClient = afcClient
             } catch {
                 print(error)
             }
@@ -202,7 +211,7 @@ extension DeviceCrashViewController {
             let window = view.window,
             let parent = window.parent
         else { return }
-        
+
         parent.endSheet(window)
     }
     

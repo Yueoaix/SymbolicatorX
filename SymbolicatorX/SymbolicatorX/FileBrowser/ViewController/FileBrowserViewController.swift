@@ -15,6 +15,9 @@ class FileBrowserViewController: BaseViewController {
     private let outlineView = NSOutlineView()
     private var exportBtn: NSButton!
     
+    private var houseArrest: HouseArrest?
+    private var afcClient: AfcClient?
+    
     private var deviceList = [Device]() {
         willSet {
             var deviceNameList = [String]()
@@ -59,6 +62,10 @@ class FileBrowserViewController: BaseViewController {
         initDeviceData()
     }
     
+    deinit {
+        houseArrest?.free()
+        afcClient?.free()
+    }
 }
 
 // MARK: - Init Data
@@ -133,8 +140,8 @@ extension FileBrowserViewController {
         
         DispatchQueue.global().async {
             do {
-                let lockdownClient = try LockdownClient(device: device, withHandshake: true)
-                let lockdownService = try lockdownClient.getService(service: .houseArrest)
+                var lockdownClient = try LockdownClient(device: device, withHandshake: true)
+                var lockdownService = try lockdownClient.getService(service: .houseArrest)
                 let houseArrest = try HouseArrest(device: device, service: lockdownService)
                 try houseArrest.sendCommand(command: "VendContainer", appid: appID)
                 _ = try houseArrest.getResult()
@@ -144,6 +151,10 @@ extension FileBrowserViewController {
                 DispatchQueue.main.async {
                     self.outlineView.reloadData()
                 }
+                self.houseArrest = houseArrest
+                self.afcClient = afcClient
+                lockdownClient.free()
+                lockdownService.free()
             } catch {
                 print(error)
             }
