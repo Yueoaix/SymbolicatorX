@@ -59,31 +59,31 @@ typedef sbservices_client_private *sbservices_client_t; /**< The client handle. 
 /* Interface */
 
 /**
-*连接到指定设备上的springboardservices服务。
-*
-* @param device要连接的设备。
-* @param service lockdownd_start_service返回的服务描述符。
-* @param client指向新分配的客户端的指针
-*成功返回时为sbservices_client_t。
-*
-* @成功返回SBSERVICES_E_SUCCESS，当返回SBSERVICES_E_INVALID_ARG
-*客户端为NULL，否则为SBSERVICES_E_ *错误代码。
-*/
+ * Connects to the springboardservices service on the specified device.
+ *
+ * @param device The device to connect to.
+ * @param service The service descriptor returned by lockdownd_start_service.
+ * @param client Pointer that will point to a newly allocated
+ *     sbservices_client_t upon successful return.
+ *
+ * @return SBSERVICES_E_SUCCESS on success, SBSERVICES_E_INVALID_ARG when
+ *     client is NULL, or an SBSERVICES_E_* error code otherwise.
+ */
 sbservices_error_t sbservices_client_new(idevice_t device, lockdownd_service_descriptor_t service, sbservices_client_t *client);
 
 /**
-*在指定的设备上启动新的sbservices服务并连接到它。
-*
-* @param device要连接的设备。
-* @param client指向新分配的客户端的指针
-*成功返回时为sbservices_client_t。 必须使用释放
-* sbservices_client_free（）使用后。
-* @param标签用于通信的标签。 通常是程序名称。
-*传递NULL以禁用将标签发送到lockdownd的请求中。
-*
-* @成功返回SBSERVICES_E_SUCCESS，否则返回SBSERVICES_E_ *错误
-*否则为代码。
-*/
+ * Starts a new sbservices service on the specified device and connects to it.
+ *
+ * @param device The device to connect to.
+ * @param client Pointer that will point to a newly allocated
+ *     sbservices_client_t upon successful return. Must be freed using
+ *     sbservices_client_free() after use.
+ * @param label The label to use for communication. Usually the program name.
+ *  Pass NULL to disable sending the label in requests to lockdownd.
+ *
+ * @return SBSERVICES_E_SUCCESS on success, or an SBSERVICES_E_* error
+ *     code otherwise.
+ */
 sbservices_error_t sbservices_client_start_service(idevice_t device, sbservices_client_t* client, const char* label);
 
 /**
@@ -126,20 +126,20 @@ sbservices_error_t sbservices_get_icon_state(sbservices_client_t client, plist_t
 sbservices_error_t sbservices_set_icon_state(sbservices_client_t client, plist_t newstate);
 
 /**
-*获取指定应用程序的图标作为PNG数据。
-*
-* @param client要使用的已连接sbservices客户端。
-* @param bundleId要为其检索图标的应用程序的捆绑标识符。
-* @param pngdata指向新分配缓冲区的指针
-*成功返回后包含PNG数据。 由来电者决定
-*释放内存。
-* @param pngsize指向uint64_t的指针，该指针将设置为
-*缓冲区pngdata成功返回时指向。
-*
-* @成功返回SBSERVICES_E_SUCCESS，当返回SBSERVICES_E_INVALID_ARG
-*客户端，bundleId或pngdata无效，或SBSERVICES_E_ *错误
-*否则为代码。
-*/
+ * Get the icon of the specified app as PNG data.
+ *
+ * @param client The connected sbservices client to use.
+ * @param bundleId The bundle identifier of the app to retrieve the icon for.
+ * @param pngdata Pointer that will point to a newly allocated buffer
+ *     containing the PNG data upon successful return. It is up to the caller
+ *     to free the memory.
+ * @param pngsize Pointer to a uint64_t that will be set to the size of the
+ *     buffer pngdata points to upon successful return.
+ *
+ * @return SBSERVICES_E_SUCCESS on success, SBSERVICES_E_INVALID_ARG when
+ *     client, bundleId, or pngdata are invalid, or an SBSERVICES_E_* error
+ *     code otherwise.
+ */
 sbservices_error_t sbservices_get_icon_pngdata(sbservices_client_t client, const char *bundleId, char **pngdata, uint64_t *pngsize);
 
 /**
@@ -154,19 +154,19 @@ sbservices_error_t sbservices_get_icon_pngdata(sbservices_client_t client, const
 sbservices_error_t sbservices_get_interface_orientation(sbservices_client_t client, sbservices_interface_orientation_t* interface_orientation);
 
 /**
-*获取主屏幕墙纸作为PNG数据。
-*
-* @param client要使用的已连接sbservices客户端。
-* @param pngdata指向新分配缓冲区的指针
-*成功返回后包含PNG数据。 由来电者决定
-*释放内存。
-* @param pngsize指向uint64_t的指针，该指针将设置为
-*缓冲区pngdata成功返回时指向。
-*
-* @成功返回SBSERVICES_E_SUCCESS，当返回SBSERVICES_E_INVALID_ARG
-*客户端或pngdata无效，或SBSERVICES_E_ *错误
-*否则为代码。
-*/
+ * Get the home screen wallpaper as PNG data.
+ *
+ * @param client The connected sbservices client to use.
+ * @param pngdata Pointer that will point to a newly allocated buffer
+ *     containing the PNG data upon successful return. It is up to the caller
+ *     to free the memory.
+ * @param pngsize Pointer to a uint64_t that will be set to the size of the
+ *     buffer pngdata points to upon successful return.
+ *
+ * @return SBSERVICES_E_SUCCESS on success, SBSERVICES_E_INVALID_ARG when
+ *     client or pngdata are invalid, or an SBSERVICES_E_* error
+ *     code otherwise.
+ */
 sbservices_error_t sbservices_get_home_screen_wallpaper_pngdata(sbservices_client_t client, char **pngdata, uint64_t *pngsize);
 
 #ifdef __cplusplus

@@ -53,32 +53,32 @@ typedef void (*syslog_relay_receive_cb_t)(char c, void *user_data);
 /* Interface */
 
 /**
-*连接到指定设备上的syslog_relay服务。
-*
-* @param device要连接的设备。
-* @param service lockdownd_start_service返回的服务描述符。
-* @param client指向新分配的客户端的指针
-* syslog_relay_client_t成功返回后。 必须使用释放
-*使用后为syslog_relay_client_free（）。
-*
-* @成功返回SYSLOG_RELAY_E_SUCCESS，当成功时返回SYSLOG_RELAY_E_INVALID_ARG
-* client为NULL，否则为SYSLOG_RELAY_E_ *错误代码。
-*/
+ * Connects to the syslog_relay service on the specified device.
+ *
+ * @param device The device to connect to.
+ * @param service The service descriptor returned by lockdownd_start_service.
+ * @param client Pointer that will point to a newly allocated
+ *     syslog_relay_client_t upon successful return. Must be freed using
+ *     syslog_relay_client_free() after use.
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success, SYSLOG_RELAY_E_INVALID_ARG when
+ *     client is NULL, or an SYSLOG_RELAY_E_* error code otherwise.
+ */
 syslog_relay_error_t syslog_relay_client_new(idevice_t device, lockdownd_service_descriptor_t service, syslog_relay_client_t * client);
 
 /**
-*在指定的设备上启动新的syslog_relay服务并连接到它。
-*
-* @param device要连接的设备。
-* @param client指向新分配的客户端的指针
-* syslog_relay_client_t成功返回后。 必须使用释放
-*使用后为syslog_relay_client_free（）。
-* @param标签用于通信的标签。 通常是程序名称。
-*传递NULL以禁用将标签发送到lockdownd的请求中。
-*
-* @成功返回SYSLOG_RELAY_E_SUCCESS，否则返回SYSLOG_RELAY_E_ *错误
-*否则为代码。
-*/
+ * Starts a new syslog_relay service on the specified device and connects to it.
+ *
+ * @param device The device to connect to.
+ * @param client Pointer that will point to a newly allocated
+ *     syslog_relay_client_t upon successful return. Must be freed using
+ *     syslog_relay_client_free() after use.
+ * @param label The label to use for communication. Usually the program name.
+ *  Pass NULL to disable sending the label in requests to lockdownd.
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success, or an SYSLOG_RELAY_E_* error
+ *     code otherwise.
+ */
 syslog_relay_error_t syslog_relay_client_start_service(idevice_t device, syslog_relay_client_t * client, const char* label);
 
 /**
@@ -93,21 +93,20 @@ syslog_relay_error_t syslog_relay_client_start_service(idevice_t device, syslog_
 syslog_relay_error_t syslog_relay_client_free(syslog_relay_client_t client);
 
 
-
 /**
-  *开始使用回调捕获设备的系统日志。
-  *
-  *使用syslog_relay_stop_capture（）停止接收syslog。
-  *
-  * @param client要使用的syslog_relay客户端
-  * @param callback回调以从syslog接收每个字符。
-  * @param user_data传递给回调函数的自定义指针。
-  *
-  * @成功返回SYSLOG_RELAY_E_SUCCESS，
-  *当一个或多个参数为SYSLOG_RELAY_E_INVALID_ARG
-  *未指定时无效或SYSLOG_RELAY_E_UNKNOWN_ERROR
-  *发生错误或系统日志捕获已开始。
-  */
+ * Starts capturing the syslog of the device using a callback.
+ *
+ * Use syslog_relay_stop_capture() to stop receiving the syslog.
+ *
+ * @param client The syslog_relay client to use
+ * @param callback Callback to receive each character from the syslog.
+ * @param user_data Custom pointer passed to the callback function.
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success,
+ *      SYSLOG_RELAY_E_INVALID_ARG when one or more parameters are
+ *      invalid or SYSLOG_RELAY_E_UNKNOWN_ERROR when an unspecified
+ *      error occurs or a syslog capture has already been started.
+ */
 syslog_relay_error_t syslog_relay_start_capture(syslog_relay_client_t client, syslog_relay_receive_cb_t callback, void* user_data);
 
 /**
@@ -132,50 +131,50 @@ syslog_relay_error_t syslog_relay_start_capture(syslog_relay_client_t client, sy
 syslog_relay_error_t syslog_relay_start_capture_raw(syslog_relay_client_t client, syslog_relay_receive_cb_t callback, void* user_data);
 
 /**
-  *停止捕获设备的系统日志。
-  *
-  *使用syslog_relay_start_capture（）开始接收系统日志。
-  *
-  * @param client要使用的syslog_relay客户端
-  *
-  * @成功返回SYSLOG_RELAY_E_SUCCESS，
-  *当一个或多个参数为SYSLOG_RELAY_E_INVALID_ARG
-  *未指定时无效或SYSLOG_RELAY_E_UNKNOWN_ERROR
-  *发生错误或系统日志捕获已开始。
-  */
+ * Stops capturing the syslog of the device.
+ *
+ * Use syslog_relay_start_capture() to start receiving the syslog.
+ *
+ * @param client The syslog_relay client to use
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success,
+ *      SYSLOG_RELAY_E_INVALID_ARG when one or more parameters are
+ *      invalid or SYSLOG_RELAY_E_UNKNOWN_ERROR when an unspecified
+ *      error occurs or a syslog capture has already been started.
+ */
 syslog_relay_error_t syslog_relay_stop_capture(syslog_relay_client_t client);
 
 /* Receiving */
 
 /**
-*使用给定的syslog_relay客户端以指定的超时时间接收数据。
-*
-* @param客户端用于接收的syslog_relay客户端
-* @param data缓冲区，将使用接收到的数据填充
-* @param size接收的字节数
-* @param收到的字节数（可以为NULL忽略）
-* @param timeout等待数据的最长时间（以毫秒为单位）。
-*
-* @成功返回SYSLOG_RELAY_E_SUCCESS，
-*当一个或多个参数为SYSLOG_RELAY_E_INVALID_ARG
-*无效，发生通信错误时，SYSLOG_RELAY_E_MUX_ERROR
-*发生，或者当未指定时发生SYSLOG_RELAY_E_UNKNOWN_ERROR
-*发生错误。
-*/
+ * Receives data using the given syslog_relay client with specified timeout.
+ *
+ * @param client The syslog_relay client to use for receiving
+ * @param data Buffer that will be filled with the data received
+ * @param size Number of bytes to receive
+ * @param received Number of bytes received (can be NULL to ignore)
+ * @param timeout Maximum time in milliseconds to wait for data.
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success,
+ *      SYSLOG_RELAY_E_INVALID_ARG when one or more parameters are
+ *      invalid, SYSLOG_RELAY_E_MUX_ERROR when a communication error
+ *      occurs, or SYSLOG_RELAY_E_UNKNOWN_ERROR when an unspecified
+ *      error occurs.
+ */
 syslog_relay_error_t syslog_relay_receive_with_timeout(syslog_relay_client_t client, char *data, uint32_t size, uint32_t *received, unsigned int timeout);
 
 /**
-  *从服务接收数据。
-  *
-  * @param客户端syslog_relay客户端
-  * @param data缓冲区，将使用接收到的数据填充
-  * @param size接收的字节数
-  * @param收到的字节数（可以为NULL忽略）
-  * @param timeout等待数据的最长时间（以毫秒为单位）。
-  *
-  * @成功返回SYSLOG_RELAY_E_SUCCESS，
-  *当客户端或plist为NULL时为SYSLOG_RELAY_E_INVALID_ARG
-  */
+ * Receives data from the service.
+ *
+ * @param client The syslog_relay client
+ * @param data Buffer that will be filled with the data received
+ * @param size Number of bytes to receive
+ * @param received Number of bytes received (can be NULL to ignore)
+ * @param timeout Maximum time in milliseconds to wait for data.
+ *
+ * @return SYSLOG_RELAY_E_SUCCESS on success,
+ *  SYSLOG_RELAY_E_INVALID_ARG when client or plist is NULL
+ */
 syslog_relay_error_t syslog_relay_receive(syslog_relay_client_t client, char *data, uint32_t size, uint32_t *received);
 
 #ifdef __cplusplus

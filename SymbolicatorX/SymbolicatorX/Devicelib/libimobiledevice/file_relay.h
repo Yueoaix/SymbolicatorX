@@ -50,33 +50,32 @@ typedef struct file_relay_client_private file_relay_client_private;
 typedef file_relay_client_private *file_relay_client_t; /**< The client handle. */
 
 /**
-*连接到指定设备上的file_relay服务。
-*
-* @param device要连接的设备。
-* @param service lockdownd_start_service返回的服务描述符。
-* @param client引用将指向新分配的
-*成功返回后的file_relay_client_t。
-*
-* @成功返回FILE_RELAY_E_SUCCESS，
-*当其中一个参数无效时，FILE_RELAY_E_INVALID_ARG
-*或FILE_RELAY_E_MUX_ERROR，当连接失败时。
-*/
+ * Connects to the file_relay service on the specified device.
+ *
+ * @param device The device to connect to.
+ * @param service The service descriptor returned by lockdownd_start_service.
+ * @param client Reference that will point to a newly allocated
+ *     file_relay_client_t upon successful return.
+ *
+ * @return FILE_RELAY_E_SUCCESS on success,
+ *     FILE_RELAY_E_INVALID_ARG when one of the parameters is invalid,
+ *     or FILE_RELAY_E_MUX_ERROR when the connection failed.
+ */
 file_relay_error_t file_relay_client_new(idevice_t device, lockdownd_service_descriptor_t service, file_relay_client_t *client);
 
-
 /**
-  *在指定的设备上启动新的file_relay服务并连接到它。
-  *
-  * @param device要连接的设备。
-  * @param client指向新分配的客户端的指针
-  *成功返回后的file_relay_client_t。 必须使用释放
-  * file_relay_client_free（）使用后。
-  * @param标签用于通信的标签。 通常是程序名称。
-  *传递NULL以禁用将标签发送到lockdownd的请求中。
-  *
-  * @成功返回FILE_RELAY_E_SUCCESS或FILE_RELAY_E_ *错误
-  *否则为代码。
-  */
+ * Starts a new file_relay service on the specified device and connects to it.
+ *
+ * @param device The device to connect to.
+ * @param client Pointer that will point to a newly allocated
+ *     file_relay_client_t upon successful return. Must be freed using
+ *     file_relay_client_free() after use.
+ * @param label The label to use for communication. Usually the program name.
+ *  Pass NULL to disable sending the label in requests to lockdownd.
+ *
+ * @return FILE_RELAY_E_SUCCESS on success, or an FILE_RELAY_E_* error
+ *     code otherwise.
+ */
 file_relay_error_t file_relay_client_start_service(idevice_t device, file_relay_client_t* client, const char* label);
 
 /**
@@ -94,68 +93,68 @@ file_relay_error_t file_relay_client_free(file_relay_client_t client);
 
 
 /**
- *请求给定来源的数据。
+ * Request data for the given sources.
  *
- * @param client连接的file_relay客户端。
- * @param sources一个以NULL结尾的源列表。
- *有效来源是：
- *-Apple支持
- *-网络
- *-VPN
- *     - 无线上网
- *-UserDatabases
- *-CrashReporter
- *-tmp
- *     - 系统配置
- * @param connection必须用于接收
- *使用idevice_connection_receive（）的数据。连接将关闭
- *由设备自动执行，但使用file_relay_client_free（）进行清理
- *正确地。
- * @param timeout等待数据的最长时间（以毫秒为单位）。
+ * @param client The connected file_relay client.
+ * @param sources A NULL-terminated list of sources to retrieve.
+ *     Valid sources are:
+ *     - AppleSupport
+ *     - Network
+ *     - VPN
+ *     - WiFi
+ *     - UserDatabases
+ *     - CrashReporter
+ *     - tmp
+ *     - SystemConfiguration
+ * @param connection The connection that has to be used for receiving the
+ *     data using idevice_connection_receive(). The connection will be closed
+ *     automatically by the device, but use file_relay_client_free() to clean
+ *     up properly.
+ * @param timeout Maximum time in milliseconds to wait for data.
  *
- * @note警告：请勿在未读取数据的情况下调用此函数。
- *用于创建档案的目录mobile_file_relay.XXXX将
- *否则保留在/ tmp目录中。
+ * @note WARNING: Don't call this function without reading the data afterwards.
+ *     A directory mobile_file_relay.XXXX used for creating the archive will
+ *     remain in the /tmp directory otherwise.
  *
- * @成功返回FILE_RELAY_E_SUCCESS，如果返回一个或多个，则返回FILE_RELAY_E_INVALID_ARG
- *更多参数无效，如果进行通信，则FILE_RELAY_E_MUX_ERROR
- *接收到的结果为NULL时发生错误，FILE_RELAY_E_PLIST_ERROR
- *或不是有效的plist，如果一个或多个，则为FILE_RELAY_E_INVALID_SOURCE
- *来源无效，如果没有可用数据，则为FILE_RELAY_E_STAGING_EMPTY
- *为给定的源，否则为FILE_RELAY_E_UNKNOWN_ERROR。
+ * @return FILE_RELAY_E_SUCCESS on succes, FILE_RELAY_E_INVALID_ARG when one or
+ *     more parameters are invalid, FILE_RELAY_E_MUX_ERROR if a communication
+ *     error occurs, FILE_RELAY_E_PLIST_ERROR when the received result is NULL
+ *     or is not a valid plist, FILE_RELAY_E_INVALID_SOURCE if one or more
+ *     sources are invalid, FILE_RELAY_E_STAGING_EMPTY if no data is available
+ *     for the given sources, or FILE_RELAY_E_UNKNOWN_ERROR otherwise.
  */
 file_relay_error_t file_relay_request_sources(file_relay_client_t client, const char **sources, idevice_connection_t *connection);
 
 /**
- *请求给定来源的数据。用以下命令调用file_relay_request_sources_timeout（）
- * 60000毫秒（60秒）的超时。
+ * Request data for the given sources. Calls file_relay_request_sources_timeout() with
+ * a timeout of 60000 milliseconds (60 seconds).
  *
- * @param client连接的file_relay客户端。
- * @param sources一个以NULL结尾的源列表。
- *有效来源是：
- *-Apple支持
- *-网络
- *-VPN
- *     - 无线上网
- *-UserDatabases
- *-CrashReporter
- *-tmp
- *     - 系统配置
- * @param connection必须用于接收
- *使用idevice_connection_receive（）的数据。连接将关闭
- *由设备自动执行，但使用file_relay_client_free（）进行清理
- *正确地。
+ * @param client The connected file_relay client.
+ * @param sources A NULL-terminated list of sources to retrieve.
+ *     Valid sources are:
+ *     - AppleSupport
+ *     - Network
+ *     - VPN
+ *     - WiFi
+ *     - UserDatabases
+ *     - CrashReporter
+ *     - tmp
+ *     - SystemConfiguration
+ * @param connection The connection that has to be used for receiving the
+ *     data using idevice_connection_receive(). The connection will be closed
+ *     automatically by the device, but use file_relay_client_free() to clean
+ *     up properly.
  *
- * @note警告：请勿在未读取数据的情况下调用此函数。
- *用于创建档案的目录mobile_file_relay.XXXX将
- *否则保留在/ tmp目录中。
+ * @note WARNING: Don't call this function without reading the data afterwards.
+ *     A directory mobile_file_relay.XXXX used for creating the archive will
+ *     remain in the /tmp directory otherwise.
  *
- * @成功返回FILE_RELAY_E_SUCCESS，如果返回一个或多个，则返回FILE_RELAY_E_INVALID_ARG
- *更多参数无效，如果进行通信，则FILE_RELAY_E_MUX_ERROR
- *接收到的结果为NULL时发生错误，FILE_RELAY_E_PLIST_ERROR
- *或不是有效的plist，如果一个或多个，则为FILE_RELAY_E_INVALID_SOURCE
- *来源无效，如果没有可用数据，则为FILE_RELAY_E_STAGING_EMPTY
- *为给定的源，否则为FILE_RELAY_E_UNKNOWN_ERROR。
+ * @return FILE_RELAY_E_SUCCESS on succes, FILE_RELAY_E_INVALID_ARG when one or
+ *     more parameters are invalid, FILE_RELAY_E_MUX_ERROR if a communication
+ *     error occurs, FILE_RELAY_E_PLIST_ERROR when the received result is NULL
+ *     or is not a valid plist, FILE_RELAY_E_INVALID_SOURCE if one or more
+ *     sources are invalid, FILE_RELAY_E_STAGING_EMPTY if no data is available
+ *     for the given sources, or FILE_RELAY_E_UNKNOWN_ERROR otherwise.
  */
 file_relay_error_t file_relay_request_sources_timeout(file_relay_client_t client, const char **sources, idevice_connection_t *connection, unsigned int timeout);
 

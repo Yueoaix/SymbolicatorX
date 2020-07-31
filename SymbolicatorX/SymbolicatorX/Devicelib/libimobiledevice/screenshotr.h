@@ -51,20 +51,20 @@ typedef screenshotr_client_private *screenshotr_client_t; /**< The client handle
 
 
 /**
-*连接到指定设备上的屏幕快照程序服务。
-*
-* @param device要连接的设备。
-* @param service lockdownd_start_service返回的服务描述符。
-* @param客户端指针，它将设置为新分配的
-*成功返回后的screenshotr_client_t。
-*
-* @note仅当开发者磁盘映像已被使用时，此服务才可用
-*已安装。
-*
-* @成功返回SCREENSHOTR_E_SUCCESS，如果返回一个，则返回SCREENSHOTR_E_INVALID ARG
-*或更多参数无效，或者如果SCREENSHOTR_E_CONN_FAILED
-*无法建立与设备的连接。
-*/
+ * Connects to the screenshotr service on the specified device.
+ *
+ * @param device The device to connect to.
+ * @param service The service descriptor returned by lockdownd_start_service.
+ * @param client Pointer that will be set to a newly allocated
+ *     screenshotr_client_t upon successful return.
+ *
+ * @note This service is only available if a developer disk image has been
+ *     mounted.
+ *
+ * @return SCREENSHOTR_E_SUCCESS on success, SCREENSHOTR_E_INVALID ARG if one
+ *     or more parameters are invalid, or SCREENSHOTR_E_CONN_FAILED if the
+ *     connection to the device could not be established.
+ */
 screenshotr_error_t screenshotr_client_new(idevice_t device, lockdownd_service_descriptor_t service, screenshotr_client_t * client);
 
 /**
@@ -95,19 +95,19 @@ screenshotr_error_t screenshotr_client_free(screenshotr_client_t client);
 
 
 /**
-*从连接的设备获取屏幕截图。
-*
-* @param client连接截图服务客户端。
-* @param imgdata指向新分配的缓冲区的指针
-*成功返回后包含TIFF图像数据。 这取决于
-*调用方释放内存。
-* @param imgsize指向uint64_t的指针，该指针将设置为
-*缓冲区imgdata成功返回时指向。
-*
-* @成功返回SCREENSHOTR_E_SUCCESS，如果成功则返回SCREENSHOTR_E_INVALID_ARG
-*一个或多个参数无效，如果一个或多个参数无效，则另一个错误代码
-*     错误发生。
-*/
+ * Get a screen shot from the connected device.
+ *
+ * @param client The connection screenshotr service client.
+ * @param imgdata Pointer that will point to a newly allocated buffer
+ *     containing TIFF image data upon successful return. It is up to the
+ *     caller to free the memory.
+ * @param imgsize Pointer to a uint64_t that will be set to the size of the
+ *     buffer imgdata points to upon successful return.
+ *
+ * @return SCREENSHOTR_E_SUCCESS on success, SCREENSHOTR_E_INVALID_ARG if
+ *     one or more parameters are invalid, or another error code if an
+ *     error occurred.
+ */
 screenshotr_error_t screenshotr_take_screenshot(screenshotr_client_t client, char **imgdata, uint64_t *imgsize);
 
 #ifdef __cplusplus

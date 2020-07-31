@@ -130,139 +130,140 @@ afc_error_t afc_client_start_service(idevice_t device, afc_client_t* client, con
 afc_error_t afc_client_free(afc_client_t client);
 
 /**
-*获取已连接客户端的设备信息。 设备信息
-*返回的是设备型号以及可用空间，总容量
-*并在访问的磁盘分区上块化。
-*
-* @param client为其获取设备信息的客户端。
-* @param device_information设备信息的字符列表，以空字符串或NULL（如果有错误）终止。 免费与
-* afc_dictionary_free（）。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Get device information for a connected client. The device information
+ * returned is the device model as well as the free space, the total capacity
+ * and blocksize on the accessed disk partition.
+ *
+ * @param client The client to get device info for.
+ * @param device_information A char list of device information terminated by an
+ *        empty string or NULL if there was an error. Free with
+ *        afc_dictionary_free().
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_get_device_info(afc_client_t client, char ***device_information);
 
 /**
-*获取所请求目录的目录列表。
-*
-* @param client从中获取目录列表的客户端。
-* @param path列出目录。 （必须是完全合格的路径）
-* @param directory_information目录中文件的字符列表
-*以空字符串终止，如果有错误，则以NULL终止。 免费与
-* afc_dictionary_free（）。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Gets a directory listing of the directory requested.
+ *
+ * @param client The client to get a directory listing from.
+ * @param path The directory for listing. (must be a fully-qualified path)
+ * @param directory_information A char list of files in the directory
+ *        terminated by an empty string or NULL if there was an error. Free with
+ *        afc_dictionary_free().
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_read_directory(afc_client_t client, const char *path, char ***directory_information);
 
 /**
-*获取有关特定文件的信息。
-*
-* @param client用于获取文件信息的客户端。
-* @param path文件的标准路径。
-* @param file_information指向将被填充的缓冲区的指针
-*以NULL终止的带有文件信息的字符串列表。 设为NULL
-*在调用此函数之前。 使用afc_dictionary_free（）免费。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Gets information about a specific file.
+ *
+ * @param client The client to use to get the information of the file.
+ * @param path The fully-qualified path to the file.
+ * @param file_information Pointer to a buffer that will be filled with a
+ *        NULL-terminated list of strings with the file information. Set to NULL
+ *        before calling this function. Free with afc_dictionary_free().
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_get_file_info(afc_client_t client, const char *path, char ***file_information);
 
 /**
-*在设备上打开文件。
-*
-* @param client用于打开文件的客户端。
-* @param filename要打开的文件。 （必须是完全合格的路径）
-* @param file_mode用于打开文件的模式。
-* @param handle指向将保存文件句柄的uint64_t的指针
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Opens a file on the device.
+ *
+ * @param client The client to use to open the file.
+ * @param filename The file to open. (must be a fully-qualified path)
+ * @param file_mode The mode to use to open the file.
+ * @param handle Pointer to a uint64_t that will hold the handle of the file
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_file_open(afc_client_t client, const char *filename, afc_file_mode_t file_mode, uint64_t *handle);
 
 /**
-*关闭设备上的文件。
-*
-* @param client客户端用来关闭文件的客户端。
-* @param handle先前打开的文件的文件句柄。
-*/
+ * Closes a file on the device.
+ *
+ * @param client The client to close the file with.
+ * @param handle File handle of a previously opened file.
+ */
 afc_error_t afc_file_close(afc_client_t client, uint64_t handle);
 
 /**
-*锁定或解锁设备上的文件。
-*
-*利用设备上的群集。
-* @请参阅http://developer.apple.com/documentation/Darwin/Reference/ManPages/man2/flock.2.html
-*
-* @param client用来锁定文件的客户端。
-* @param handle先前打开的文件的文件句柄。
-* @param操作执行锁定或解锁操作，这是其中之一
-* AFC_LOCK_SH（共享锁），AFC_LOCK_EX（排他锁）或
-* AFC_LOCK_UN（解锁）。
-*/
+ * Locks or unlocks a file on the device.
+ *
+ * Makes use of flock on the device.
+ * @see http://developer.apple.com/documentation/Darwin/Reference/ManPages/man2/flock.2.html
+ *
+ * @param client The client to lock the file with.
+ * @param handle File handle of a previously opened file.
+ * @param operation the lock or unlock operation to perform, this is one of
+ *        AFC_LOCK_SH (shared lock), AFC_LOCK_EX (exclusive lock), or
+ *        AFC_LOCK_UN (unlock).
+ */
 afc_error_t afc_file_lock(afc_client_t client, uint64_t handle, afc_lock_op_t operation);
 
 /**
-*尝试从给定文件中读取给定数目的字节。
-*
-* @param客户相关的AFC客户
-* @param handle先前打开的文件的文件句柄
-* @param data指向存储读取数据的存储区域的指针
-* @param length要读取的字节数
-* @param bytes_read实际读取的字节数。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Attempts to the read the given number of bytes from the given file.
+ *
+ * @param client The relevant AFC client
+ * @param handle File handle of a previously opened file
+ * @param data The pointer to the memory region to store the read data
+ * @param length The number of bytes to read
+ * @param bytes_read The number of bytes actually read.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_file_read(afc_client_t client, uint64_t handle, char *data, uint32_t length, uint32_t *bytes_read);
 
 /**
-*将给定数量的字节写入文件。
-*
-* @param client用于写入文件的客户端。
-* @param handle先前打开的文件的文件句柄。
-* @param data要写入文件的数据。
-* @param length要写入多少数据。
-* @param bytes_write实际写入文件的字节数。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Writes a given number of bytes to a file.
+ *
+ * @param client The client to use to write to the file.
+ * @param handle File handle of previously opened file.
+ * @param data The data to write to the file.
+ * @param length How much data to write.
+ * @param bytes_written The number of bytes actually written to the file.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_file_write(afc_client_t client, uint64_t handle, const char *data, uint32_t length, uint32_t *bytes_written);
 
 /**
-*寻找设备上预打开文件的给定位置。
-*
-* @param client客户用来寻找职位的客户。
-* @param handle先前打开的文件句柄。
-* @param offset寻找偏移量。
-* @param wherece寻求方向，SEEK_SET，SEEK_CUR或SEEK_END之一。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Seeks to a given position of a pre-opened file on the device.
+ *
+ * @param client The client to use to seek to the position.
+ * @param handle File handle of a previously opened.
+ * @param offset Seek offset.
+ * @param whence Seeking direction, one of SEEK_SET, SEEK_CUR, or SEEK_END.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_file_seek(afc_client_t client, uint64_t handle, int64_t offset, int whence);
 
 /**
-*返回设备上预打开文件中的当前位置。
-*
-* @param client要使用的客户端。
-* @param handle先前打开的文件的文件句柄。
-* @param position指标的位置（以字节为单位）
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Returns current position in a pre-opened file on the device.
+ *
+ * @param client The client to use.
+ * @param handle File handle of a previously opened file.
+ * @param position Position in bytes of indicator
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_file_tell(afc_client_t client, uint64_t handle, uint64_t *position);
 
 /**
-*设置设备上文件的大小。
-*
-* @param client用于设置文件大小的客户端。
-* @param handle先前打开的文件的文件句柄。
-* @param newsize设置文件的大小。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*
-* @note此函数类似于ftruncate而不是truncate和truncate
-*可悲的是，调用之前必须先打开文件。
-*/
+ * Sets the size of a file on the device.
+ *
+ * @param client The client to use to set the file size.
+ * @param handle File handle of a previously opened file.
+ * @param newsize The size to set the file to.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ *
+ * @note This function is more akin to ftruncate than truncate, and truncate
+ *       calls would have to open the file before calling this, sadly.
+ */
 afc_error_t afc_file_truncate(afc_client_t client, uint64_t handle, uint64_t newsize);
 
 /**
@@ -298,37 +299,37 @@ afc_error_t afc_rename_path(afc_client_t client, const char *from, const char *t
 afc_error_t afc_make_directory(afc_client_t client, const char *path);
 
 /**
-*设置设备上文件的大小，而无需先打开它。
-*
-* @param client用于设置文件大小的客户端。
-* @param path要截断的文件的路径。
-* @param newsize设置文件的大小。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Sets the size of a file on the device without prior opening it.
+ *
+ * @param client The client to use to set the file size.
+ * @param path The path of the file to be truncated.
+ * @param newsize The size to set the file to.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_truncate(afc_client_t client, const char *path, uint64_t newsize);
 
 /**
-*在设备上创建硬链接或符号链接。
-*
-* @param client用来建立链接的客户端
-* @param链接类型1 =硬链接，2 =符号链接
-* @param target要链接的文件。
-* @param linkname链接的名称。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Creates a hard link or symbolic link on the device.
+ *
+ * @param client The client to use for making a link
+ * @param linktype 1 = hard link, 2 = symlink
+ * @param target The file to be linked.
+ * @param linkname The name of link.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_make_link(afc_client_t client, afc_link_type_t linktype, const char *target, const char *linkname);
 
 /**
-*设置设备上文件的修改时间。
-*
-* @param client用于设置文件大小的客户端。
-* @param path应该设置修改时间的文件的路径。
-* @param mtime修改时间，自纪元以来以纳秒为单位设置。
-*
-* @成功返回AFC_E_SUCCESS或错误值AFC_E_ *。
-*/
+ * Sets the modification time of a file on the device.
+ *
+ * @param client The client to use to set the file size.
+ * @param path Path of the file for which the modification time should be set.
+ * @param mtime The modification time to set in nanoseconds since epoch.
+ *
+ * @return AFC_E_SUCCESS on success or an AFC_E_* error value.
+ */
 afc_error_t afc_set_file_time(afc_client_t client, const char *path, uint64_t mtime);
 
 /**

@@ -95,81 +95,81 @@ house_arrest_error_t house_arrest_client_free(house_arrest_client_t client);
 
 
 /**
-*向连接的house_arrest服务发送一般请求。
-*
-* @param client要使用的house_arrest客户端。
-* @param dict以PLIST_DICT类型的plist发送的请求。
-*
-* @note如果此函数返回HOUSE_ARREST_E_SUCCESS，则并不表示
-*请求成功。 要检查成功或失败，您
-*需要调用house_arrest_get_result（）。
-* @see house_arrest_get_result
-*
-* @返回HOUSE_ARREST_E_SUCCESS，如果请求已成功发送，
-* HOUSE_ARREST_E_INVALID_ARG如果客户端或字典无效，
-* HOUSE_ARREST_E_PLIST_ERROR，如果dict不是PLIST_DICT类型的plist，
-* HOUSE_ARREST_E_INVALID_MODE如果客户端未处于正确模式，
-*或HOUSE_ARREST_E_CONN_FAILED（如果发生连接错误）。
-*/
+ * Sends a generic request to the connected house_arrest service.
+ *
+ * @param client The house_arrest client to use.
+ * @param dict The request to send as a plist of type PLIST_DICT.
+ *
+ * @note If this function returns HOUSE_ARREST_E_SUCCESS it does not mean
+ *     that the request was successful. To check for success or failure you
+ *     need to call house_arrest_get_result().
+ * @see house_arrest_get_result
+ *
+ * @return HOUSE_ARREST_E_SUCCESS if the request was successfully sent,
+ *     HOUSE_ARREST_E_INVALID_ARG if client or dict is invalid,
+ *     HOUSE_ARREST_E_PLIST_ERROR if dict is not a plist of type PLIST_DICT,
+ *     HOUSE_ARREST_E_INVALID_MODE if the client is not in the correct mode,
+ *     or HOUSE_ARREST_E_CONN_FAILED if a connection error occurred.
+ */
 house_arrest_error_t house_arrest_send_request(house_arrest_client_t client, plist_t dict);
 
 /**
-*向连接的house_arrest服务发送命令。
-*内部调用house_arrest_send_request（）。
-*
-* @param client要使用的house_arrest客户端。
-* @param命令发送的命令。 目前，只有VendContainer和
-* VendDocuments是已知的。
-* @param appid与一起传递的应用程序标识符。
-*
-* @note如果此函数返回HOUSE_ARREST_E_SUCCESS，则并不表示
-*命令成功。 要检查成功或失败，您
-*需要调用house_arrest_get_result（）。
-* @see house_arrest_get_result
-*
-* @返回HOUSE_ARREST_E_SUCCESS如果命令已成功发送，
-* HOUSE_ARREST_E_INVALID_ARG如果客户端，命令或appid无效，
-* HOUSE_ARREST_E_INVALID_MODE如果客户端未处于正确模式，
-*或HOUSE_ARREST_E_CONN_FAILED（如果发生连接错误）。
-*/
+ * Send a command to the connected house_arrest service.
+ * Calls house_arrest_send_request() internally.
+ *
+ * @param client The house_arrest client to use.
+ * @param command The command to send. Currently, only VendContainer and
+ *     VendDocuments are known.
+ * @param appid The application identifier to pass along with the .
+ *
+ * @note If this function returns HOUSE_ARREST_E_SUCCESS it does not mean
+ *     that the command was successful. To check for success or failure you
+ *     need to call house_arrest_get_result().
+ * @see house_arrest_get_result
+ *
+ * @return HOUSE_ARREST_E_SUCCESS if the command was successfully sent,
+ *     HOUSE_ARREST_E_INVALID_ARG if client, command, or appid is invalid,
+ *     HOUSE_ARREST_E_INVALID_MODE if the client is not in the correct mode,
+ *     or HOUSE_ARREST_E_CONN_FAILED if a connection error occurred.
+ */
 house_arrest_error_t house_arrest_send_command(house_arrest_client_t client, const char *command, const char *appid);
 
 /**
-*检索先前发送的house_arrest_request_ *请求的结果。
-*
-* @param client使用的house_arrest客户端
-* @param dict指针，该指针将设置为包含结果的plist
-*最后执行的操作。 它具有一个带有值的键“状态”
-*成功时为“完成”，或错误说明为键“ Error”为
-*值。 调用者负责释放返回的plist。
-*
-* @返回HOUSE_ARREST_E_SUCCESS，如果已检索到结果plist，
-* HOUSE_ARREST_E_INVALID_ARG如果客户端无效，
-* HOUSE_ARREST_E_INVALID_MODE如果客户端未处于正确模式，
-*或HOUSE_ARREST_E_CONN_FAILED（如果发生连接错误）。
-*/
+ * Retrieves the result of a previously sent house_arrest_request_* request.
+ *
+ * @param client The house_arrest client to use
+ * @param dict Pointer that will be set to a plist containing the result to
+ *     the last performed operation. It holds a key 'Status' with the value
+ *     'Complete' on success or a key 'Error' with an error description as
+ *     value. The caller is responsible for freeing the returned plist.
+ *
+ * @return HOUSE_ARREST_E_SUCCESS if a result plist was retrieved,
+ *     HOUSE_ARREST_E_INVALID_ARG if client is invalid,
+ *     HOUSE_ARREST_E_INVALID_MODE if the client is not in the correct mode,
+ *     or HOUSE_ARREST_E_CONN_FAILED if a connection error occurred.
+ */
 house_arrest_error_t house_arrest_get_result(house_arrest_client_t client, plist_t *dict);
 
 
 /**
-*使用给定的house_arrest客户端连接创建AFC客户端
-*允许文件访问由其请求的特定应用程序目录
-*函数，例如house_arrest_request_vendor_documents（）。
-*
-* @param client要使用的house_arrest客户端。
-* @param afc_client指针，它将设置为新分配的afc_client_t
-*成功返回后。
-*
-* @note调用此函数后，house_arrest客户端将进入
-*仅允许调用house_arrest_client_free（）的AFC模式。
-*如果所有AFC操作都具有，则仅调用house_arrest_client_free（）
-*已完成，因为它将关闭连接。
-*
-* @返回AFC_E_SUCCESS如果成功创建了afc客户端，
-* AFC_E_INVALID_ARG如果客户端无效或已经用于创建客户端
-* AFC客户端，或AFC_E_ *错误代码，返回
-* afc_client_new_with_service_client（）。
-*/
+ * Creates an AFC client using the given house_arrest client's connection
+ * allowing file access to a specific application directory requested by
+ * functions like house_arrest_request_vendor_documents().
+ *
+ * @param client The house_arrest client to use.
+ * @param afc_client Pointer that will be set to a newly allocated afc_client_t
+ *     upon successful return.
+ *
+ * @note After calling this function the house_arrest client will go in an
+ *     AFC mode that will only allow calling house_arrest_client_free().
+ *     Only call house_arrest_client_free() if all AFC operations have
+ *     completed since it will close the connection.
+ *
+ * @return AFC_E_SUCCESS if the afc client was successfully created,
+ *     AFC_E_INVALID_ARG if client is invalid or was already used to create
+ *     an afc client, or an AFC_E_* error code returned by
+ *     afc_client_new_with_service_client().
+ */
 afc_error_t afc_client_new_from_house_arrest_client(house_arrest_client_t client, afc_client_t *afc_client);
 
 #ifdef __cplusplus

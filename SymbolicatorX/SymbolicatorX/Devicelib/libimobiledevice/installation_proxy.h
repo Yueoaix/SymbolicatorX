@@ -173,29 +173,22 @@ instproxy_error_t instproxy_client_free(instproxy_client_t client);
 instproxy_error_t instproxy_browse(instproxy_client_t client, plist_t client_options, plist_t *result);
 
 /**
-*在设备上安装应用程序。
-*
-* @param客户端已连接的installation_proxy客户端
-* @param pkg_path安装包的路径（在AFC监狱内）
-* @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-*有效选项包括：
-*“ iTunesMetadata”-> PLIST_DATA
-*“ ApplicationSINF”-> PLIST_DATA
-*“ PackageType”->“开发人员”
-*如果指定了PackageType-> Developer，则pkg_path指向
-* .app目录而不是安装软件包。
-* @param status_cb用于获取进度和状态信息的回调函数。如果
-*传递NULL，此函数将同步运行。
-* @param user_data回调数据传递给status_cb。
-*
-*如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-*发生错误。
-*
-* @note如果提供了回调函数（异步模式），则此函数返回
-*如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
-*创建成功；在命令执行期间发生的任何错误都必须
-*在指定的回调函数内部处理。
-*/
+ * List pages of installed applications in a callback.
+ *
+ * @param client The connected installation_proxy client
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Valid client options include:
+ *          "ApplicationType" -> "System"
+ *          "ApplicationType" -> "User"
+ *          "ApplicationType" -> "Internal"
+ *          "ApplicationType" -> "Any"
+ * @param status_cb Callback function to process each page of application
+ *        information. Passing a callback is required.
+ * @param user_data Callback data passed to status_cb.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *         an error occurred.
+ */
 instproxy_error_t instproxy_browse_with_callback(instproxy_client_t client, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
 /**
@@ -241,161 +234,157 @@ instproxy_error_t instproxy_lookup(instproxy_client_t client, const char** appid
 instproxy_error_t instproxy_install(instproxy_client_t client, const char *pkg_path, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
 /**
-*升级设备上的应用程序。该功能几乎与
-* instproxy_install;区别在于安装进度
-*如果已安装应用程序，则设备速度更快。
-*
-* @param客户端已连接的installation_proxy客户端
-* @param pkg_path安装包的路径（在AFC监狱内）
-* @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-*有效选项包括：
-*“ iTunesMetadata”-> PLIST_DATA
-*“ ApplicationSINF”-> PLIST_DATA
-*“ PackageType”->“Developer”
-*如果指定了PackageType-> Developer，则pkg_path指向
-* .app目录而不是安装软件包。
-* @param status_cb用于获取进度和状态信息的回调函数。如果
-*传递NULL，此函数将同步运行。
-* @param user_data回调数据传递给status_cb。
-*
-*如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-*发生错误。
-*
-* @note如果提供了回调函数（异步模式），则此函数返回
-*如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
-*创建成功；在命令执行期间发生的任何错误都必须
-*在指定的回调函数内部处理。
-*/
+ * Upgrade an application on the device. This function is nearly the same as
+ * instproxy_install; the difference is that the installation progress on the
+ * device is faster if the application is already installed.
+ *
+ * @param client The connected installation_proxy client
+ * @param pkg_path Path of the installation package (inside the AFC jail)
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Valid options include:
+ *          "iTunesMetadata" -> PLIST_DATA
+ *          "ApplicationSINF" -> PLIST_DATA
+ *          "PackageType" -> "Developer"
+ *        If PackageType -> Developer is specified, then pkg_path points to
+ *        an .app directory instead of an install package.
+ * @param status_cb Callback function for progress and status information. If
+ *        NULL is passed, this function will run synchronously.
+ * @param user_data Callback data passed to status_cb.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *         an error occurred.
+ *
+ * @note If a callback function is given (async mode), this function returns
+ *       INSTPROXY_E_SUCCESS immediately if the status updater thread has been
+ *       created successfully; any error occuring during the command has to be
+ *       handled inside the specified callback function.
+ */
 instproxy_error_t instproxy_upgrade(instproxy_client_t client, const char *pkg_path, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
-/*
-*从设备上卸载应用程序。
-*
-* @param客户端连接的安装代理客户端
-*要卸载的应用程序的@param appid ApplicationIdentifier
-* @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-*当前没有已知的客户端选项，因此在此处传递NULL。
-* @param status_cb用于获取进度和状态信息的回调函数。 如果
-*传递NULL，此函数将同步运行。
-* @param user_data回调数据传递给status_cb。
-*
-*如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-*发生错误。
-*
-* @note如果提供了回调函数（异步模式），则此函数返回
-*如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
-*创建成功； 在命令执行期间发生的任何错误都必须
-*在指定的回调函数内部处理。
-*/
+/**
+ * Uninstall an application from the device.
+ *
+ * @param client The connected installation proxy client
+ * @param appid ApplicationIdentifier of the app to uninstall
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Currently there are no known client options, so pass NULL here.
+ * @param status_cb Callback function for progress and status information. If
+ *        NULL is passed, this function will run synchronously.
+ * @param user_data Callback data passed to status_cb.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *     an error occurred.
+ *
+ * @note If a callback function is given (async mode), this function returns
+ *       INSTPROXY_E_SUCCESS immediately if the status updater thread has been
+ *       created successfully; any error occuring during the command has to be
+ *       handled inside the specified callback function.
+ */
 instproxy_error_t instproxy_uninstall(instproxy_client_t client, const char *appid, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
 /**
-*列出存档的应用程序。 此功能同步运行。
-*
-* @请参阅instproxy_archive
-*
-* @param客户端已连接的installation_proxy客户端
-* @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-*当前没有已知的客户端选项，因此在此处传递NULL。
-* @param结果指针，该指针将设置为包含PLIST_DICT的plist
-*保留有关找到的已归档应用程序的信息。
-*
-*如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-*发生错误。
-*/
+ * List archived applications. This function runs synchronously.
+ *
+ * @see instproxy_archive
+ *
+ * @param client The connected installation_proxy client
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Currently there are no known client options, so pass NULL here.
+ * @param result Pointer that will be set to a plist containing a PLIST_DICT
+ *        holding information about the archived applications found.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *         an error occurred.
+ */
 instproxy_error_t instproxy_lookup_archives(instproxy_client_t client, plist_t client_options, plist_t *result);
 
 /**
-*在设备上存档应用程序。
-*此功能告诉设备将指定的文件存档
-*应用程序。这导致设备在
-*'ApplicationArchives'目录并卸载应用程序。
-*
-* @param客户端连接的安装代理客户端
-* @param appid要存档的应用程序的ApplicationIdentifier。
-* @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-*有效选项包括：
-*“ SkipUninstall”->布尔值
-*“ ArchiveType”->“ ApplicationOnly”
-* @param status_cb用于获取进度和状态信息的回调函数。如果
-*传递NULL，此函数将同步运行。
-* @param user_data回调数据传递给status_cb。
-*
-*如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-*发生错误。
-*
-* @note如果提供了回调函数（异步模式），则此函数返回
-*如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
-*创建成功；在命令执行期间发生的任何错误都必须
-*在指定的回调函数内部处理。
-*/
+ * Archive an application on the device.
+ * This function tells the device to make an archive of the specified
+ * application. This results in the device creating a ZIP archive in the
+ * 'ApplicationArchives' directory and uninstalling the application.
+ *
+ * @param client The connected installation proxy client
+ * @param appid ApplicationIdentifier of the app to archive.
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Valid options include:
+ *          "SkipUninstall" -> Boolean
+ *          "ArchiveType" -> "ApplicationOnly"
+ * @param status_cb Callback function for progress and status information. If
+ *        NULL is passed, this function will run synchronously.
+ * @param user_data Callback data passed to status_cb.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *     an error occurred.
+ *
+ * @note If a callback function is given (async mode), this function returns
+ *       INSTPROXY_E_SUCCESS immediately if the status updater thread has been
+ *       created successfully; any error occuring during the command has to be
+ *       handled inside the specified callback function.
+ */
 instproxy_error_t instproxy_archive(instproxy_client_t client, const char *appid, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
-
 /**
- *在设备上还原以前存档的应用程序。
- *此函数是instproxy_archive的对应函数。
- * @请参阅instproxy_archive
+ * Restore a previously archived application on the device.
+ * This function is the counterpart to instproxy_archive.
+ * @see instproxy_archive
  *
- * @param客户端连接的安装代理客户端
- * @param appid要还原的应用程序的ApplicationIdentifier。
- * @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
- *有效选项包括：
- *“ ArchiveType”->“仅文档”
- * @param status_cb用于获取进度和状态信息的回调函数。如果
- *传递NULL，此函数将同步运行。
- * @param user_data回调数据传递给status_cb。
+ * @param client The connected installation proxy client
+ * @param appid ApplicationIdentifier of the app to restore.
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Valid options include:
+ *          "ArchiveType" -> "DocumentsOnly"
+ * @param status_cb Callback function for progress and status information. If
+ *        NULL is passed, this function will run synchronously.
+ * @param user_data Callback data passed to status_cb.
  *
- *如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
- *发生错误。
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *     an error occurred.
  *
- * @note如果提供了回调函数（异步模式），则此函数返回
- *如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
- *创建成功；在命令执行期间发生的任何错误都必须
- *在指定的回调函数内部处理。
+ * @note If a callback function is given (async mode), this function returns
+ *       INSTPROXY_E_SUCCESS immediately if the status updater thread has been
+ *       created successfully; any error occuring during the command has to be
+ *       handled inside the specified callback function.
  */
 instproxy_error_t instproxy_restore(instproxy_client_t client, const char *appid, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
-
 /**
- *从设备中删除以前存档的应用程序。
- *此功能从“ ApplicationArchives”中删除ZIP存档
- * 目录。
+ * Removes a previously archived application from the device.
+ * This function removes the ZIP archive from the 'ApplicationArchives'
+ * directory.
  *
- * @param客户端连接的安装代理客户端
- * @param appid要删除的已存档应用的ApplicationIdentifier。
- * @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
- *当前没有已知的客户端选项，因此传递NULL即可。
- * @param status_cb用于获取进度和状态信息的回调函数。如果
- *传递NULL，此函数将同步运行。
- * @param user_data回调数据传递给status_cb。
+ * @param client The connected installation proxy client
+ * @param appid ApplicationIdentifier of the archived app to remove.
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Currently there are no known client options, so passing NULL is fine.
+ * @param status_cb Callback function for progress and status information. If
+ *        NULL is passed, this function will run synchronously.
+ * @param user_data Callback data passed to status_cb.
  *
- *如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
- *发生错误。
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *         an error occurred.
  *
- * @note如果提供了回调函数（异步模式），则此函数返回
- *如果状态更新程序线程已被执行，则立即INSTPROXY_E_SUCCESS
- *创建成功；在命令执行期间发生的任何错误都必须
- *在指定的回调函数内部处理。
+ * @note If a callback function is given (async mode), this function returns
+ *       INSTPROXY_E_SUCCESS immediately if the status updater thread has been
+ *       created successfully; any error occuring during the command has to be
+ *       handled inside the specified callback function.
  */
 instproxy_error_t instproxy_remove_archive(instproxy_client_t client, const char *appid, plist_t client_options, instproxy_status_cb_t status_cb, void *user_data);
 
-
-
 /**
-  *检查设备的某些功能。
-  *
-  * @param客户端已连接的installation_proxy客户端
-  * @param功能由功能名称必须具有一个
-  *终止NULL条目。
-  * @param client_options要使用的客户端选项，如PLIST_DICT或NULL。
-  *当前没有已知的客户端选项，因此在此处传递NULL。
-  * @param结果指针，该指针将设置为包含PLIST_DICT的plist
-  *保存信息，如果功能匹配或错误为NULL。
-  *
-  *如果成功则返回INSTPROXY_E_SUCCESS，如果错误则返回INSTPROXY_E_ *错误值
-  *发生错误。
-  */
+ * Checks a device for certain capabilities.
+ *
+ * @param client The connected installation_proxy client
+ * @param capabilities An array of char* with capability names that MUST have a
+ *        terminating NULL entry.
+ * @param client_options The client options to use, as PLIST_DICT, or NULL.
+ *        Currently there are no known client options, so pass NULL here.
+ * @param result Pointer that will be set to a plist containing a PLIST_DICT
+ *        holding information if the capabilities matched or NULL on errors.
+ *
+ * @return INSTPROXY_E_SUCCESS on success or an INSTPROXY_E_* error value if
+ *         an error occurred.
+ */
 instproxy_error_t instproxy_check_capabilities_match(instproxy_client_t client, const char** capabilities, plist_t client_options, plist_t *result);
 
 /* Helper */
@@ -495,17 +484,17 @@ void instproxy_client_options_set_return_attributes(plist_t client_options, ...)
 void instproxy_client_options_free(plist_t client_options);
 
 /**
-*查询设备的应用程序路径。
-*
-* @param客户端连接的安装代理客户端。
-* @param appid要检索其路径的应用程序的ApplicationIdentifier。
-* @param path指针，用于存储应用程序的设备路径
-*如果无法确定，则设置为NULL。
-*
-* @成功返回INSTPROXY_E_SUCCESS，如果成功则返回INSTPROXY_E_OP_FAILED
-*无法确定路径或INSTPROXY_E_ *错误
-*值，如果发生错误。
-*/
+ * Queries the device for the path of an application.
+ *
+ * @param client The connected installation proxy client.
+ * @param appid ApplicationIdentifier of app to retrieve the path for.
+ * @param path Pointer to store the device path for the application
+ *        which is set to NULL if it could not be determined.
+ *
+ * @return INSTPROXY_E_SUCCESS on success, INSTPROXY_E_OP_FAILED if
+ *         the path could not be determined or an INSTPROXY_E_* error
+ *         value if an error occurred.
+ */
 instproxy_error_t instproxy_client_get_path_for_bundle_identifier(instproxy_client_t client, const char* bundle_id, char** path);
 
 #ifdef __cplusplus

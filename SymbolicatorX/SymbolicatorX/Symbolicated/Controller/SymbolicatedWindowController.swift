@@ -111,7 +111,7 @@ extension SymbolicatedWindowController {
     
     private func setupUI() {
         
-        window?.title = "Symbolicated Content"
+        window?.title = "Content"
         contentViewController = textViewController
         
         let toolbar = NSToolbar(identifier: self.className)
