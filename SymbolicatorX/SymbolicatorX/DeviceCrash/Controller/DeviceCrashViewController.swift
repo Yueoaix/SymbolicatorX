@@ -20,41 +20,16 @@ class DeviceCrashViewController: BaseViewController {
     private let textWindowController = SymbolicatedWindowController()
     
     private var afcClient: AfcClient?
-    
     public var crashFileHandle: CrashFileHandler?
-    
-    private var deviceList = [Device]() {
-        willSet {
-            var deviceNameList = [String]()
-            self.deviceList = newValue.filter { (device) -> Bool in
-                
-                guard
-                    var lockdownClient = try? LockdownClient(device: device, withHandshake: false),
-                    let deviceName = try? lockdownClient.getName()
-                else { return false }
-                
-                deviceNameList.append(deviceName)
-                lockdownClient.free()
-                return true
-            }
-            
-            DispatchQueue.main.async {
-                self.devicePopBtn.removeAllItems()
-                self.devicePopBtn.addItems(withTitles: deviceNameList)
-                self.selectLastDevice()
-                self.initAppData()
-            }
-        }
-    }
+    private var disposable: Disposable?
+    private var deviceList = [Device]()
     
     private var appInfoDict = [String:Plist]() {
         didSet {
-            DispatchQueue.main.async {
-                self.appPopBtn.removeAllItems()
-                self.appPopBtn.addItems(withTitles: ["All File"] + self.appInfoDict.keys.sorted())
-                self.selectLastApp()
-                self.initCrashFileData()
-            }
+            self.appPopBtn.removeAllItems()
+            self.appPopBtn.addItems(withTitles: ["All File"] + self.appInfoDict.keys.sorted())
+            self.selectLastApp()
+            self.loadCrashFileData()
         }
     }
     
@@ -75,65 +50,155 @@ class DeviceCrashViewController: BaseViewController {
         super.viewDidLoad()
         // Do view setup here.
         setupUI()
-        initDeviceData()
+        deviceEventSubscribe()
     }
     
     deinit {
+        deviceList.forEach { ( device) in
+            var device = device
+            device.free()
+        }
+        _ = MobileDevice.eventUnsubscribe()
+        disposable?.dispose()
+        afcClient?.free()
         afcClient?.free()
     }
 }
 
-// MARK: - init Data
+// MARK: - Load Data
 extension DeviceCrashViewController {
     
-    private func initDeviceData() {
-        DispatchQueue.global().async {
-            guard let deviceList = try? MobileDevice.getDeviceList().compactMap({ (udid) -> Device? in
-                try? Device(udid: udid)
-            }) else { return }
-            
-            self.deviceList = deviceList
+    private func deviceEventSubscribe() {
+        
+        do {
+            disposable = try MobileDevice.eventSubscribe { [weak self] (event) in
+                
+                guard
+                    let `self` = self,
+                    let udid = event.udid,
+                    let type = event.type,
+                    let connectionType = event.connectionType
+                else {
+                    return
+                }
+                
+                let isExist = self.deviceList.count > 0 && self.deviceList.contains { (device) -> Bool in
+                    let deviceUDID = try? device.getUDID()
+                    return deviceUDID == udid
+                }
+
+                switch type {
+                    
+                case .add:
+                    if !isExist {
+                        self.addDevice(udid: udid, connectionType: connectionType)
+                    }
+                case .remove:
+                    if isExist {
+                        self.removeDevice(udid: udid)
+                    }
+                case .paired:
+                    print("paired udid: \(udid)")
+                    break
+                }
+            }
+        } catch {
+            view.window?.alert(message: error.localizedDescription)
         }
     }
     
-    private func initAppData() {
+    private func addDevice(udid: String, connectionType: ConnectionType) {
+        
+        var option: DeviceLookupOptions = .usbmux
+        if connectionType == .network {
+            option = .network
+        }
+        
+        do {
+            var device = try Device(udid: udid, options: option)
+            var lockdownClient = try LockdownClient(device: device, withHandshake: false)
+            let deviceName = try lockdownClient.getName()
+            device.name = deviceName
+            deviceList.append(device)
+            DispatchQueue.main.async {
+                self.devicePopBtn.addItem(withTitle: deviceName)
+                if self.deviceList.count == 1 {
+                    self.loadAppData()
+                }
+            }
+            lockdownClient.free()
+        } catch {
+            self.view.window?.alert(message: error.localizedDescription)
+        }
+    }
+    
+    private func removeDevice(udid: String) {
+        
+        DispatchQueue.main.async {
+            
+            var isNeedRefresh = false
+            self.deviceList.removeAll { (device) -> Bool in
+                
+                var device = device
+                let deviceUDID = try? device.getUDID()
+                if deviceUDID == udid {
+                    
+                    let deviceName = device.name ?? ""
+                    if self.devicePopBtn.selectedItem?.title == deviceName {
+                        isNeedRefresh = true
+                    }
+                    
+                    self.devicePopBtn.removeItem(withTitle: deviceName)
+                    device.free()
+                    return true
+                }
+                return false
+            }
+            
+            if isNeedRefresh {
+                self.loadAppData()
+            }
+            
+            if self.deviceList.count == 0 {
+                self.clearData()
+            }
+        }
+    }
+    
+    private func loadAppData() {
         
         guard
             deviceList.count > 0,
             devicePopBtn.indexOfSelectedItem < deviceList.count
             else { return }
         let device = deviceList[devicePopBtn.indexOfSelectedItem]
-        lastSelectedDeviceUDID = try? device.getUDID()
         
-        DispatchQueue.global().async {
+        let options = Plist(dictionary: ["ApplicationType":Plist(string: "User")])
+        do {
+            var lockdownClient = try LockdownClient(device: device, withHandshake: true)
+            var installService = try lockdownClient.getService(service: .installationProxy)
+            var install = try InstallationProxy(device: device, service: installService)
+            let appListPlist = try install.browse(options: options)
             
-            let options = Plist(dictionary: ["ApplicationType":Plist(string: "User")])
-            do {
-                var lockdownClient = try LockdownClient(device: device, withHandshake: true)
-                var installService = try lockdownClient.getService(service: .installationProxy)
-                var install = try InstallationProxy(device: device, service: installService)
-                let appListPlist = try install.browse(options: options)
+            var appInfoDict = [String:Plist]()
+            _ = appListPlist.array?.map({ (appInfoItem) -> Plist in
                 
-                var appInfoDict = [String:Plist]()
-                _ = appListPlist.array?.map({ (appInfoItem) -> Plist in
-                    
-                    if let appName = appInfoItem["CFBundleDisplayName"]?.string {
-                        appInfoDict[appName] = appInfoItem
-                    }
-                    return appInfoItem
-                })
-                self.appInfoDict = appInfoDict
-                
-                lockdownClient.free()
-                installService.free()
-                install.free()
-            } catch {
-                self.view.window?.alert(message: error.localizedDescription)
-            }
+                if let appName = appInfoItem["CFBundleDisplayName"]?.string {
+                    appInfoDict[appName] = appInfoItem
+                }
+                return appInfoItem
+            })
+            self.appInfoDict = appInfoDict
+            
+            lockdownClient.free()
+            installService.free()
+            install.free()
+        } catch {
+            view.window?.alert(message: error.localizedDescription)
         }
     }
     
-    private func initCrashFileData() {
+    private func loadCrashFileData() {
         
         guard
             deviceList.count > 0,
@@ -189,6 +254,13 @@ extension DeviceCrashViewController {
             }
         }
     }
+    
+    private func clearData() {
+        crashFileList.removeAll()
+        devicePopBtn.removeAllItems()
+        appPopBtn.removeAllItems()
+        tableView.reloadData()
+    }
 }
 
 // MARK: - Action
@@ -217,12 +289,12 @@ extension DeviceCrashViewController {
     
     @objc private func didChangeDevice(_ sender: NSPopUpButton) {
         
-        initAppData()
+        loadAppData()
     }
     
     @objc private func didChangeApp(_ sender: NSPopUpButton) {
         
-        initCrashFileData()
+        loadCrashFileData()
     }
 }
 
@@ -304,15 +376,6 @@ extension NSUserInterfaceItemIdentifier {
 // MARK: - Restory Last Selected
 extension DeviceCrashViewController {
     
-    var lastSelectedDeviceUDID: String? {
-        get {
-            UserDefaults.standard.string(forKey: "lastSelectedDeviceUDID")
-        }
-        set{
-            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedDeviceUDID")
-        }
-    }
-    
     var lastSelectedAppID: String? {
         get {
             UserDefaults.standard.string(forKey: "lastSelectedAppID")
@@ -321,20 +384,7 @@ extension DeviceCrashViewController {
             UserDefaults.standard.setValue(newValue, forKey: "lastSelectedAppID")
         }
     }
-    
-    private func selectLastDevice() {
-        
-        guard let lastUDID = lastSelectedDeviceUDID else { return }
-        
-        let index = deviceList.firstIndex { (device) -> Bool in
-            guard let udid = try? device.getUDID() else { return false }
-            
-            return udid == lastUDID
-        }
-        
-        devicePopBtn.selectItem(at: index ?? 0)
-    }
-    
+
     private func selectLastApp() {
         
         guard let lastAppID = lastSelectedAppID else { return }

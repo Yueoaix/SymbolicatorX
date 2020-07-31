@@ -15,115 +15,180 @@ class FileBrowserViewController: BaseViewController {
     private let outlineView = NSOutlineView()
     private var exportBtn: NSButton!
     
+    private var disposable: Disposable?
     private var houseArrest: HouseArrest?
     private var afcClient: AfcClient?
-    
-    private var deviceList = [Device]() {
-        willSet {
-            var deviceNameList = [String]()
-            self.deviceList = newValue.filter { (device) -> Bool in
-                
-                guard
-                    var lockdownClient = try? LockdownClient(device: device, withHandshake: false),
-                    let deviceName = try? lockdownClient.getName()
-                else { return false }
-                
-                deviceNameList.append(deviceName)
-                lockdownClient.free()
-                return true
-            }
-            
-            DispatchQueue.main.async {
-                self.devicePopBtn.removeAllItems()
-                self.devicePopBtn.addItems(withTitles: deviceNameList)
-                self.selectLastDevice()
-                self.initAppData()
-            }
-        }
-    }
+    private var file: FileModel?
+    private var deviceList = [Device]()
     
     private var appInfoDict = [String:Plist]() {
         didSet {
-            DispatchQueue.main.async {
-                self.appPopBtn.removeAllItems()
-                self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
-                self.selectLastApp()
-                self.initFileData()
-            }
+            self.appPopBtn.removeAllItems()
+            self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
+            self.selectLastApp()
+            self.loadFileData()
         }
     }
-    
-    private var file: FileModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
         setupUI()
-        initDeviceData()
+        deviceEventSubscribe()
     }
     
     deinit {
+        
+        deviceList.forEach { ( device) in
+            var device = device
+            device.free()
+        }
+        _ = MobileDevice.eventUnsubscribe()
+        disposable?.dispose()
         houseArrest?.free()
         afcClient?.free()
     }
 }
 
-// MARK: - Init Data
+// MARK: - Load Data
 extension FileBrowserViewController {
     
-    private func initDeviceData() {
-        DispatchQueue.global().async {
-            guard let deviceList = try? MobileDevice.getDeviceList().compactMap({ (udid) -> Device? in
-                try? Device(udid: udid)
-            }) else { return }
-            
-            self.deviceList = deviceList
+    private func deviceEventSubscribe() {
+        
+        do {
+            disposable = try MobileDevice.eventSubscribe { [weak self] (event) in
+                
+                guard
+                    let `self` = self,
+                    let udid = event.udid,
+                    let type = event.type,
+                    let connectionType = event.connectionType
+                else {
+                    return
+                }
+                
+                let isExist = self.deviceList.count > 0 && self.deviceList.contains { (device) -> Bool in
+                    let deviceUDID = try? device.getUDID()
+                    return deviceUDID == udid
+                }
+
+                switch type {
+                    
+                case .add:
+                    if !isExist {
+                        self.addDevice(udid: udid, connectionType: connectionType)
+                    }
+                case .remove:
+                    if isExist {
+                        self.removeDevice(udid: udid)
+                    }
+                case .paired:
+                    print("paired udid: \(udid)")
+                    break
+                }
+            }
+        } catch {
+            view.window?.alert(message: error.localizedDescription)
         }
     }
     
-    private func initAppData() {
+    private func addDevice(udid: String, connectionType: ConnectionType) {
         
-        guard
-            deviceList.count > 0,
-            devicePopBtn.indexOfSelectedItem < deviceList.count
-            else { return }
-        let device = deviceList[devicePopBtn.indexOfSelectedItem]
-        lastSelectedDeviceUDID = try? device.getUDID()
+        var option: DeviceLookupOptions = .usbmux
+        if connectionType == .network {
+            option = .network
+        }
         
-        DispatchQueue.global().async {
+        do {
+            var device = try Device(udid: udid, options: option)
+            var lockdownClient = try LockdownClient(device: device, withHandshake: false)
+            let deviceName = try lockdownClient.getName()
+            device.name = deviceName
+            self.deviceList.append(device)
+            DispatchQueue.main.async {
+                self.devicePopBtn.addItem(withTitle: deviceName)
+                if self.deviceList.count == 1 {
+                    self.loadAppData()
+                }
+            }
+            lockdownClient.free()
+        } catch {
+            self.view.window?.alert(message: error.localizedDescription)
+        }
+    }
+    
+    private func removeDevice(udid: String) {
+        
+        DispatchQueue.main.async {
             
-            let options = Plist(dictionary: ["ApplicationType":Plist(string: "User")])
-            do {
-                var lockdownClient = try LockdownClient(device: device, withHandshake: true)
-                var installService = try lockdownClient.getService(service: .installationProxy)
-                var install = try InstallationProxy(device: device, service: installService)
-                let appListPlist = try install.browse(options: options)
+            var isNeedRefresh = false
+            self.deviceList.removeAll { (device) -> Bool in
                 
-                var appInfoDict = [String:Plist]()
-                _ = appListPlist.array?.compactMap({ (appInfoItem) -> Plist? in
+                var device = device
+                let deviceUDID = try? device.getUDID()
+                if deviceUDID == udid {
                     
-                    guard
-                        let signer = appInfoItem["SignerIdentity"]?.string,
-                        signer.contains("Developer") || signer.contains("Development"),
-                        let appName = appInfoItem["CFBundleDisplayName"]?.string
-                    else { return nil }
+                    let deviceName = device.name ?? ""
+                    if self.devicePopBtn.selectedItem?.title == deviceName {
+                        isNeedRefresh = true
+                    }
                     
-                    appInfoDict[appName] = appInfoItem
-                    
-                    return appInfoItem
-                })
-                self.appInfoDict = appInfoDict
-                
-                lockdownClient.free()
-                installService.free()
-                install.free()
-            } catch {
-                self.view.window?.alert(message: error.localizedDescription)
+                    self.devicePopBtn.removeItem(withTitle: deviceName)
+                    device.free()
+                    return true
+                }
+                return false
+            }
+            
+            if isNeedRefresh {
+                self.loadAppData()
+            }
+            
+            if self.deviceList.count == 0 {
+                self.clearData()
             }
         }
     }
     
-    private func initFileData() {
+    private func loadAppData() {
+        
+        guard
+            deviceList.count > 0,
+            devicePopBtn.indexOfSelectedItem < deviceList.count
+        else { return }
+        let device = deviceList[devicePopBtn.indexOfSelectedItem]
+        let options = Plist(dictionary: ["ApplicationType":Plist(string: "User")])
+        
+        do {
+            var lockdownClient = try LockdownClient(device: device, withHandshake: true)
+            var installService = try lockdownClient.getService(service: .installationProxy)
+            var install = try InstallationProxy(device: device, service: installService)
+            let appListPlist = try install.browse(options: options)
+            
+            var appInfoDict = [String:Plist]()
+            _ = appListPlist.array?.compactMap({ (appInfoItem) -> Plist? in
+                
+                guard
+                    let signer = appInfoItem["SignerIdentity"]?.string,
+                    signer.contains("Developer") || signer.contains("Development"),
+                    let appName = appInfoItem["CFBundleDisplayName"]?.string
+                else { return nil }
+                
+                appInfoDict[appName] = appInfoItem
+                
+                return appInfoItem
+            })
+            self.appInfoDict = appInfoDict
+            
+            lockdownClient.free()
+            installService.free()
+            install.free()
+        } catch {
+            view.window?.alert(message: error.localizedDescription)
+        }
+    }
+    
+    private func loadFileData() {
         
         guard
             deviceList.count > 0,
@@ -159,6 +224,13 @@ extension FileBrowserViewController {
                 self.view.window?.alert(message: error.localizedDescription)
             }
         }
+    }
+    
+    private func clearData() {
+        file = nil
+        devicePopBtn.removeAllItems()
+        appPopBtn.removeAllItems()
+        outlineView.reloadData()
     }
 }
 
@@ -207,12 +279,12 @@ extension FileBrowserViewController {
     
     @objc private func didChangeDevice(_ sender: NSPopUpButton) {
         
-        initAppData()
+        loadAppData()
     }
     
     @objc private func didChangeApp(_ sender: NSPopUpButton) {
         
-        initFileData()
+        loadFileData()
     }
     
 }
@@ -279,15 +351,6 @@ extension FileBrowserViewController: NSOutlineViewDelegate {
 // MARK: - Restory Last Selected
 extension FileBrowserViewController {
     
-    var lastSelectedDeviceUDID: String? {
-        get {
-            UserDefaults.standard.string(forKey: "lastSelectedDeviceUDID")
-        }
-        set{
-            UserDefaults.standard.setValue(newValue, forKey: "lastSelectedDeviceUDID")
-        }
-    }
-    
     var lastSelectedAppID: String? {
         get {
             UserDefaults.standard.string(forKey: "lastSelectedAppID")
@@ -295,19 +358,6 @@ extension FileBrowserViewController {
         set{
             UserDefaults.standard.setValue(newValue, forKey: "lastSelectedAppID")
         }
-    }
-    
-    private func selectLastDevice() {
-        
-        guard let lastUDID = lastSelectedDeviceUDID else { return }
-        
-        let index = deviceList.firstIndex { (device) -> Bool in
-            guard let udid = try? device.getUDID() else { return false }
-            
-            return udid == lastUDID
-        }
-        
-        devicePopBtn.selectItem(at: index ?? 0)
     }
     
     private func selectLastApp() {

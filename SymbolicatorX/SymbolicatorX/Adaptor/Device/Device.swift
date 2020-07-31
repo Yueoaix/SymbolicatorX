@@ -24,6 +24,7 @@ public struct DeviceLookupOptions: OptionSet {
 public struct Device {
     
     var rawValue: idevice_t? = nil
+    var name: String?
     
     public init(udid: String) throws {
         let rawError = idevice_new(&rawValue, udid)
