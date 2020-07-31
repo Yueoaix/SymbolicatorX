@@ -118,7 +118,7 @@ extension FileBrowserViewController {
                 installService.free()
                 install.free()
             } catch {
-                print(error)
+                self.view.window?.alert(message: error.localizedDescription)
             }
         }
     }
@@ -156,7 +156,7 @@ extension FileBrowserViewController {
                 lockdownClient.free()
                 lockdownService.free()
             } catch {
-                print(error)
+                self.view.window?.alert(message: error.localizedDescription)
             }
         }
     }

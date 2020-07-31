@@ -65,6 +65,7 @@
 		5456FA9924C993E30005D6CA /* FileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5456FA9824C993E30005D6CA /* FileModel.swift */; };
 		545CD66F24C1742F004AE652 /* DeviceCrashPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD66E24C1742F004AE652 /* DeviceCrashPanel.swift */; };
 		545CD67124C1758F004AE652 /* DeviceCrashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CD67024C1758F004AE652 /* DeviceCrashViewController.swift */; };
+		547DB90824D3AF1600C7A5FD /* NSWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547DB90724D3AF1600C7A5FD /* NSWindow+Extension.swift */; };
 		548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548B367324CACDE400838902 /* CrashFileTableView.swift */; };
 /* End PBXBuildFile section */
 
@@ -187,6 +188,7 @@
 		5456FA9824C993E30005D6CA /* FileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileModel.swift; sourceTree = "<group>"; };
 		545CD66E24C1742F004AE652 /* DeviceCrashPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCrashPanel.swift; sourceTree = "<group>"; };
 		545CD67024C1758F004AE652 /* DeviceCrashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCrashViewController.swift; sourceTree = "<group>"; };
+		547DB90724D3AF1600C7A5FD /* NSWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extension.swift"; sourceTree = "<group>"; };
 		548B367324CACDE400838902 /* CrashFileTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashFileTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -297,6 +299,7 @@
 				542C659424C1575D000DCC08 /* NSToolbar+Extension.swift */,
 				5415674124CE836C007B37E2 /* NSButton+Extension.swift */,
 				5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */,
+				547DB90724D3AF1600C7A5FD /* NSWindow+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -675,6 +678,7 @@
 				5406E76D24BDA6D8005E6028 /* SpotlightSearch.swift in Sources */,
 				5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */,
 				5428218424B36D7A00DFC62F /* NSColor+Extension.swift in Sources */,
+				547DB90824D3AF1600C7A5FD /* NSWindow+Extension.swift in Sources */,
 				542B94AC24B0E84300D73B5A /* SyslogRelay.swift in Sources */,
 				542B947024B0E18B00D73B5A /* PlistArray.swift in Sources */,
 				5428B17F24B4CC2D004AC47A /* Architecture.swift in Sources */,

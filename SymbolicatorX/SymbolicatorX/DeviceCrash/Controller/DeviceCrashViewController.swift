@@ -128,7 +128,7 @@ extension DeviceCrashViewController {
                 installService.free()
                 install.free()
             } catch {
-                print(error)
+                self.view.window?.alert(message: error.localizedDescription)
             }
         }
     }
@@ -185,7 +185,7 @@ extension DeviceCrashViewController {
                 lockdownService.free()
                 self.afcClient = afcClient
             } catch {
-                print(error)
+                self.view.window?.alert(message: error.localizedDescription)
             }
         }
     }

@@ -41,15 +41,6 @@ class MainViewController: BaseViewController {
         setupUI()
     }
     
-    private func alert(message: String) {
-        
-        let alert = NSAlert()
-        alert.messageText = "Error"
-        alert.informativeText = message
-        alert.alertStyle = .warning
-        alert.addButton(withTitle: "OK")
-        alert.beginSheetModal(for: view.window!, completionHandler: nil)
-    }
 }
 
 // MARK: - Symbolicate
@@ -58,9 +49,9 @@ extension MainViewController {
     public func symbolicate() {
         
         if self.crashFile == nil {
-            alert(message: "No Crash File")
+            view.window?.alert(message: "No Crash File")
         } else if self.dsymFile == nil {
-            alert(message: "No DSYM File")
+            view.window?.alert(message: "No DSYM File")
         }
         
         guard
@@ -74,7 +65,7 @@ extension MainViewController {
         Symbolicator.symbolicate(crashFile: crashFile, dsymFile: dsymFile, errorHandler: { [weak self] (error) in
             
             DispatchQueue.main.async {
-                self?.alert(message: error)
+                self?.view.window?.alert(message: error)
                 self?.isSymbolicating = false
             }
         }) { [weak self] (content) in
