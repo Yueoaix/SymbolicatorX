@@ -19,7 +19,7 @@ class FileModel {
     var afc: AfcClient?
     var data: Data? {
         
-        guard let afcClient = afc else { return nil }
+        guard let afcClient = afc, !isDirectory else { return nil }
         
         do {
             let handle = try afcClient.fileOpen(filename: path, fileMode: .rdOnly)
@@ -88,6 +88,7 @@ class FileModel {
                 let subPath = path.appendingPathComponent(file.name)
                 file.save(toPath: subPath)
             })
+            return
         }
         
         do {
