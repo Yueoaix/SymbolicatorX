@@ -13,7 +13,9 @@ class FileBrowserViewController: BaseViewController {
     private let devicePopBtn = NSPopUpButton()
     private let appPopBtn = NSPopUpButton()
     private let outlineView = NSOutlineView()
+    private let progressIndicator = NSProgressIndicator()
     private var exportBtn: NSButton!
+    private var backBtn: NSButton!
     
     private var disposable: Disposable?
     private var houseArrest: HouseArrest?
@@ -255,9 +257,15 @@ extension FileBrowserViewController {
             selectedFile.append(file)
         }
         
-        if selectedFile.count == 0 {
-            return
+        guard selectedFile.count > 0 else { return }
+        
+        var total = 0
+        var progress = 0
+        selectedFile.forEach { (file) in
+            total += file.allFileCount()
         }
+        progressIndicator.doubleValue = 0
+        progressIndicator.isHidden = total == 0
         
         let savePanel = NSSavePanel()
         savePanel.canCreateDirectories = true
@@ -267,10 +275,27 @@ extension FileBrowserViewController {
             switch response {
             case .OK:
                 guard let url = savePanel.url else { return }
-                selectedFile.forEach { (file) in
-                    file.save(toPath: url.appendingPathComponent(file.name))
+                self.progressIndicator.startAnimation(self)
+                self.backBtn.isEnabled = false
+                self.exportBtn.isEnabled = false
+                DispatchQueue.global().async {
+
+                    selectedFile.forEach { (file) in
+                        file.save(toPath: url.appendingPathComponent(file.name)) { [weak self] in
+                            progress += 1
+                            print("\(progress)/\(total)")
+                            DispatchQueue.main.async {
+                                self?.progressIndicator.doubleValue = Double(progress)/Double(total)
+                                if progress == total {
+                                    self?.progressIndicator.isHidden = true
+                                    self?.backBtn.isEnabled = true
+                                    self?.exportBtn.isEnabled = true
+                                }
+                            }
+                        }
+                    }
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
                 }
-                NSWorkspace.shared.activateFileViewerSelecting([url])
             default:
                 return
             }
@@ -389,9 +414,9 @@ extension FileBrowserViewController {
             make.top.equalToSuperview().offset(10)
         }
         
-        let back = NSButton.makeButton(title: "Back", target: self, action: #selector(didClickBackBtn))
-        view.addSubview(back)
-        back.snp.makeConstraints { (make) in
+        backBtn = NSButton.makeButton(title: "Back", target: self, action: #selector(didClickBackBtn))
+        view.addSubview(backBtn)
+        backBtn.snp.makeConstraints { (make) in
             make.right.equalTo(exportBtn.snp.left).offset(-10)
             make.top.equalTo(exportBtn)
         }
@@ -446,6 +471,19 @@ extension FileBrowserViewController {
             make.bottom.right.equalToSuperview().offset(-10)
             make.left.equalToSuperview().offset(10)
             make.top.equalTo(devicePopBtn.snp.bottom).offset(10)
+        }
+        
+        progressIndicator.isDisplayedWhenStopped = false
+        progressIndicator.isIndeterminate = false
+        progressIndicator.style = .bar
+        progressIndicator.minValue = 0
+        progressIndicator.maxValue = 1
+        progressIndicator.isHidden = true
+        view.addSubview(progressIndicator)
+        progressIndicator.snp.makeConstraints { (make) in
+            make.left.equalTo(devicePopBtn)
+            make.right.equalTo(exportBtn)
+            make.top.equalTo(devicePopBtn.snp.bottom).offset(-3)
         }
     }
 }

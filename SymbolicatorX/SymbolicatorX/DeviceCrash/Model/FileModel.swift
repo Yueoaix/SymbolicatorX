@@ -10,6 +10,8 @@ import Foundation
 
 class FileModel {
     
+    typealias CompletionHandler = () -> Void
+    
     let path: String
     let isDirectory: Bool
     var date: Date?
@@ -79,14 +81,28 @@ class FileModel {
            
     }
     
-    public func save(toPath path: URL) {
+    public func allFileCount() -> Int {
+        
+        var count = 0
+        if isDirectory {
+            children.forEach { (file) in
+                count += file.allFileCount()
+            }
+        }else{
+            count = 1
+        }
+        
+        return count
+    }
+    
+    public func save(toPath path: URL, completion: @escaping CompletionHandler) {
         
         if isDirectory {
             
             children.forEach({ (file) in
                 let file = file
                 let subPath = path.appendingPathComponent(file.name)
-                file.save(toPath: subPath)
+                file.save(toPath: subPath, completion: completion)
             })
             return
         }
@@ -100,6 +116,7 @@ class FileModel {
                 try fileManager .createDirectory(at: directoryPath, withIntermediateDirectories: true, attributes: nil)
             }
             try data?.write(to: path, options: .atomic)
+            completion()
         } catch {
             print(error)
         }
