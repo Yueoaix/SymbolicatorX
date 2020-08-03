@@ -25,10 +25,10 @@ class FileBrowserViewController: BaseViewController {
     
     private var appInfoDict = [String:Plist]() {
         didSet {
-            self.appPopBtn.removeAllItems()
-            self.appPopBtn.addItems(withTitles: self.appInfoDict.keys.sorted())
-            self.selectLastApp()
-            self.loadFileData()
+            appPopBtn.removeAllItems()
+            appPopBtn.addItems(withTitles: appInfoDict.keys.sorted())
+            selectLastApp()
+            loadFileData()
         }
     }
     
@@ -64,7 +64,8 @@ extension FileBrowserViewController {
                     let `self` = self,
                     let udid = event.udid,
                     let type = event.type,
-                    let connectionType = event.connectionType
+                    let connectionType = event.connectionType,
+                    connectionType == .usbmuxd
                 else {
                     return
                 }
@@ -97,9 +98,12 @@ extension FileBrowserViewController {
     private func addDevice(udid: String, connectionType: ConnectionType) {
         
         var option: DeviceLookupOptions = .usbmux
-        if connectionType == .network { option = .network }
+        if connectionType == .network {
+            option = .network
+        }
         
         DispatchQueue.main.async {
+            
             do {
                 var device = try Device(udid: udid, options: option)
                 var lockdownClient = try LockdownClient(device: device, withHandshake: false)
@@ -107,11 +111,16 @@ extension FileBrowserViewController {
                 device.name = deviceName
                 self.deviceList.append(device)
                 self.devicePopBtn.addItem(withTitle: deviceName)
+                if self.deviceList.count == 1 {
+                    self.loadAppData()
+                }
                 lockdownClient.free()
             } catch {
                 self.view.window?.alert(message: error.localizedDescription)
             }
+            
         }
+        
     }
     
     private func removeDevice(udid: String) {

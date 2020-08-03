@@ -135,7 +135,8 @@ extension InstallViewController {
                     let `self` = self,
                     let udid = event.udid,
                     let type = event.type,
-                    let connectionType = event.connectionType
+                    let connectionType = event.connectionType,
+                    connectionType == .usbmuxd
                 else {
                     return
                 }
