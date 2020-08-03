@@ -297,6 +297,25 @@ public struct AfcClient {
         })
     }
     
+    public func fileWrite(handle: UInt64, fileURL: URL) throws {
+        
+        let data = try Data(contentsOf: fileURL)
+        var total = data.count
+        var length = 10000
+        var index = 0
+        
+        repeat{
+            
+            if total < length { length = total }
+            total -= length
+            
+            let subData = data[index..<(index + length)]
+            index = index + length
+            _ = try fileWrite(handle: handle, data: subData)
+            
+        } while total > 0
+    }
+    
     public func fileSeek(handle: UInt64, offset: Int64, whence: Int32) throws {
         
         let rawError = afc_file_seek(rawValue, handle, offset, whence)

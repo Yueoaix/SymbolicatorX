@@ -19,6 +19,8 @@
 		5415674724CEA806007B37E2 /* NSTableCellView+Extesnion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */; };
 		5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */; };
 		5420D92524C05D85009E7CED /* SymbolicatedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */; };
+		5423DF4E24D7EEF30030DA25 /* InstallPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */; };
+		5423DF5024D7EF0F0030DA25 /* InstallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5423DF4F24D7EF0F0030DA25 /* InstallViewController.swift */; };
 		54273AC524C0A7E200B184D2 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */; };
 		54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */; };
 		5428218424B36D7A00DFC62F /* NSColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5428218324B36D7A00DFC62F /* NSColor+Extension.swift */; };
@@ -96,6 +98,8 @@
 		5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableCellView+Extesnion.swift"; sourceTree = "<group>"; };
 		5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolicatedWindowController.swift; sourceTree = "<group>"; };
 		5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SymbolicatedWindowController.xib; sourceTree = "<group>"; };
+		5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPanel.swift; sourceTree = "<group>"; };
+		5423DF4F24D7EF0F0030DA25 /* InstallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallViewController.swift; sourceTree = "<group>"; };
 		54273AC424C0A7E200B184D2 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
 		54273AC624C0A81100B184D2 /* NSTextView+LineNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextView+LineNumber.swift"; sourceTree = "<group>"; };
 		5428218324B36D7A00DFC62F /* NSColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extension.swift"; sourceTree = "<group>"; };
@@ -270,6 +274,23 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		5423DF4B24D7EE950030DA25 /* Install */ = {
+			isa = PBXGroup;
+			children = (
+				5423DF4C24D7EEA40030DA25 /* ViewController */,
+			);
+			path = Install;
+			sourceTree = "<group>";
+		};
+		5423DF4C24D7EEA40030DA25 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */,
+				5423DF4F24D7EF0F0030DA25 /* InstallViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		54273AC324C0A7C600B184D2 /* LineNumber */ = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +370,7 @@
 				5406E77924BEE683005E6028 /* Symbolicated */,
 				5415673B24CE8188007B37E2 /* FileBrowser */,
 				542C659324C15692000DCC08 /* DeviceCrash */,
+				5423DF4B24D7EE950030DA25 /* Install */,
 				542C170D24B21B21009A4219 /* Main */,
 				542B93E924B0D8D000D73B5A /* AppDelegate.swift */,
 				542B93ED24B0D8D200D73B5A /* Assets.xcassets */,
@@ -666,12 +688,14 @@
 				542B947224B0E1CB00D73B5A /* PlistDict.swift in Sources */,
 				542C171224B21B54009A4219 /* MainWindowController.swift in Sources */,
 				542B949424B0E4EB00D73B5A /* AfcClient.swift in Sources */,
+				5423DF5024D7EF0F0030DA25 /* InstallViewController.swift in Sources */,
 				548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */,
 				542B947424B0E1F500D73B5A /* PlistValue.swift in Sources */,
 				5406E78224BEEC29005E6028 /* TextViewController.swift in Sources */,
 				5406E76F24BDB20C005E6028 /* FileSearch.swift in Sources */,
 				542C659224C151BE000DCC08 /* String+Text.swift in Sources */,
 				5415674524CEA274007B37E2 /* FileTableCellView.swift in Sources */,
+				5423DF4E24D7EEF30030DA25 /* InstallPanel.swift in Sources */,
 				54273AC724C0A81100B184D2 /* NSTextView+LineNumber.swift in Sources */,
 				542B949C24B0E76900D73B5A /* FileRelay.swift in Sources */,
 				542C171A24B21E6C009A4219 /* BaseWindowController.swift in Sources */,

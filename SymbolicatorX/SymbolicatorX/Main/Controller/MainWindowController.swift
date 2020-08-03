@@ -22,6 +22,13 @@ class MainWindowController: BaseWindowController {
 // MARK: - Action
 extension MainWindowController {
     
+    @objc private func didClickInstallBtn() {
+        
+        let devicePannel = InstallPanel(size: NSSize(width: 300, height: 282))
+        devicePannel.parent = window
+        window?.beginSheet(devicePannel, completionHandler: nil)
+    }
+    
     @objc private func didClickFileBrowserBtn() {
         
         let devicePannel = FileBrowserPanel(size: NSSize(width: 600, height: 282))
@@ -61,6 +68,8 @@ extension MainWindowController: NSToolbarDelegate {
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         
         switch itemIdentifier {
+        case .install:
+            return NSToolbar.makeToolbarItem(identifier: .install, target: self, action: #selector(didClickInstallBtn))
         case .fileBrowser:
             return NSToolbar.makeToolbarItem(identifier: .fileBrowser, target: self, action: #selector(didClickFileBrowserBtn))
         case .device:
@@ -73,11 +82,11 @@ extension MainWindowController: NSToolbarDelegate {
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .fileBrowser, .device, .symbolicate]
+        return [.flexibleSpace, .install, .fileBrowser, .device, .symbolicate]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .fileBrowser, .device, .symbolicate]
+        return [.flexibleSpace, .install, .fileBrowser, .device, .symbolicate]
     }
 }
 
@@ -86,6 +95,7 @@ extension NSToolbarItem.Identifier {
     static let device = NSToolbarItem.Identifier(rawValue: "Device Crash")
     static let symbolicate = NSToolbarItem.Identifier(rawValue: "Symbolicate")
     static let fileBrowser = NSToolbarItem.Identifier(rawValue: "File Browser")
+    static let install = NSToolbarItem.Identifier(rawValue: "Install")
 }
 
 // MARK: - UI

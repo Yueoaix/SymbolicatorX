@@ -97,25 +97,20 @@ extension FileBrowserViewController {
     private func addDevice(udid: String, connectionType: ConnectionType) {
         
         var option: DeviceLookupOptions = .usbmux
-        if connectionType == .network {
-            option = .network
-        }
+        if connectionType == .network { option = .network }
         
-        do {
-            var device = try Device(udid: udid, options: option)
-            var lockdownClient = try LockdownClient(device: device, withHandshake: false)
-            let deviceName = try lockdownClient.getName()
-            device.name = deviceName
-            self.deviceList.append(device)
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            do {
+                var device = try Device(udid: udid, options: option)
+                var lockdownClient = try LockdownClient(device: device, withHandshake: false)
+                let deviceName = try lockdownClient.getName()
+                device.name = deviceName
+                self.deviceList.append(device)
                 self.devicePopBtn.addItem(withTitle: deviceName)
-                if self.deviceList.count == 1 {
-                    self.loadAppData()
-                }
+                lockdownClient.free()
+            } catch {
+                self.view.window?.alert(message: error.localizedDescription)
             }
-            lockdownClient.free()
-        } catch {
-            self.view.window?.alert(message: error.localizedDescription)
         }
     }
     
@@ -283,7 +278,6 @@ extension FileBrowserViewController {
                     selectedFile.forEach { (file) in
                         file.save(toPath: url.appendingPathComponent(file.name)) { [weak self] in
                             progress += 1
-                            print("\(progress)/\(total)")
                             DispatchQueue.main.async {
                                 self?.progressIndicator.doubleValue = Double(progress)/Double(total)
                                 if progress == total {
