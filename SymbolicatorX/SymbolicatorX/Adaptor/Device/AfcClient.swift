@@ -301,7 +301,7 @@ public struct AfcClient {
         
         let data = try Data(contentsOf: fileURL)
         var total = data.count
-        var length = 10000
+        var length = 102400
         var index = 0
         
         repeat{

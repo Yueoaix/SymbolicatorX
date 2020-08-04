@@ -108,6 +108,7 @@ extension InstallViewController {
                     self.progressIndicator.isHidden = true
                     self.backBtn.isEnabled = true
                     self.installBtn.isEnabled = true
+                    self.view.window?.alert(message: error.localizedDescription)
                 }
                 print(error)
             }
