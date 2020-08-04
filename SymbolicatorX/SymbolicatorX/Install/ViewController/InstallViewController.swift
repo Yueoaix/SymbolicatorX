@@ -19,7 +19,7 @@ class InstallViewController: BaseViewController {
     private let ipaFileDropZoneView = DropZoneView(fileTypes: [".ipa"], text: "Drop App IPA")
 
     private var disposable: Disposable?
-    private var fileURL: URL?
+    private var IPAFileURL: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +38,7 @@ extension InstallViewController {
     
     @objc private func didClickInstallBtn() {
         
-        guard let fileURL = fileURL else {
+        guard let IPAFileURL = IPAFileURL else {
             view.window?.alert(message: "No IPA File")
             return
         }
@@ -66,7 +66,7 @@ extension InstallViewController {
                     try afcClient.makeDirectory(path: "PublicStaging")
                 }
                 let handle = try afcClient.fileOpen(filename: self.installFilePath, fileMode: .wrOnly)
-                try afcClient.fileWrite(handle: handle, fileURL: fileURL)
+                try afcClient.fileWrite(handle: handle, fileURL: IPAFileURL)
                 try afcClient.fileClose(handle: handle)
                 
                 lockdownService.free()
@@ -125,7 +125,7 @@ extension InstallViewController {
 extension InstallViewController: DropZoneViewDelegate {
     
     func receivedFile(dropZoneView: DropZoneView, fileURL: URL) {
-        self.fileURL = fileURL
+        self.IPAFileURL = fileURL
     }
 }
 
