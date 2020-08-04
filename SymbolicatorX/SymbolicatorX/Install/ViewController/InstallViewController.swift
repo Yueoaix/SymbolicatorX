@@ -52,6 +52,14 @@ extension InstallViewController {
             return
         }
         
+        guard
+            deviceList.count > 0,
+            devicePopBtn.indexOfSelectedItem < deviceList.count
+        else {
+            view.window?.alert(message: "No Selected Device")
+            return
+        }
+        
         let device = self.deviceList[devicePopBtn.indexOfSelectedItem]
         progressIndicator.doubleValue = 0
         progressIndicator.isHidden = false
