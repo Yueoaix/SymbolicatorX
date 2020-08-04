@@ -12,7 +12,7 @@ typealias CrashFileHandler = (CrashFile) -> Void
 
 class DeviceCrashViewController: BaseViewController {
     
-    private let devicePopBtn = NSPopUpButton()
+    private let devicePopBtn = DevicePopUpButton()
     private let appPopBtn = NSPopUpButton()
     private let tableView = CrashFileTableView()
     private let emptyLab = NSTextField()
@@ -21,8 +21,6 @@ class DeviceCrashViewController: BaseViewController {
     
     private var afcClient: AfcClient?
     public var crashFileHandle: CrashFileHandler?
-    private var disposable: Disposable?
-    private var deviceList = [Device]()
     
     private var appInfoDict = [String:Plist]() {
         didSet {
@@ -50,17 +48,9 @@ class DeviceCrashViewController: BaseViewController {
         super.viewDidLoad()
         // Do view setup here.
         setupUI()
-        deviceEventSubscribe()
     }
     
     deinit {
-        deviceList.forEach { ( device) in
-            var device = device
-            device.free()
-        }
-        _ = MobileDevice.eventUnsubscribe()
-        disposable?.dispose()
-        afcClient?.free()
         afcClient?.free()
     }
 }
@@ -68,113 +58,14 @@ class DeviceCrashViewController: BaseViewController {
 // MARK: - Load Data
 extension DeviceCrashViewController {
     
-    private func deviceEventSubscribe() {
-        
-        do {
-            disposable = try MobileDevice.eventSubscribe { [weak self] (event) in
-                
-                guard
-                    let `self` = self,
-                    let udid = event.udid,
-                    let type = event.type,
-                    let connectionType = event.connectionType,
-                    connectionType == .usbmuxd
-                else {
-                    return
-                }
-                
-                let isExist = self.deviceList.count > 0 && self.deviceList.contains { (device) -> Bool in
-                    let deviceUDID = try? device.getUDID()
-                    return deviceUDID == udid
-                }
-
-                switch type {
-                    
-                case .add:
-                    if !isExist {
-                        self.addDevice(udid: udid, connectionType: connectionType)
-                    }
-                case .remove:
-                    if isExist {
-                        self.removeDevice(udid: udid)
-                    }
-                case .paired:
-                    print("paired udid: \(udid)")
-                    break
-                }
-            }
-        } catch {
-            view.window?.alert(message: error.localizedDescription)
-        }
-    }
-    
-    private func addDevice(udid: String, connectionType: ConnectionType) {
-        
-        var option: DeviceLookupOptions = .usbmux
-        if connectionType == .network {
-            option = .network
-        }
-        
-        DispatchQueue.main.async {
-            
-            do {
-                var device = try Device(udid: udid, options: option)
-                var lockdownClient = try LockdownClient(device: device, withHandshake: false)
-                let deviceName = try lockdownClient.getName()
-                device.name = deviceName
-                self.deviceList.append(device)
-                self.devicePopBtn.addItem(withTitle: deviceName)
-                if self.deviceList.count == 1 {
-                    self.loadAppData()
-                }
-                lockdownClient.free()
-            } catch {
-                self.view.window?.alert(message: error.localizedDescription)
-            }
-            
-        }
-    }
-    
-    private func removeDevice(udid: String) {
-        
-        DispatchQueue.main.async {
-            
-            var isNeedRefresh = false
-            self.deviceList.removeAll { (device) -> Bool in
-                
-                var device = device
-                let deviceUDID = try? device.getUDID()
-                if deviceUDID == udid {
-                    
-                    let deviceName = device.name ?? ""
-                    if self.devicePopBtn.selectedItem?.title == deviceName {
-                        isNeedRefresh = true
-                    }
-                    
-                    self.devicePopBtn.removeItem(withTitle: deviceName)
-                    device.free()
-                    return true
-                }
-                return false
-            }
-            
-            if isNeedRefresh {
-                self.loadAppData()
-            }
-            
-            if self.deviceList.count == 0 {
-                self.clearData()
-            }
-        }
-    }
-    
     private func loadAppData() {
         
         guard
-            deviceList.count > 0,
-            devicePopBtn.indexOfSelectedItem < deviceList.count
-            else { return }
-        let device = deviceList[devicePopBtn.indexOfSelectedItem]
+            let device = devicePopBtn.getSelecteDevice()
+        else {
+            clearData()
+            return
+        }
         
         let options = Plist(dictionary: ["ApplicationType":Plist(string: "User")])
         do {
@@ -204,12 +95,10 @@ extension DeviceCrashViewController {
     private func loadCrashFileData() {
         
         guard
-            deviceList.count > 0,
-            devicePopBtn.indexOfSelectedItem < deviceList.count,
+            let device = devicePopBtn.getSelecteDevice(),
             appPopBtn.indexOfSelectedItem < appInfoDict.count
         else { return }
         
-        let device = deviceList[devicePopBtn.indexOfSelectedItem]
         let title = appPopBtn.selectedItem?.title ?? ""
         let appInfo = appInfoDict[title]
         let process = appInfo?["CFBundleExecutable"]?.string ?? ""
@@ -260,7 +149,6 @@ extension DeviceCrashViewController {
     
     private func clearData() {
         crashFileList.removeAll()
-        devicePopBtn.removeAllItems()
         appPopBtn.removeAllItems()
         tableView.reloadData()
     }
@@ -482,7 +370,6 @@ extension DeviceCrashViewController {
         emptyLab.snp.makeConstraints { (make) in
             make.center.equalTo(scrollView)
         }
-        
     }
     
 }

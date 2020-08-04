@@ -12,32 +12,23 @@ class InstallViewController: BaseViewController {
     
     private let installFilePath = "PublicStaging/com.zhongxiaoyue.SymbolicatorX"
     
-    private let devicePopBtn = NSPopUpButton()
+    private let devicePopBtn = DevicePopUpButton()
     private let progressIndicator = NSProgressIndicator()
     private var installBtn: NSButton!
     private var backBtn: NSButton!
     private let ipaFileDropZoneView = DropZoneView(fileTypes: [".ipa"], text: "Drop App IPA")
 
-    private var deviceList = [Device]()
-    private var deviceDisposable: Disposable?
-    private var installDisposable: Disposable?
+    private var disposable: Disposable?
     private var fileURL: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
         setupUI()
-        deviceEventSubscribe()
     }
     
     deinit {
-        deviceList.forEach { ( device) in
-            var device = device
-            device.free()
-        }
-        _ = MobileDevice.eventUnsubscribe()
-        deviceDisposable?.dispose()
-        installDisposable?.dispose()
+        disposable?.dispose()
     }
     
 }
@@ -53,14 +44,12 @@ extension InstallViewController {
         }
         
         guard
-            deviceList.count > 0,
-            devicePopBtn.indexOfSelectedItem < deviceList.count
+            let device = devicePopBtn.getSelecteDevice()
         else {
             view.window?.alert(message: "No Selected Device")
             return
         }
         
-        let device = self.deviceList[devicePopBtn.indexOfSelectedItem]
         progressIndicator.doubleValue = 0
         progressIndicator.isHidden = false
         backBtn.isEnabled = false
@@ -83,8 +72,8 @@ extension InstallViewController {
                 lockdownService.free()
                 lockdownService = try lockdownClient.getService(service: .installationProxy)
                 var install = try InstallationProxy(device: device, service: lockdownService)
-                self.installDisposable?.dispose()
-                self.installDisposable = try install.install(pkgPath: self.installFilePath, options: nil) { [weak self] (command, status) in
+                self.disposable?.dispose()
+                self.disposable = try install.install(pkgPath: self.installFilePath, options: nil) { [weak self] (command, status) in
                     
                     guard let statusStr = status?["Status"]?.string else { return }
                     let percent = status?["PercentComplete"]?.uint ?? 0
@@ -128,91 +117,6 @@ extension InstallViewController {
     
     @objc private func didChangeDevice(_ sender: NSPopUpButton) {
         
-    }
-    
-}
-
-// MARK: - Install
-extension InstallViewController {
-    
-    private func deviceEventSubscribe() {
-        
-        do {
-            deviceDisposable = try MobileDevice.eventSubscribe { [weak self] (event) in
-                
-                guard
-                    let `self` = self,
-                    let udid = event.udid,
-                    let type = event.type,
-                    let connectionType = event.connectionType,
-                    connectionType == .usbmuxd
-                else {
-                    return
-                }
-                
-                let isExist = self.deviceList.count > 0 && self.deviceList.contains { (device) -> Bool in
-                    let deviceUDID = try? device.getUDID()
-                    return deviceUDID == udid
-                }
-
-                switch type {
-                    
-                case .add:
-                    if !isExist {
-                        self.addDevice(udid: udid, connectionType: connectionType)
-                    }
-                case .remove:
-                    if isExist {
-                        self.removeDevice(udid: udid)
-                    }
-                case .paired:
-                    print("paired udid: \(udid)")
-                    break
-                }
-            }
-        } catch {
-            view.window?.alert(message: error.localizedDescription)
-        }
-    }
-    
-    private func addDevice(udid: String, connectionType: ConnectionType) {
-        
-        var option: DeviceLookupOptions = .usbmux
-        if connectionType == .network { option = .network }
-        
-        DispatchQueue.main.async {
-            do {
-                var device = try Device(udid: udid, options: option)
-                var lockdownClient = try LockdownClient(device: device, withHandshake: false)
-                let deviceName = try lockdownClient.getName()
-                device.name = deviceName
-                self.deviceList.append(device)
-                self.devicePopBtn.addItem(withTitle: deviceName)
-                lockdownClient.free()
-            } catch {
-                self.view.window?.alert(message: error.localizedDescription)
-            }
-        }
-    }
-    
-    private func removeDevice(udid: String) {
-        
-        DispatchQueue.main.async {
-            
-            self.deviceList.removeAll { (device) -> Bool in
-                var device = device
-                let deviceUDID = try? device.getUDID()
-                if deviceUDID == udid {
-                    
-                    let deviceName = device.name ?? ""
-                    self.devicePopBtn.removeItem(withTitle: deviceName)
-                    device.free()
-                    return true
-                }
-                return false
-            }
-            
-        }
     }
     
 }
