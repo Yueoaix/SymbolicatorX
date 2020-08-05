@@ -17,6 +17,7 @@ class MainViewController: BaseViewController {
                 
                 crashFileDropZoneView.setFile(crashFile.path)
                 dsymFileDropZoneView.reset()
+                dsymFile = nil
                 startSearchForDSYM()
             }
         }
