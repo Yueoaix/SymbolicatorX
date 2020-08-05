@@ -75,19 +75,22 @@ extension InstallViewController {
                 self.disposable?.dispose()
                 self.disposable = try install.install(pkgPath: self.installFilePath, options: nil) { [weak self] (command, status) in
                     
-                    guard let statusStr = status?["Status"]?.string else { return }
+                    let statusStr = status?["Status"]?.string ?? ""
+                    let errorStr = status?["Error"]?.string
                     let percent = status?["PercentComplete"]?.uint ?? 0
                     let percentf = Double(percent)
                     
                     DispatchQueue.main.async {
                         self?.progressIndicator.doubleValue = percentf
                         if statusStr == "Complete" {
-                            self?.progressIndicator.doubleValue = 100
-                            self?.progressIndicator.isHidden = true
-                            self?.backBtn.isEnabled = true
-                            self?.installBtn.isEnabled = true
+                            stopInstall()
                             afcClient.free()
                             install.free()
+                        } else if let error = errorStr {
+                            stopInstall()
+                            afcClient.free()
+                            install.free()
+                            self?.view.window?.alert(message: error)
                         }
                     }
                 }
@@ -103,6 +106,11 @@ extension InstallViewController {
             }
         }
         
+        func stopInstall() {
+            progressIndicator.isHidden = true
+            backBtn.isEnabled = true
+            installBtn.isEnabled = true
+        }
     }
     
     @objc private func didClickBackBtn() {
