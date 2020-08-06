@@ -12,7 +12,8 @@ public struct CrashFile {
     
     enum CrashFileType {
         case mobile
-        case mac
+        case crash
+        case crashinfo
     }
     
     var crashFileType: CrashFileType
@@ -31,7 +32,7 @@ public struct CrashFile {
     var symbolicatedContent: String?
     var symbolicatedContentSaveURL: URL? {
         
-        guard let path = path, crashFileType == .mac else { return nil }
+        guard let path = path, crashFileType == .crash else { return nil }
         
         let originalPathExtension = path.pathExtension
         let extensionLessPath = path.deletingPathExtension()
@@ -50,8 +51,13 @@ public struct CrashFile {
         
         self.path = path
         self.filename = path.lastPathComponent
-        self.crashFileType = .mac
-        config(content: content)
+        if path.pathExtension == "crashinfo" {
+            self.crashFileType = .crashinfo
+            crashInfoConfig(content: content)
+        }else{
+            self.crashFileType = .crash
+            config(content: content)
+        }
     }
     
     init?(file: FileModel) {
@@ -67,6 +73,38 @@ public struct CrashFile {
         self.filename = file.name
         self.crashFileType = .mobile
         config(content: content)
+    }
+    
+    private mutating func crashInfoConfig(content: String) {
+        self.content = content
+        self.bundleIdentifier = content.scan(
+            pattern: "Loaded modules:.*?0x.*? - 0x.*?\\s+(.*?)\\s+",
+            options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+        ).first?.first?.trimmed
+        self.processName = self.bundleIdentifier
+        self.architecture = content.scan(pattern: "^CPU: (.*?)(\\(.*\\))?$").first?.first?.trimmed.components(separatedBy: " ").first.flatMap(Architecture.init)
+        
+        self.loadAddress = content.scan(
+            pattern: "Loaded modules:.*?(0x.*?)\\s",
+            options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+        ).first?.first?.trimmed
+        
+        let loadAddressHex = loadAddress?.hex() ?? 0
+        self.addresses = content.scan(
+            pattern: "^\\s?\\d+\\s+\(bundleIdentifier ?? "") \\+ (0x.*?)\\n",
+            options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+        ).compactMap({ (addresses) -> String in
+            let address = addresses.last ?? ""
+            let addressHex = address.hex() ?? 0
+            let realAddress = String(format: "0x%lx", loadAddressHex + addressHex)
+            self.content = self.content.replacingOccurrences(of: address, with: realAddress)
+            return realAddress
+        })
+        
+        self.uuid = (content.scan(
+            pattern: "WARNING: No symbols, \(bundleIdentifier ?? ""), (.*?)0\\)",
+            options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+        ).first?.first?.trimmed).flatMap(BinaryUUID.init)
     }
     
     private mutating func config(content: String) {

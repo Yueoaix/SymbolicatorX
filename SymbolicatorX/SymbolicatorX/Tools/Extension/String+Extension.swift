@@ -50,4 +50,14 @@ extension String {
             return match
         }
     }
+    
+    func hex() -> Int? {
+        
+        if hasPrefix("0x") {
+            let str = self[self.index(self.startIndex, offsetBy: 2)..<self.endIndex]
+            return Int(str, radix: 16) ?? 0
+        }
+        
+        return Int(self, radix: 16)
+    }
 }

@@ -59,14 +59,18 @@ class Symbolicator {
                 let address = addresses[index]
                 let replacement = outputLines[index]
 
-                let sampleOccurences = replacedContent.scan(pattern: "\\?{3}.*?\\[\(address)\\]").flatMap { $0 }
-                sampleOccurences.forEach {
-                    replacedContent = replacedContent.replacingOccurrences(of: $0, with: "\(replacement) [\(address)]")
-                }
+                if crashFile.crashFileType == .crashinfo {
+                    replacedContent = replacedContent.replacingOccurrences(of: address, with: replacement)
+                } else {
+                    let sampleOccurences = replacedContent.scan(pattern: "\\?{3}.*?\\[\(address)\\]").flatMap { $0 }
+                    sampleOccurences.forEach {
+                        replacedContent = replacedContent.replacingOccurrences(of: $0, with: "\(replacement) [\(address)]")
+                    }
 
-                let crashOccurences = replacedContent.scan(pattern: "\(address)\\s.*?$").flatMap { $0 }
-                crashOccurences.forEach {
-                    replacedContent = replacedContent.replacingOccurrences(of: $0, with: "\(address) \(replacement)")
+                    let crashOccurences = replacedContent.scan(pattern: "\(address)\\s.*?$").flatMap { $0 }
+                    crashOccurences.forEach {
+                        replacedContent = replacedContent.replacingOccurrences(of: $0, with: "\(address) \(replacement)")
+                    }
                 }
             }
             

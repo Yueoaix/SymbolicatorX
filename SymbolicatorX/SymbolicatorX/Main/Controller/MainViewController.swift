@@ -32,7 +32,7 @@ class MainViewController: BaseViewController {
     private var isSymbolicating = false
     
     private let textWindowController = SymbolicatedWindowController()
-    private let crashFileDropZoneView = DropZoneView(fileTypes: [".crash", ".txt"], text: "Drop Crash Report or Sample")
+    private let crashFileDropZoneView = DropZoneView(fileTypes: [".crash", ".txt", ".crashinfo"], text: "Drop Crash Report or Sample")
     private let dsymFileDropZoneView = DropZoneView(fileTypes: [".dSYM"], text: "Drop App DSYM")
     
     override func viewDidLoad() {

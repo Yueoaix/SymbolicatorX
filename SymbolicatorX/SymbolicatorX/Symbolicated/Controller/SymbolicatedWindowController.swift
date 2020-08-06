@@ -47,8 +47,10 @@ class SymbolicatedWindowController: BaseWindowController {
 extension SymbolicatedWindowController {
     
     @objc private func didClickLocationBtn() {
-        
-        textViewController.location(pattern: "(?:^Thread \\d+.*\n)*^Thread \\d+ Crashed:\\s*\n(?:^\\s*\\d{1,3}.*\n)+")
+        let crashInfoPattern = "Thread\\s+\\d+\\s+\\(crashed\\)\n(.*(\\d|\\w)+.+\n)+"
+        let crashPattern = "(?:^Thread \\d+.*\n)*^Thread \\d+ Crashed:\\s*.*\n(?:^\\s*\\d{1,3}.*\n)+"
+
+        textViewController.location(pattern: "(\(crashInfoPattern)|\(crashPattern))")
     }
     
     @objc private func didClickSaveBtn() {
