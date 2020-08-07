@@ -1,2 +1,3 @@
-SymbolicatorX/SymbolicatorX/Devicelib/* linguist-vendored
 SymbolicatorX/SymbolicatorX/Devicelib/libimobiledevice/* linguist-vendored
+SymbolicatorX/SymbolicatorX/Devicelib/plist/* linguist-vendored
+SymbolicatorX/SymbolicatorX/Devicelib/usbmuxd/* linguist-vendored
