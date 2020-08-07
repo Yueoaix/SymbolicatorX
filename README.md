@@ -5,7 +5,9 @@
   <img src="./SymbolicatorX/SymbolicatorX/Assets.xcassets/AppIcon.appiconset/appiconMacHuge_512pt.png" width="150">
 </p>
 
-iOS/Mac 项目崩溃文件自动符号化工具
+iOS/Mac 项目崩溃文件自动符号化工具.
+
+[下载最新版本](https://github.com/Yueoaix/SymbolicatorX/releases)
 
 ## 主要功能
 1. Crash 文件自动查找匹配的 dSYM 文件并解析
