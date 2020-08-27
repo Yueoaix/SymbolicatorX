@@ -140,7 +140,7 @@ public struct CrashFile {
         self.addresses = crashReportAddresses + sampleAddresses
         
         let crashReportBinaries = content.scan(
-            pattern: "^\\d+\\s+(\("[a-zA-Z_\\u4e00-\\u9fa5]*")).*?0x.*?\\s",
+            pattern: "^\\d+\\s+(\("[a-zA-Z0-9_\\u4e00-\\u9fa5]*")).*?0x.*?\\s",
             options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
         ).compactMap { $0.last }
         
