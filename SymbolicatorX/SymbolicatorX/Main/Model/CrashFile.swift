@@ -25,6 +25,7 @@ public struct CrashFile {
     var architecture: Architecture?
     var loadAddress: String?
     var addresses: [String]?
+    var addressArray = [String:[String]]()
     var version: String?
     var buildVersion: String?
     var uuid: BinaryUUID?
@@ -137,6 +138,19 @@ public struct CrashFile {
         ).compactMap { $0.last }
         
         self.addresses = crashReportAddresses + sampleAddresses
+        
+        let crashReportBinaries = content.scan(
+            pattern: "^\\d+\\s+(\("[a-zA-Z_\\u4e00-\\u9fa5]*")).*?0x.*?\\s",
+            options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+        ).compactMap { $0.last }
+        
+        crashReportBinaries.unique.forEach { (binary) in
+            let crashReportAddresses = content.scan(
+                pattern: "^\\d+\\s+(\(binary)).*?(0x.*?)\\s",
+                options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
+            ).compactMap { $0.last }
+            self.addressArray[binary] = crashReportAddresses
+        }
         
         self.responsible = content.scan(pattern: "^Responsible:\\s+(.+?)\\[").first?.first?.trimmed
         self.version = content.scan(pattern: "^Version:\\s+(.+?)\\(").first?.first?.trimmed

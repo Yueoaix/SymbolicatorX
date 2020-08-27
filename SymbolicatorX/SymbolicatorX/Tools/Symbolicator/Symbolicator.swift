@@ -27,7 +27,7 @@ class Symbolicator {
                 return
             }
             
-            guard let addresses = crashFile.addresses, addresses.count > 0 else {
+            guard let addresses = crashFile.addressArray[dsymFile.binaryName], addresses.count > 0 else {
                 completion(crashFile.content)
                 return
             }
