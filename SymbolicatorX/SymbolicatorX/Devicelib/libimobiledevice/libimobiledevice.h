@@ -33,7 +33,7 @@ extern "C" {
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <plist/plist.h>
+#include <libplist/plist.h>
 
 /** Error Codes */
 typedef enum {

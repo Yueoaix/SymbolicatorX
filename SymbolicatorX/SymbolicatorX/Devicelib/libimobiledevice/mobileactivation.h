@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/libimobiledevice.h>
-#include <libimobiledevice/lockdown.h>
+#include "libimobiledevice.h"
+#include "lockdown.h"
 
 #define MOBILEACTIVATION_SERVICE_NAME "com.apple.mobileactivationd"
 

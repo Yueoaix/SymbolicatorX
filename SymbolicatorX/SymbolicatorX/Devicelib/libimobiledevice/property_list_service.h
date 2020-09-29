@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/lockdown.h>
+#include "lockdown.h"
 
 /* Error Codes */
 typedef enum {

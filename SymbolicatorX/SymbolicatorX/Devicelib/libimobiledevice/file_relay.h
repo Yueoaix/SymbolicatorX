@@ -29,8 +29,8 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/libimobiledevice.h>
-#include <libimobiledevice/lockdown.h>
+#include "libimobiledevice.h"
+#include "lockdown.h"
 
 #define FILE_RELAY_SERVICE_NAME "com.apple.mobile.file_relay"
 

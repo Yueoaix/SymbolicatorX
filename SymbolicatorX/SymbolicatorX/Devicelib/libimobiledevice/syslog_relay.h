@@ -28,8 +28,8 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/libimobiledevice.h>
-#include <libimobiledevice/lockdown.h>
+#include "libimobiledevice.h"
+#include "lockdown.h"
 
 #define SYSLOG_RELAY_SERVICE_NAME "com.apple.syslog_relay"
 
