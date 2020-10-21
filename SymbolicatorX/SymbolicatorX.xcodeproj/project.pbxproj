@@ -1038,6 +1038,7 @@
 					"$(PROJECT_DIR)/SymbolicatorX/Devicelib/usbmuxd",
 					"$(PROJECT_DIR)/SymbolicatorX/Devicelib/openssl",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhongxiaoyue.SymbolicatorX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SymbolicatorX/SymbolicatorX-Bridging-Header.h";
@@ -1074,6 +1075,7 @@
 					"$(PROJECT_DIR)/SymbolicatorX/Devicelib/usbmuxd",
 					"$(PROJECT_DIR)/SymbolicatorX/Devicelib/openssl",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhongxiaoyue.SymbolicatorX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SymbolicatorX/SymbolicatorX-Bridging-Header.h";

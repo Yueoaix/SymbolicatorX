@@ -37,6 +37,11 @@ class FileModel {
     
     lazy var children: [FileModel] = {
        
+        return getChildren()
+    }()
+    
+    private func getChildren() -> [FileModel] {
+        
         guard isDirectory, let afcClient = afc else { return [] }
 
         let fileList = try? afcClient.readDirectory(path: path)
@@ -55,7 +60,7 @@ class FileModel {
             return file1.date!.compare(file2.date!) == .orderedDescending
         })
         return children ?? []
-    }()
+    }
     
     
     init(filePath: String, fileInfo: [String], afcClient: AfcClient) {
@@ -79,6 +84,10 @@ class FileModel {
             dateStr = dateFormatter.string(from: date!)
         }
            
+    }
+    
+    public func refreshChildren() {
+        self.children = getChildren()
     }
     
     public func allFileCount() -> Int {

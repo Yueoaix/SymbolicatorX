@@ -206,6 +206,32 @@ extension FileBrowserViewController {
     
 }
 
+// MARK: - Upload Data
+extension FileBrowserViewController {
+    
+    func uploadFiles(fileURLs: [URL], fileModel: FileModel) {
+        
+        guard
+            let afcClient = afcClient
+        else { return }
+        
+        fileURLs.forEach { (fileUrl) in
+            
+            let uploadFilePath = (fileModel.path as NSString).appendingPathComponent(fileUrl.lastPathComponent)
+            do {
+                let handle = try afcClient.fileOpen(filename: uploadFilePath, fileMode: .wrOnly)
+                try afcClient.fileWrite(handle: handle, fileURL: fileUrl)
+                try afcClient.fileClose(handle: handle)
+                fileModel.refreshChildren()
+                outlineView.reloadItem(fileModel, reloadChildren: true)
+            } catch {
+                print(error)
+            }
+        }
+    }
+}
+
+
 // MARK: - NSOutlineViewDataSource
 extension FileBrowserViewController: NSOutlineViewDataSource {
     
@@ -236,6 +262,29 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
         let file = item as! FileModel
         
         return file.children.count > 0
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
+        
+        return .every;
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+        
+        guard
+            let draggedFiles = info.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: nil),
+            let fileModel = item as? FileModel
+        else {
+            return false
+        }
+        
+        let draggedFileURLs = draggedFiles.compactMap { (draggedFile) -> URL? in
+            guard let draggedFile = draggedFile as? NSURL else { return nil }
+            return draggedFile.filePathURL
+        }
+        
+        uploadFiles(fileURLs: draggedFileURLs, fileModel: fileModel)
+        return true
     }
 }
 
@@ -352,6 +401,8 @@ extension FileBrowserViewController {
         outlineView.focusRingType = .none
         outlineView.rowHeight = 20
         outlineView.outlineTableColumn = column1
+        outlineView.registerForDraggedTypes([(kUTTypeFileURL as
+        NSPasteboard.PasteboardType)])
         
         let scrollView = NSScrollView()
         scrollView.focusRingType = .none
