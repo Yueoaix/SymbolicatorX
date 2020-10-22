@@ -145,6 +145,7 @@ extension FileModel {
             let afcClient = afc
             else { return }
         
+        _ = children
         for fileUrl in fileURLs {
             
             let uploadFilePath = (path as NSString).appendingPathComponent(fileUrl.lastPathComponent)
