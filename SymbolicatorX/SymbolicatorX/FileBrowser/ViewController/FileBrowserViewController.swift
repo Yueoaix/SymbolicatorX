@@ -129,78 +129,6 @@ extension FileBrowserViewController {
     }
 }
 
-// MARK: - Upload Data
-extension FileBrowserViewController {
-    
-    func makeFileModel(filePath: String, afcClient: AfcClient) -> FileModel? {
-        
-        guard let fileInfo = try? afcClient.getFileInfo(path: filePath) else { return nil }
-        
-        return FileModel(filePath: filePath, fileInfo: fileInfo, afcClient: afcClient)
-    }
-    
-    func uploadFiles(fileURLs: [URL], fileModel: FileModel) {
-        
-        guard
-            let afcClient = afcClient
-        else { return }
-        
-        fileURLs.forEach { (fileUrl) in
-            
-            let uploadFilePath = (fileModel.path as NSString).appendingPathComponent(fileUrl.lastPathComponent)
-            var uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
-            
-            var isDirectory: ObjCBool = false
-            guard FileManager.default.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory)
-            else { return }
-            
-            do {
-                
-                if isDirectory.boolValue {
-                    
-                    // directory exists
-                    if let uploadFileModel = uploadFileModel, uploadFileModel.isDirectory {
-                        
-                        fileModel.children.append(uploadFileModel)
-                    }else{
-                        
-                        try afcClient.makeDirectory(path: uploadFilePath)
-                        uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
-                    }
-                    
-                    let subFileUrls = try FileManager.default.contentsOfDirectory(at: fileUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                    
-                    if let uploadFileModel = uploadFileModel {
-                        
-                        fileModel.children.append(uploadFileModel)
-                        uploadFiles(fileURLs: subFileUrls, fileModel: uploadFileModel)
-                    }
-                }else{
-                    
-                    guard uploadFileModel == nil
-                    else {
-                        print("设备已存在文件:\(uploadFilePath)")
-                        return
-                    }
-                    
-                    let handle = try afcClient.fileOpen(filename: uploadFilePath, fileMode: .wrOnly)
-                    try afcClient.fileWrite(handle: handle, fileURL: fileUrl)
-                    try afcClient.fileClose(handle: handle)
-                    uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
-//                    fileModel.refreshChildren()
-                    if let uploadFileModel = uploadFileModel {
-                        
-                        fileModel.children.append(uploadFileModel)
-                    }
-//                    outlineView.reloadItem(fileModel, reloadChildren: true)
-                }
-            } catch {
-                view.window?.alert(message: error.localizedDescription)
-            }
-        }
-    }
-}
-
 // MARK: - Action
 extension FileBrowserViewController {
     
@@ -319,7 +247,7 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
         
         guard
             let draggedFiles = info.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: nil),
-            let fileModel = item as? FileModel
+            var fileModel = item as? FileModel
         else {
             return false
         }
@@ -329,8 +257,19 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
             return draggedFile.filePathURL
         }
         
+        if !fileModel.isDirectory {
+            fileModel = outlineView.parent(forItem: fileModel) as! FileModel
+        }
+        
         DispatchQueue.global().async {
-            self.uploadFiles(fileURLs: draggedFileURLs, fileModel: fileModel)
+            
+            do{
+                try fileModel.uploadFiles(fileURLs: draggedFileURLs) {
+                    outlineView.reloadData()
+                }
+            }catch{
+                self.view.window?.alert(message: error.localizedDescription)
+            }
         }
         return true
     }

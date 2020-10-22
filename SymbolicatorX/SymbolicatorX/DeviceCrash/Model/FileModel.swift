@@ -36,14 +36,9 @@ class FileModel {
     }
     
     lazy var children: [FileModel] = {
-       
-        return getChildren()
-    }()
-    
-    private func getChildren() -> [FileModel] {
         
         guard isDirectory, let afcClient = afc else { return [] }
-
+        
         let fileList = try? afcClient.readDirectory(path: path)
         var children = fileList?.compactMap { (fileName) -> FileModel? in
             
@@ -52,7 +47,7 @@ class FileModel {
                 fileName != "." && fileName != "..",
                 fileName != ".com.apple.mobile_container_manager.metadata.plist",
                 let fileInfo = try? afcClient.getFileInfo(path: path)
-            else { return nil }
+                else { return nil }
             
             return FileModel(filePath: path, fileInfo: fileInfo, afcClient: afcClient)
         }
@@ -60,8 +55,7 @@ class FileModel {
             return file1.date!.compare(file2.date!) == .orderedDescending
         })
         return children ?? []
-    }
-    
+    }()
     
     init(filePath: String, fileInfo: [String], afcClient: AfcClient) {
         
@@ -83,11 +77,7 @@ class FileModel {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             dateStr = dateFormatter.string(from: date!)
         }
-           
-    }
-    
-    public func refreshChildren() {
-        self.children = getChildren()
+        
     }
     
     public func allFileCount() -> Int {
@@ -129,7 +119,70 @@ class FileModel {
         } catch {
             print(error)
         }
-        
     }
     
+}
+
+// MARK: - Upload Data
+extension FileModel {
+    
+    func makeFileModel(filePath: String, afcClient: AfcClient) -> FileModel? {
+        
+        guard let fileInfo = try? afcClient.getFileInfo(path: filePath) else { return nil }
+        
+        return FileModel(filePath: filePath, fileInfo: fileInfo, afcClient: afcClient)
+    }
+    
+    func uploadFiles(fileURLs: [URL], completion: CompletionHandler?) throws {
+        
+        defer {
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }
+        
+        guard
+            let afcClient = afc
+            else { return }
+        
+        for fileUrl in fileURLs {
+            
+            let uploadFilePath = (path as NSString).appendingPathComponent(fileUrl.lastPathComponent)
+            var uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
+            
+            var isDirectory: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory)
+                else { return }
+            
+            if isDirectory.boolValue {
+                
+                if !(uploadFileModel?.isDirectory ?? false) {
+                    
+                    try afcClient.makeDirectory(path: uploadFilePath)
+                    uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
+                }
+                
+                guard let uploadFileModel = uploadFileModel else { return }
+                
+                let subFileUrls = try FileManager.default.contentsOfDirectory(at: fileUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                children.insert(uploadFileModel, at: 0)
+                try uploadFileModel.uploadFiles(fileURLs: subFileUrls, completion: nil)
+            }else{
+                
+                guard uploadFileModel == nil
+                else {
+                    print("设备已存在文件:\(uploadFilePath)")
+                    return
+                }
+                
+                let handle = try afcClient.fileOpen(filename: uploadFilePath, fileMode: .wrOnly)
+                try afcClient.fileWrite(handle: handle, fileURL: fileUrl)
+                try afcClient.fileClose(handle: handle)
+                uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
+                if let uploadFileModel = uploadFileModel {
+                    children.insert(uploadFileModel, at: 0)
+                }
+            }
+        }
+    }
 }
