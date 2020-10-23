@@ -201,11 +201,14 @@ extension FileBrowserViewController: OutlineViewMenuDelegate {
     func didClickMenu(outlineView: NSOutlineView, type: MenuType) {
         
         guard type == .remove else { return }
-
-        outlineView.selectedRowIndexes.forEach { (row) in
+        
+        let removeFileModelList = outlineView.selectedRowIndexes.compactMap { (row) -> FileModel? in
+            return outlineView.item(atRow: row) as? FileModel
+        }
+        
+        removeFileModelList.forEach { (fileModel) in
             
             guard
-                let fileModel = outlineView.item(atRow: row) as? FileModel,
                 let parentFileModel = outlineView.parent(forItem: fileModel) as? FileModel,
                 let index = parentFileModel.children.firstIndex(of: fileModel)
             else { return }
