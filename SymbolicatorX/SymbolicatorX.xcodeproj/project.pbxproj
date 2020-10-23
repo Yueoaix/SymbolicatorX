@@ -18,6 +18,7 @@
 		5415674524CEA274007B37E2 /* FileTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674424CEA274007B37E2 /* FileTableCellView.swift */; };
 		5415674724CEA806007B37E2 /* NSTableCellView+Extesnion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */; };
 		5415DFDC25427C0800CDE936 /* FileProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */; };
+		5415DFDE2542B47A00CDE936 /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415DFDD2542B47A00CDE936 /* FileOutlineView.swift */; };
 		5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */; };
 		5420D92524C05D85009E7CED /* SymbolicatedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */; };
 		5423DF4E24D7EEF30030DA25 /* InstallPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */; };
@@ -133,6 +134,7 @@
 		5415674424CEA274007B37E2 /* FileTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTableCellView.swift; sourceTree = "<group>"; };
 		5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableCellView+Extesnion.swift"; sourceTree = "<group>"; };
 		5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProgressIndicator.swift; sourceTree = "<group>"; };
+		5415DFDD2542B47A00CDE936 /* FileOutlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolicatedWindowController.swift; sourceTree = "<group>"; };
 		5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SymbolicatedWindowController.xib; sourceTree = "<group>"; };
 		5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPanel.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 			children = (
 				5415674424CEA274007B37E2 /* FileTableCellView.swift */,
 				5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */,
+				5415DFDD2542B47A00CDE936 /* FileOutlineView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -849,6 +852,7 @@
 				5428B17D24B4CB2B004AC47A /* DSYMFile.swift in Sources */,
 				54478B2A24DD51AB0064F956 /* ConstraintLayoutGuideDSL.swift in Sources */,
 				54478B1424DD51AB0064F956 /* ConstraintAttributes.swift in Sources */,
+				5415DFDE2542B47A00CDE936 /* FileOutlineView.swift in Sources */,
 				54478B2524DD51AB0064F956 /* ConstraintConstantTarget.swift in Sources */,
 				5423DF5224D8FB5E0030DA25 /* DevicePopUpButton.swift in Sources */,
 				5428218424B36D7A00DFC62F /* NSColor+Extension.swift in Sources */,

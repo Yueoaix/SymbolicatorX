@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FileModel {
+class FileModel: NSObject {
     
     typealias CompletionHandler = () -> Void
     
@@ -94,14 +94,29 @@ class FileModel {
         return count
     }
     
-    public func save(toPath path: URL, completion: @escaping CompletionHandler) {
+}
+
+// MARK: - Remove
+extension FileModel {
+    
+    public func removeFile() throws {
+        
+        try afc?.removePathAndContents(path: path)
+    }
+    
+}
+
+// MARK: - Export
+extension FileModel {
+    
+    public func exportFiles(toPath path: URL, completion: @escaping CompletionHandler) {
         
         if isDirectory {
             
             children.forEach({ (file) in
                 let file = file
                 let subPath = path.appendingPathComponent(file.name)
-                file.save(toPath: subPath, completion: completion)
+                file.exportFiles(toPath: subPath, completion: completion)
             })
             return
         }
@@ -120,10 +135,9 @@ class FileModel {
             print(error)
         }
     }
-    
 }
 
-// MARK: - Upload Data
+// MARK: - Upload
 extension FileModel {
     
     func makeFileModel(filePath: String, afcClient: AfcClient) -> FileModel? {

@@ -12,7 +12,7 @@ class FileBrowserViewController: BaseViewController {
     
     private let devicePopBtn = DevicePopUpButton()
     private let appPopBtn = NSPopUpButton()
-    private let outlineView = NSOutlineView()
+    private let outlineView = FileOutlineView()
     private let progressIndicator = FileProgressIndicator()
     private var exportBtn: NSButton!
     private var backBtn: NSButton!
@@ -169,7 +169,7 @@ extension FileBrowserViewController {
                 DispatchQueue.global().async {
 
                     selectedFile.forEach { (file) in
-                        file.save(toPath: url.appendingPathComponent(file.name)) { [weak self] in
+                        file.exportFiles(toPath: url.appendingPathComponent(file.name)) { [weak self] in
                             DispatchQueue.main.async {
                                 self?.progressIndicator.finish(count: 1)
                             }
@@ -193,6 +193,35 @@ extension FileBrowserViewController {
         loadFileData()
     }
     
+}
+
+// MARK: - TableViewMenuDelegate
+extension FileBrowserViewController: OutlineViewMenuDelegate {
+    
+    func didClickMenu(outlineView: NSOutlineView, type: MenuType) {
+        
+        guard type == .remove else { return }
+
+        outlineView.selectedRowIndexes.forEach { (row) in
+            
+            guard
+                let fileModel = outlineView.item(atRow: row) as? FileModel,
+                let parentFileModel = outlineView.parent(forItem: fileModel) as? FileModel,
+                let index = parentFileModel.children.firstIndex(of: fileModel)
+            else { return }
+            
+            do{
+                try fileModel.removeFile()
+                outlineView.beginUpdates()
+                parentFileModel.children.remove(at: index)
+                outlineView.removeItems(at: IndexSet.init(integer: index), inParent: parentFileModel, withAnimation: .slideUp)
+                outlineView.endUpdates()
+            }catch{
+                view.window?.alert(message: error.localizedDescription)
+            }
+        }
+    }
+
 }
 
 // MARK: - NSOutlineViewDataSource
@@ -382,6 +411,7 @@ extension FileBrowserViewController {
         outlineView.dataSource = self;
         outlineView.focusRingType = .none
         outlineView.rowHeight = 20
+        outlineView.menuDelegate = self
         outlineView.outlineTableColumn = column1
         outlineView.registerForDraggedTypes([(kUTTypeFileURL as
         NSPasteboard.PasteboardType)])

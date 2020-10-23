@@ -8,18 +8,19 @@
 
 import Cocoa
 
-protocol CrashFileTableViewDelegate: class {
-    func didClickMenu(type: MenuType, selectedRow: Int)
+protocol TableViewMenuDelegate: class {
+    func didClickMenu(tableView: NSTableView, type: MenuType)
 }
 
 enum MenuType {
     case view
     case save
+    case remove
 }
 
 class CrashFileTableView: NSTableView {
     
-    public weak var menuDelegate: CrashFileTableViewDelegate?
+    public weak var menuDelegate: TableViewMenuDelegate?
     
     private lazy var cmenu: NSMenu = {
         
@@ -61,14 +62,14 @@ class CrashFileTableView: NSTableView {
     
 }
 
-// MARK: - Crash
+// MARK: - Menu Action
 extension CrashFileTableView {
     
     @objc private func didClickViewMenu() {
-        menuDelegate?.didClickMenu(type: .view, selectedRow: selectedRow)
+        menuDelegate?.didClickMenu(tableView: self, type: .view)
     }
         
     @objc private func didClickSaveMenu() {
-        menuDelegate?.didClickMenu(type: .save, selectedRow: selectedRow)
+        menuDelegate?.didClickMenu(tableView: self, type: .save)
     }
 }

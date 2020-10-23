@@ -189,12 +189,12 @@ extension DeviceCrashViewController {
     }
 }
 
-// MARK: - CrashFileTableViewDelegate
-extension DeviceCrashViewController: CrashFileTableViewDelegate {
+// MARK: - TableViewMenuDelegate
+extension DeviceCrashViewController: TableViewMenuDelegate {
     
-    func didClickMenu(type: MenuType, selectedRow: Int) {
+    func didClickMenu(tableView: NSTableView, type: MenuType) {
         
-        let fileInfo = crashFileList[selectedRow]
+        let fileInfo = crashFileList[tableView.selectedRow]
         guard let data = fileInfo.data, let content = String(data: data, encoding: .utf8) else { return }
         
         switch type {
@@ -217,6 +217,8 @@ extension DeviceCrashViewController: CrashFileTableViewDelegate {
                     return
                 }
             }
+            break
+        case .remove:
             break
         }
     }
