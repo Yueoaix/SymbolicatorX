@@ -13,7 +13,7 @@ class FileBrowserViewController: BaseViewController {
     private let devicePopBtn = DevicePopUpButton()
     private let appPopBtn = NSPopUpButton()
     private let outlineView = NSOutlineView()
-    private let progressIndicator = NSProgressIndicator()
+    private let progressIndicator = FileProgressIndicator()
     private var exportBtn: NSButton!
     private var backBtn: NSButton!
     
@@ -153,12 +153,9 @@ extension FileBrowserViewController {
         guard selectedFile.count > 0 else { return }
         
         var total = 0
-        var progress = 0
         selectedFile.forEach { (file) in
             total += file.allFileCount()
         }
-        progressIndicator.doubleValue = 0
-        progressIndicator.isHidden = total == 0
         
         let savePanel = NSSavePanel()
         savePanel.canCreateDirectories = true
@@ -168,21 +165,13 @@ extension FileBrowserViewController {
             switch response {
             case .OK:
                 guard let url = savePanel.url else { return }
-                self.progressIndicator.startAnimation(self)
-                self.backBtn.isEnabled = false
-                self.exportBtn.isEnabled = false
+                self.progressIndicator.start(taskCount: total)
                 DispatchQueue.global().async {
 
                     selectedFile.forEach { (file) in
                         file.save(toPath: url.appendingPathComponent(file.name)) { [weak self] in
-                            progress += 1
                             DispatchQueue.main.async {
-                                self?.progressIndicator.doubleValue = Double(progress)/Double(total)
-                                if progress == total {
-                                    self?.progressIndicator.isHidden = true
-                                    self?.backBtn.isEnabled = true
-                                    self?.exportBtn.isEnabled = true
-                                }
+                                self?.progressIndicator.finish(count: 1)
                             }
                         }
                     }
@@ -252,20 +241,26 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
             return false
         }
         
-        let draggedFileURLs = draggedFiles.compactMap { (draggedFile) -> URL? in
-            guard let draggedFile = draggedFile as? NSURL else { return nil }
-            return draggedFile.filePathURL
-        }
-        
         if !fileModel.isDirectory {
             fileModel = outlineView.parent(forItem: fileModel) as! FileModel
         }
         
-        DispatchQueue.global().async {
+        var total = draggedFiles.count
+        let draggedFileURLs = draggedFiles.compactMap { (draggedFile) -> URL? in
+            guard let draggedFile = draggedFile as? NSURL else { return nil }
             
+            let allSubFiles = FileManager.default.enumerator(at: draggedFile.filePathURL!, includingPropertiesForKeys: nil, options: .skipsHiddenFiles, errorHandler: nil)
+            total += allSubFiles?.allObjects.count ?? 0
+            return draggedFile.filePathURL
+        }
+        
+        progressIndicator.start(taskCount: total)
+        DispatchQueue.global().async {
             do{
                 try fileModel.uploadFiles(fileURLs: draggedFileURLs) {
-                    outlineView.reloadData()
+                    DispatchQueue.main.async {
+                        self.progressIndicator.finish(count: 1)
+                    }
                 }
             }catch{
                 self.view.window?.alert(message: error.localizedDescription)
@@ -414,6 +409,20 @@ extension FileBrowserViewController {
             make.left.equalTo(devicePopBtn)
             make.right.equalTo(exportBtn)
             make.top.equalTo(devicePopBtn.snp.bottom).offset(-3)
+        }
+        
+        progressIndicator.setCallback(start: {
+            [weak self] in
+            self?.progressIndicator.isHidden = false
+            self?.backBtn.isEnabled = false
+            self?.exportBtn.isEnabled = false
+        }, progress: nil) {
+            [weak self] in
+            
+            self?.progressIndicator.isHidden = true
+            self?.backBtn.isEnabled = true
+            self?.exportBtn.isEnabled = true
+            self?.outlineView.reloadData()
         }
     }
     

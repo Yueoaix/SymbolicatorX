@@ -10,10 +10,10 @@ import Cocoa
 
 class FileTableCellView: NSTableCellView {
     
-    let icon = NSImageView.init()
-    let title = NSTextField.init()
+    private let icon = NSImageView.init()
+    private let title = NSTextField.init()
     
-    var model: FileModel? {
+    public var model: FileModel? {
         didSet {
             title.stringValue = model?.name ?? ""
             title.toolTip = title.stringValue
@@ -29,8 +29,21 @@ class FileTableCellView: NSTableCellView {
         super.init(frame: frameRect)
         setupUI()
     }
+
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    func setupUI() {
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
+
+        // Drawing code here.
+    }
+}
+
+extension FileTableCellView {
+    
+    private func setupUI() {
         
         // 添加图片
         icon.image = NSImage.init(named: NSImage.folderName)
@@ -50,15 +63,5 @@ class FileTableCellView: NSTableCellView {
             make.left.equalTo(icon.snp.right).offset(10)
             make.top.bottom.right.equalToSuperview()
         }
-    }
-    
-    required init?(coder decoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-
-        // Drawing code here.
     }
 }

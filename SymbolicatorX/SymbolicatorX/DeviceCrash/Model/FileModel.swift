@@ -133,13 +133,7 @@ extension FileModel {
         return FileModel(filePath: filePath, fileInfo: fileInfo, afcClient: afcClient)
     }
     
-    func uploadFiles(fileURLs: [URL], completion: CompletionHandler?) throws {
-        
-        defer {
-            DispatchQueue.main.async {
-                completion?()
-            }
-        }
+    func uploadFiles(fileURLs: [URL], completion: @escaping CompletionHandler) throws {
         
         guard
             let afcClient = afc
@@ -148,12 +142,19 @@ extension FileModel {
         _ = children
         for fileUrl in fileURLs {
             
+            defer {
+                completion()
+            }
+            
             let uploadFilePath = (path as NSString).appendingPathComponent(fileUrl.lastPathComponent)
             var uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
             
             var isDirectory: ObjCBool = false
             guard FileManager.default.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory)
-                else { return }
+            else {
+                print("⚠️ File not found :\(uploadFilePath)")
+                continue
+            }
             
             if isDirectory.boolValue {
                 
@@ -163,17 +164,21 @@ extension FileModel {
                     uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
                 }
                 
-                guard let uploadFileModel = uploadFileModel else { return }
+                guard let uploadFileModel = uploadFileModel
+                else {
+                    print("⚠️ Failed to create directory :\(uploadFilePath)")
+                    continue
+                }
                 
                 let subFileUrls = try FileManager.default.contentsOfDirectory(at: fileUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
                 children.insert(uploadFileModel, at: 0)
-                try uploadFileModel.uploadFiles(fileURLs: subFileUrls, completion: nil)
+                try uploadFileModel.uploadFiles(fileURLs: subFileUrls, completion: completion)
             }else{
                 
                 guard uploadFileModel == nil
                 else {
-                    print("设备已存在文件:\(uploadFilePath)")
-                    return
+                    print("⚠️ File already exists :\(uploadFilePath)")
+                    continue
                 }
                 
                 let handle = try afcClient.fileOpen(filename: uploadFilePath, fileMode: .wrOnly)

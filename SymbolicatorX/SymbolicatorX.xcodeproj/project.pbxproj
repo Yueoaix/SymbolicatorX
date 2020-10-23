@@ -17,6 +17,7 @@
 		5415674224CE836C007B37E2 /* NSButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674124CE836C007B37E2 /* NSButton+Extension.swift */; };
 		5415674524CEA274007B37E2 /* FileTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674424CEA274007B37E2 /* FileTableCellView.swift */; };
 		5415674724CEA806007B37E2 /* NSTableCellView+Extesnion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */; };
+		5415DFDC25427C0800CDE936 /* FileProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */; };
 		5420D92424C05D85009E7CED /* SymbolicatedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */; };
 		5420D92524C05D85009E7CED /* SymbolicatedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */; };
 		5423DF4E24D7EEF30030DA25 /* InstallPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */; };
@@ -131,6 +132,7 @@
 		5415674124CE836C007B37E2 /* NSButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Extension.swift"; sourceTree = "<group>"; };
 		5415674424CEA274007B37E2 /* FileTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTableCellView.swift; sourceTree = "<group>"; };
 		5415674624CEA806007B37E2 /* NSTableCellView+Extesnion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableCellView+Extesnion.swift"; sourceTree = "<group>"; };
+		5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProgressIndicator.swift; sourceTree = "<group>"; };
 		5420D92224C05D85009E7CED /* SymbolicatedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolicatedWindowController.swift; sourceTree = "<group>"; };
 		5420D92324C05D85009E7CED /* SymbolicatedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SymbolicatedWindowController.xib; sourceTree = "<group>"; };
 		5423DF4D24D7EEF30030DA25 /* InstallPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPanel.swift; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				5415674424CEA274007B37E2 /* FileTableCellView.swift */,
+				5415DFDB25427C0800CDE936 /* FileProgressIndicator.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -793,6 +796,7 @@
 			files = (
 				54478B2424DD51AB0064F956 /* Typealiases.swift in Sources */,
 				542C171024B21B41009A4219 /* MainViewController.swift in Sources */,
+				5415DFDC25427C0800CDE936 /* FileProgressIndicator.swift in Sources */,
 				54478B3424DD51AB0064F956 /* ConstraintMakerRelatable.swift in Sources */,
 				54478B3024DD51AB0064F956 /* LayoutConstraint.swift in Sources */,
 				54478B1724DD51AB0064F956 /* ConstraintInsets.swift in Sources */,
