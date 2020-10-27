@@ -117,7 +117,7 @@ extension InstallViewController {
         
         guard
             let window = view.window,
-            let parent = window.parent
+            let parent = window.sheetParent
         else { return }
         
         parent.endSheet(window)

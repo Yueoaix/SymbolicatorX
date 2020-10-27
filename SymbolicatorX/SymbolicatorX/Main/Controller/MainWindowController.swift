@@ -25,21 +25,18 @@ extension MainWindowController {
     @objc private func didClickInstallBtn() {
         
         let devicePannel = InstallPanel(size: NSSize(width: 300, height: 282))
-        devicePannel.parent = window
         window?.beginSheet(devicePannel, completionHandler: nil)
     }
     
     @objc private func didClickFileBrowserBtn() {
         
         let devicePannel = FileBrowserPanel(size: NSSize(width: 600, height: 282))
-        devicePannel.parent = window
         window?.beginSheet(devicePannel, completionHandler: nil)
     }
     
     @objc private func didClickDeviceBtn() {
         
         let devicePannel = DeviceCrashPanel(size: NSSize(width: 600, height: 282))
-        devicePannel.parent = window
         window?.beginSheet(devicePannel, completionHandler: nil)
         
         guard
