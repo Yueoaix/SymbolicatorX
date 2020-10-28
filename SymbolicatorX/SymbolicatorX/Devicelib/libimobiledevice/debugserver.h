@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/libimobiledevice.h>
-#include <libimobiledevice/lockdown.h>
+#include <libmobiledevice/libimobiledevice.h>
+#include <libmobiledevice/lockdown.h>
 
 #define DEBUGSERVER_SERVICE_NAME "com.apple.debugserver"
 

@@ -3,10 +3,12 @@
 //  SymbolicatorX
 //
 //  Created by 钟晓跃 on 2020/7/5.
-//  Copyright © 2020 钟晓跃. All rights reserved.
+//  Modify by 钟晓跃 on 2020/7/5.
+//  Copyright © 2020 lory. All rights reserved.
 //
 
 import Cocoa
+import libSymbolicatorX
 
 class MainViewController: BaseViewController {
     
@@ -62,7 +64,12 @@ extension MainViewController {
         
         isSymbolicating = true
         
-        Symbolicator.symbolicate(crashFile: crashFile, dsymFile: dsymFile, errorHandler: { [weak self] (error) in
+        print(crashFile.path?.absoluteString)
+        print(dsymFile.path.absoluteString)
+        
+        guard let cf = libSymbolicatorX.LibCrashFile(path: crashFile.path!) else { return }
+        let df = libSymbolicatorX.LibDSYMFile(path: dsymFile.path)
+        libSymbolicatorX.symbolicate(crashFile: cf, dsymFile: df, errorHandler: { [weak self] (error) in
             
             DispatchQueue.main.async {
                 self?.view.window?.alert(message: error)
@@ -78,6 +85,23 @@ extension MainViewController {
                 self?.textWindowController.saveUrl = crashFile.symbolicatedContentSaveURL
             }
         }
+        
+//        Symbolicator.symbolicate(crashFile: crashFile, dsymFile: dsymFile, errorHandler: { [weak self] (error) in
+//
+//            DispatchQueue.main.async {
+//                self?.view.window?.alert(message: error)
+//                self?.isSymbolicating = false
+//            }
+//        }) { [weak self] (content) in
+//
+//            DispatchQueue.main.async {
+//                self?.isSymbolicating = false
+//                self?.textWindowController.showWindow(nil)
+//                self?.textWindowController.fileName = crashFile.filename
+//                self?.textWindowController.text = content
+//                self?.textWindowController.saveUrl = crashFile.symbolicatedContentSaveURL
+//            }
+//        }
     }
 }
 

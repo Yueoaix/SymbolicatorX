@@ -28,9 +28,9 @@
 extern "C" {
 #endif
 
-#include <libimobiledevice/libimobiledevice.h>
-#include <libimobiledevice/lockdown.h>
-#include <libimobiledevice/afc.h>
+#include "libimobiledevice.h"
+#include "lockdown.h"
+#include "afc.h"
 
 #define HOUSE_ARREST_SERVICE_NAME "com.apple.mobile.house_arrest"
 

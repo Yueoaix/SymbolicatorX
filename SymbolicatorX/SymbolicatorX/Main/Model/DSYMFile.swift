@@ -23,6 +23,17 @@ public struct DSYMFile {
         
         return dwarfPath.appendingPathComponent(binary).path
     }
+    
+    var binaryName: String {
+        
+        let dwarfPath = path.appendingPathComponent("Contents").appendingPathComponent("Resources").appendingPathComponent("DWARF")
+        
+        guard let binary = (try? FileManager.default.contentsOfDirectory(atPath: dwarfPath.path))?.first else {
+            return filename.replacingOccurrences(of: ".dSYM", with: "")
+        }
+        
+        return binary
+    }
 
     public init(path: URL) {
     
