@@ -261,7 +261,7 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         
-        return .every;
+        return .every
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
@@ -410,8 +410,8 @@ extension FileBrowserViewController {
         
         outlineView.allowsMultipleSelection = true
         outlineView.usesAlternatingRowBackgroundColors = true
-        outlineView.delegate = self;
-        outlineView.dataSource = self;
+        outlineView.delegate = self
+        outlineView.dataSource = self
         outlineView.focusRingType = .none
         outlineView.rowHeight = 20
         outlineView.menuDelegate = self

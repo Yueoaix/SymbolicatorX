@@ -45,7 +45,7 @@ public enum AppleServiceIdentifier: String {
     
     case springboar = "com.apple.springboardservices"
     
-    case screenshot = "com.apple.screenshotr"
+    case screenshot = "com.apple.mobile.screenshotr"
     
     case webInspector = "com.apple.webinspector"
     
