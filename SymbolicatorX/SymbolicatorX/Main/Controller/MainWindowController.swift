@@ -22,21 +22,27 @@ class MainWindowController: BaseWindowController {
 // MARK: - Action
 extension MainWindowController {
     
+    @objc private func didClickScreenshotBtn() {
+        
+        let screenshotPannel = BasePanel(size: NSSize(width: 260, height: 282), viewController: ScreenshotViewController())
+        window?.beginSheet(screenshotPannel, completionHandler: nil)
+    }
+    
     @objc private func didClickInstallBtn() {
         
-        let devicePannel = InstallPanel(size: NSSize(width: 300, height: 282))
+        let devicePannel = BasePanel(size: NSSize(width: 300, height: 282), viewController: InstallViewController())
         window?.beginSheet(devicePannel, completionHandler: nil)
     }
     
     @objc private func didClickFileBrowserBtn() {
         
-        let devicePannel = FileBrowserPanel(size: NSSize(width: 600, height: 282))
+        let devicePannel = BasePanel(size: NSSize(width: 600, height: 282), viewController: FileBrowserViewController())
         window?.beginSheet(devicePannel, completionHandler: nil)
     }
     
     @objc private func didClickDeviceBtn() {
         
-        let devicePannel = DeviceCrashPanel(size: NSSize(width: 600, height: 282))
+        let devicePannel = BasePanel(size: NSSize(width: 600, height: 282), viewController: DeviceCrashViewController())
         window?.beginSheet(devicePannel, completionHandler: nil)
         
         guard
@@ -65,6 +71,8 @@ extension MainWindowController: NSToolbarDelegate {
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         
         switch itemIdentifier {
+        case .screenshot:
+            return NSToolbar.makeToolbarItem(identifier: .screenshot, target: self, action: #selector(didClickScreenshotBtn))
         case .install:
             return NSToolbar.makeToolbarItem(identifier: .install, target: self, action: #selector(didClickInstallBtn))
         case .fileBrowser:
@@ -79,11 +87,11 @@ extension MainWindowController: NSToolbarDelegate {
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .install, .fileBrowser, .device, .symbolicate]
+        return [.flexibleSpace, .screenshot, .install, .fileBrowser, .device, .symbolicate]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.flexibleSpace, .install, .fileBrowser, .device, .symbolicate]
+        return [.flexibleSpace, .screenshot, .install, .fileBrowser, .device, .symbolicate]
     }
 }
 
@@ -93,6 +101,7 @@ extension NSToolbarItem.Identifier {
     static let symbolicate = NSToolbarItem.Identifier(rawValue: "Symbolicate")
     static let fileBrowser = NSToolbarItem.Identifier(rawValue: "File Browser")
     static let install = NSToolbarItem.Identifier(rawValue: "Install")
+    static let screenshot = NSToolbarItem.Identifier(rawValue: "Screenshot")
 }
 
 // MARK: - UI
