@@ -13,7 +13,7 @@ class ScreenshotViewController: BaseViewController {
     private let devicePopBtn = DevicePopUpButton()
     
     private let screenImageView = NSImageView()
-    private var exportBtn: NSButton!
+    private var saveBtn: NSButton!
     private var refreshBtn: NSButton!
     private var backBtn: NSButton!
     
@@ -30,7 +30,7 @@ class ScreenshotViewController: BaseViewController {
 // MARK: - Action
 extension ScreenshotViewController {
     
-    @objc private func didClickExportBtn() {
+    @objc private func didClickSaveBtn() {
         
         guard let data = self.screenData else {
             view.window?.alert(message: "No Screen Data")
@@ -113,9 +113,9 @@ extension ScreenshotViewController {
             make.width.equalTo(85)
         }
         
-        exportBtn = NSButton.makeButton(title: "Export", target: self, action: #selector(didClickExportBtn))
-        view.addSubview(exportBtn)
-        exportBtn.snp.makeConstraints { (make) in
+        saveBtn = NSButton.makeButton(title: "Save", target: self, action: #selector(didClickSaveBtn))
+        view.addSubview(saveBtn)
+        saveBtn.snp.makeConstraints { (make) in
             make.top.equalTo(backBtn.snp.bottom).offset(10)
             make.centerX.height.width.equalTo(backBtn)
         }
@@ -123,7 +123,7 @@ extension ScreenshotViewController {
         refreshBtn = NSButton.makeButton(title: "Refresh", target: self, action: #selector(didClickRefreshBtn))
         view.addSubview(refreshBtn)
         refreshBtn.snp.makeConstraints { (make) in
-            make.top.equalTo(exportBtn.snp.bottom).offset(10)
+            make.top.equalTo(saveBtn.snp.bottom).offset(10)
             make.centerX.height.width.equalTo(backBtn)
         }
         
