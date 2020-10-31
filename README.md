@@ -17,16 +17,16 @@ iOS/Mac 项目崩溃文件自动符号化工具.
 
 ## 使用方法
 Crash 文件符号化,自动定位崩溃位置
-![](./Demo/Demo1.gif)
+![](https://github.com/Yueoaix/DemoImages-Storage/blob/master/SymbolicatorX/Demo1.gif)
 
 设备崩溃日志直接导入使用
-![](./Demo/Demo2.gif)
+![](https://github.com/Yueoaix/DemoImages-Storage/blob/master/SymbolicatorX/Demo2.gif)
 
 App 沙盒文件浏览与导出
-![](./Demo/Demo3.gif)
+![](https://github.com/Yueoaix/DemoImages-Storage/blob/master/SymbolicatorX/Demo3.gif)
 
 App 沙盒文件上传与删除
-![](./Demo/Demo5.gif)
+![](https://github.com/Yueoaix/DemoImages-Storage/blob/master/SymbolicatorX/Demo5.gif)
 
 ipa 包安装
-![](./Demo/Demo4.gif)
+![](https://github.com/Yueoaix/DemoImages-Storage/blob/master/SymbolicatorX/Demo4.gif)
