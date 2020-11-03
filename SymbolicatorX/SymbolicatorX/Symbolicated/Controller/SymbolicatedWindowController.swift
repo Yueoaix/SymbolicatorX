@@ -68,7 +68,7 @@ extension SymbolicatedWindowController {
                 case .OK:
                     guard let url = self.savePanel.url else { return }
                     try? self.text.write(to: url, atomically: true, encoding: .utf8)
-                    self.window?.orderOut(nil)
+                    self.window?.close()
                     NSWorkspace.shared.activateFileViewerSelecting([url])
                 default:
                     return
