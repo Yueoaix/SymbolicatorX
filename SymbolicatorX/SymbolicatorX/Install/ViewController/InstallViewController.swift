@@ -66,7 +66,11 @@ extension InstallViewController {
                     try afcClient.makeDirectory(path: "PublicStaging")
                 }
                 let handle = try afcClient.fileOpen(filename: self.installFilePath, fileMode: .wrOnly)
-                try afcClient.fileWrite(handle: handle, fileURL: IPAFileURL)
+                try afcClient.fileWrite(handle: handle, fileURL: IPAFileURL, progressHandler: { [weak self] (progress) in
+                    DispatchQueue.main.async {
+                        self?.progressIndicator.doubleValue = progress * 100 * 0.5;
+                    }
+                })
                 try afcClient.fileClose(handle: handle)
                 
                 lockdownClient.free()
@@ -83,7 +87,7 @@ extension InstallViewController {
                     let percentf = Double(percent)
                     
                     DispatchQueue.main.async {
-                        self?.progressIndicator.doubleValue = percentf
+                        self?.progressIndicator.doubleValue = 50 + (percentf * 0.5)
                         if statusStr == "Complete" {
                             stopInstall()
                             afcClient.free()

@@ -196,7 +196,7 @@ extension FileModel {
                 }
                 
                 let handle = try afcClient.fileOpen(filename: uploadFilePath, fileMode: .wrOnly)
-                try afcClient.fileWrite(handle: handle, fileURL: fileUrl)
+                try afcClient.fileWrite(handle: handle, fileURL: fileUrl, progressHandler: nil)
                 try afcClient.fileClose(handle: handle)
                 uploadFileModel = makeFileModel(filePath: uploadFilePath, afcClient: afcClient)
                 if let uploadFileModel = uploadFileModel {

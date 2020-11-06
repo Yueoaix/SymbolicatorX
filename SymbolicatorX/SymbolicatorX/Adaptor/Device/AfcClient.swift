@@ -297,7 +297,7 @@ public struct AfcClient {
         })
     }
     
-    public func fileWrite(handle: UInt64, fileURL: URL) throws {
+    public func fileWrite(handle: UInt64, fileURL: URL, progressHandler: ((Double) -> Void)?) throws {
         
         let data = try Data(contentsOf: fileURL)
         var total = data.count
@@ -312,7 +312,7 @@ public struct AfcClient {
             let subData = data[index..<(index + length)]
             index = index + length
             _ = try fileWrite(handle: handle, data: subData)
-            
+            progressHandler?(Double(index) / Double(data.count))
         } while total > 0
     }
     
