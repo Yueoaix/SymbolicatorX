@@ -69,6 +69,8 @@ extension InstallViewController {
                 try afcClient.fileWrite(handle: handle, fileURL: IPAFileURL)
                 try afcClient.fileClose(handle: handle)
                 
+                lockdownClient.free()
+                lockdownClient = try LockdownClient(device: device, withHandshake: true)
                 lockdownService.free()
                 lockdownService = try lockdownClient.getService(service: .installationProxy)
                 var install = try InstallationProxy(device: device, service: lockdownService)
