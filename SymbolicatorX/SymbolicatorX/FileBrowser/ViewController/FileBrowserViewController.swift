@@ -111,9 +111,8 @@ extension FileBrowserViewController {
                 
                 lockdownClient.free()
                 lockdownService.free()
-                self.houseArrest?.free()
                 self.afcClient?.free()
-                
+                self.houseArrest?.free()
                 self.houseArrest = houseArrest
                 self.afcClient = afcClient
                 
