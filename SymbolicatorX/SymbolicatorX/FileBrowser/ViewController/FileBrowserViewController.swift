@@ -108,15 +108,22 @@ extension FileBrowserViewController {
                 let afcClient = try AfcClient(houseArrest: houseArrest)
                 let fileInfo = try afcClient.getFileInfo(path: ".")
                 self.file = FileModel(filePath: ".", fileInfo: fileInfo, afcClient: afcClient)
+                
+                lockdownClient.free()
+                lockdownService.free()
+                self.houseArrest?.free()
+                self.afcClient?.free()
+                
+                self.houseArrest = houseArrest
+                self.afcClient = afcClient
+                
                 DispatchQueue.main.async {
                     self.outlineView.reloadData()
                 }
-                self.houseArrest = houseArrest
-                self.afcClient = afcClient
-                lockdownClient.free()
-                lockdownService.free()
             } catch {
-                self.view.window?.alert(message: error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.view.window?.alert(message: error.localizedDescription)
+                }
             }
         }
     }
@@ -295,7 +302,9 @@ extension FileBrowserViewController: NSOutlineViewDataSource {
                     }
                 }
             }catch{
-                self.view.window?.alert(message: error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.view.window?.alert(message: error.localizedDescription)
+                }
             }
         }
         return true

@@ -140,9 +140,12 @@ extension DeviceCrashViewController {
                 self.crashFileList = crashList + retiredList
                 lockdownClient.free()
                 lockdownService.free()
+                self.afcClient?.free()
                 self.afcClient = afcClient
             } catch {
-                self.view.window?.alert(message: error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.view.window?.alert(message: error.localizedDescription)
+                }
             }
         }
     }
