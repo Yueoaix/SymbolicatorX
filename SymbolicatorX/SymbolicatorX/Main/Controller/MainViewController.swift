@@ -136,8 +136,8 @@ extension MainViewController {
         crashFileDropZoneView.snp.makeConstraints { (make) in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview()
-            make.width.equalTo(300)
-            make.height.equalTo(240)
+            make.width.equalTo(400)
+            make.height.equalTo(340)
         }
         
         dsymFileDropZoneView.translatesAutoresizingMaskIntoConstraints = false

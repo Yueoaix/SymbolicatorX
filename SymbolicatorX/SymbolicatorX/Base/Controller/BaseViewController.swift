@@ -17,7 +17,7 @@ class BaseViewController: NSViewController {
     }
     
     override func loadView() {
-        view = NSView(frame: NSRect.init(x: 0, y: 0, width: 600, height: 260))
+        view = NSView(frame: NSRect.init(x: 0, y: 0, width: 800, height: 340))
     }
     
 }

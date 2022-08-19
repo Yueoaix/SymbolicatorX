@@ -81,6 +81,7 @@ class Symbolicator {
     private static func symbolicationCommand(dsymPath: String, architecture: String, loadAddress: String, addresses: [String]) -> String {
         
         let addressesString = addresses.joined(separator: " ")
-        return "xcrun atos -o \"\(dsymPath)\" -arch \(architecture) -l \(loadAddress) \(addressesString)"
+        let dsymPath = dsymPath.replacingOccurrences(of: " ", with: "\\ ")
+        return "xcrun atos -o \(dsymPath) -arch \(architecture) -l \(loadAddress) \(addressesString)"
     }
 }

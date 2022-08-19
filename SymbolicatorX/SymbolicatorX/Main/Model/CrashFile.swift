@@ -120,9 +120,10 @@ public struct CrashFile {
                 options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
             ).first?.first?.trimmed).flatMap(Architecture.init)
         }
-        
+
+        //pattern: "Binary Images:.*?(0x.*?)\\s",
         self.loadAddress = content.scan(
-            pattern: "Binary Images:.*?(0x.*?)\\s",
+            pattern: "^\\s*(0x[0-9a-fA-F]+)\\s+-\\s+0x[0-9a-fA-F]+[^\\n]+(\(bundleIdentifier ?? "")|\(processName ?? ""))\\s+.*?\\n",
             options: [.caseInsensitive, .anchorsMatchLines, .dotMatchesLineSeparators]
         ).first?.first?.trimmed
         
