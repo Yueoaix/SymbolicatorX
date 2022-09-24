@@ -13,6 +13,7 @@ class FileModel: NSObject {
     typealias CompletionHandler = () -> Void
     
     let path: String
+    let pathExtension: String
     let isDirectory: Bool
     var date: Date?
     var dateStr: String = ""
@@ -66,6 +67,7 @@ class FileModel: NSObject {
         
         afc = afcClient
         path = filePath
+        pathExtension = (path as NSString).pathExtension
         name = (filePath as NSString).lastPathComponent
         `extension` = (filePath as NSString).pathExtension
         isDirectory = fileInfoDict["st_ifmt"] == "S_IFDIR"

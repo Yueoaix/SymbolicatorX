@@ -108,6 +108,7 @@
 		548B367424CACDE400838902 /* CrashFileTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548B367324CACDE400838902 /* CrashFileTableView.swift */; };
 		54BB66E6254BC35200A3E956 /* BaseWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BB66E5254BC35200A3E956 /* BaseWindow.swift */; };
 		54BB66E8254BC36100A3E956 /* BasePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BB66E7254BC36100A3E956 /* BasePanel.swift */; };
+		54D74A9028DF04F400D79269 /* CrashTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D74A8F28DF04F300D79269 /* CrashTranslator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -273,6 +274,7 @@
 		548B367324CACDE400838902 /* CrashFileTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashFileTableView.swift; sourceTree = "<group>"; };
 		54BB66E5254BC35200A3E956 /* BaseWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWindow.swift; sourceTree = "<group>"; };
 		54BB66E7254BC36100A3E956 /* BasePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePanel.swift; sourceTree = "<group>"; };
+		54D74A8F28DF04F300D79269 /* CrashTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrashTranslator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,6 +391,7 @@
 		5428218124B36D1B00DFC62F /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5497D88A28DF045400C7241A /* CrashTranslator */,
 				542C659024C151A2000DCC08 /* Text */,
 				54273AC324C0A7C600B184D2 /* LineNumber */,
 				5406E77624BECE65005E6028 /* Symbolicator */,
@@ -734,6 +737,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		5497D88A28DF045400C7241A /* CrashTranslator */ = {
+			isa = PBXGroup;
+			children = (
+				54D74A8F28DF04F300D79269 /* CrashTranslator.swift */,
+			);
+			path = CrashTranslator;
+			sourceTree = "<group>";
+		};
 		54BB66E3254BC26B00A3E956 /* Screenshot */ = {
 			isa = PBXGroup;
 			children = (
@@ -897,6 +908,7 @@
 				54478B1924DD51AB0064F956 /* ConstraintDSL.swift in Sources */,
 				542B94A224B0E7D800D73B5A /* LockdownClient.swift in Sources */,
 				54478B1E24DD51AB0064F956 /* ConstraintMakerRelatable+Extensions.swift in Sources */,
+				54D74A9028DF04F400D79269 /* CrashTranslator.swift in Sources */,
 				54478B2D24DD51AB0064F956 /* Constraint.swift in Sources */,
 				542C659524C1575D000DCC08 /* NSToolbar+Extension.swift in Sources */,
 				54478B1B24DD51AB0064F956 /* ConstraintPriority.swift in Sources */,

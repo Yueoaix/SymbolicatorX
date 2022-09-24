@@ -43,10 +43,14 @@ public struct CrashFile {
     public init?(path: URL) {
         
         guard
-            let content = try? String(contentsOf: path, encoding: .utf8),
+            var content = try? String(contentsOf: path, encoding: .utf8),
             content.trimmingCharacters(in: .whitespacesAndNewlines) != ""
         else {
             return nil
+        }
+        
+        if path.pathExtension == "ips" {
+            content = CrashTranslator.convertFromJSON(jsonFile: content)
         }
         
         self.path = path
@@ -63,10 +67,14 @@ public struct CrashFile {
     init?(file: FileModel) {
         guard
             let data = file.data,
-            let content = String(data: data, encoding: .utf8),
+            var content = String(data: data, encoding: .utf8),
             content.trimmingCharacters(in: .whitespacesAndNewlines) != ""
         else {
             return nil
+        }
+        
+        if file.pathExtension == "ips" {
+            content = CrashTranslator.convertFromJSON(jsonFile: content)
         }
         
         self.path = URL(fileURLWithPath: file.path)

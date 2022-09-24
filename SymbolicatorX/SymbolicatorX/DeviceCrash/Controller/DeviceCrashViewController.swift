@@ -198,7 +198,11 @@ extension DeviceCrashViewController: TableViewMenuDelegate {
     func didClickMenu(tableView: NSTableView, type: MenuType) {
         
         let fileInfo = crashFileList[tableView.selectedRow]
-        guard let data = fileInfo.data, let content = String(data: data, encoding: .utf8) else { return }
+        guard let data = fileInfo.data, var content = String(data: data, encoding: .utf8) else { return }
+        
+        if fileInfo.pathExtension == "ips" {
+            content = CrashTranslator.convertFromJSON(jsonFile: content)
+        }
         
         switch type {
         case .view:
