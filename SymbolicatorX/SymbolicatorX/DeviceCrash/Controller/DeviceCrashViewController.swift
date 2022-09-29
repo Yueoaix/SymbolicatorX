@@ -111,7 +111,10 @@ extension DeviceCrashViewController {
                 var lockdownService = try lockdownClient.getService(service: .crashreportcopymobile)
                 let afcClient = try AfcClient(device: device, service: lockdownService)
                 let crashFileList = try afcClient.readDirectory(path: ".")
-                let retiredFileList = try afcClient.readDirectory(path: "./Retired")
+                var retiredFileList = [String].init()
+                if crashFileList.contains("Retired") {
+                    retiredFileList = try afcClient.readDirectory(path: "./Retired")
+                }
                 
                 let crashList = crashFileList.compactMap { (fileName) -> FileModel? in
 
