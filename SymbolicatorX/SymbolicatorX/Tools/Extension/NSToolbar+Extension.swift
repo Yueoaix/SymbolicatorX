@@ -15,7 +15,7 @@ extension NSToolbar {
         
         let title = identifier.rawValue
         
-        let toolbarItem = NSToolbarItem(itemIdentifier: .save)
+        let toolbarItem = NSToolbarItem(itemIdentifier: identifier)
         toolbarItem.label = title
         toolbarItem.paletteLabel = title
         toolbarItem.target = target
