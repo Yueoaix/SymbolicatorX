@@ -25,7 +25,7 @@ public struct PlistError: Error {
 
 public enum PlistType {
     case boolean
-    case uint
+    case int
     case real
     case string
     case array
@@ -35,13 +35,14 @@ public enum PlistType {
     case key
     case uid
     case none
+    case null
     
     public init(rawValue: plist_type) {
         switch rawValue {
         case PLIST_BOOLEAN:
             self = .boolean
-        case PLIST_UINT:
-            self = .uint
+        case PLIST_INT:
+            self = .int
         case PLIST_REAL:
             self = .real
         case PLIST_STRING:
@@ -58,6 +59,8 @@ public enum PlistType {
             self = .key
         case PLIST_UID:
             self = .uid
+        case PLIST_NULL:
+            self = .null
         default:
             self = .none
         }
@@ -118,8 +121,7 @@ public extension Plist {
         guard let xml = pxml else {
             return nil
         }
-        
-        defer { plist_to_xml_free(xml) }
+        defer { plist_mem_free(xml) }
         return String(cString: xml)
     }
     
@@ -131,7 +133,7 @@ public extension Plist {
             return nil
         }
         
-        defer { plist_to_bin_free(bin) }
+        defer { plist_mem_free(bin) }
         return Data(bytes: UnsafeRawPointer(bin), count: Int(length))
     }
     
@@ -180,7 +182,8 @@ public extension Plist {
     init?(memory: String) {
         let length = memory.utf8CString.count
         var prawValue: plist_t? = nil
-        plist_from_memory(memory, UInt32(length), &prawValue)
+        let plist_format_t: UnsafeMutablePointer<plist_format_t>? = nil
+        plist_from_memory(memory, UInt32(length), &prawValue, plist_format_t)
         guard let rawValue = prawValue else {
             return nil
         }

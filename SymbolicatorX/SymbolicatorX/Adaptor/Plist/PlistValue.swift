@@ -184,9 +184,9 @@ public extension Plist {
         }
     }
     
-    var uint: UInt64? {
+    var int: UInt64? {
         get {
-            guard nodeType == .uint else {
+            guard nodeType == .int else {
                 return nil
             }
             var uint: UInt64 = 0

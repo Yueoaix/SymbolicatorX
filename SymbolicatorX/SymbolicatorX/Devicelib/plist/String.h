@@ -34,8 +34,11 @@ public :
     String(Node* parent = NULL);
     String(plist_t node, Node* parent = NULL);
     String(const String& s);
-    String& operator=(String& s);
+    String& operator=(const String& s);
+    String& operator=(const std::string& s);
+    String& operator=(const char* s);
     String(const std::string& s);
+    String(const char *s);
     virtual ~String();
 
     Node* Clone() const;

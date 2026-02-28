@@ -28,11 +28,21 @@
 extern "C" {
 #endif
 
+#ifndef USBMUXD_API
+  #ifdef LIBUSBMUXD_STATIC
+    #define USBMUXD_API
+  #elif defined(_WIN32)
+    #define USBMUXD_API __declspec(dllimport)
+  #else
+    #define USBMUXD_API
+  #endif
+#endif
+
 /** Device lookup options for usbmuxd_get_device. */
 enum usbmux_lookup_options {
-	DEVICE_LOOKUP_USBMUX = 1 << 1, /** include USBMUX devices during lookup */
-	DEVICE_LOOKUP_NETWORK = 1 << 2, /** include network devices during lookup */
-	DEVICE_LOOKUP_PREFER_NETWORK = 1 << 3 /** prefer network connection if device is available via USBMUX *and* network */
+	DEVICE_LOOKUP_USBMUX = 1 << 1, /**< include USBMUX devices during lookup */
+	DEVICE_LOOKUP_NETWORK = 1 << 2, /**< include network devices during lookup */
+	DEVICE_LOOKUP_PREFER_NETWORK = 1 << 3 /**< prefer network connection if device is available via USBMUX *and* network */
 };
 
 /** Type of connection a device is available on */
@@ -52,7 +62,7 @@ typedef struct {
 	uint32_t product_id;
 	char udid[44];
 	enum usbmux_connection_type conn_type;
-	char conn_data[200];
+	uint8_t conn_data[200];
 } usbmuxd_device_info_t;
 
 /**
@@ -99,7 +109,7 @@ typedef struct usbmuxd_subscription_context* usbmuxd_subscription_context_t;
  *
  * @return 0 on success or a negative errno value.
  */
-int usbmuxd_events_subscribe(usbmuxd_subscription_context_t *context, usbmuxd_event_cb_t callback, void *user_data);
+USBMUXD_API int usbmuxd_events_subscribe(usbmuxd_subscription_context_t *context, usbmuxd_event_cb_t callback, void *user_data);
 
 /**
  * Unsubscribe callback function
@@ -108,35 +118,31 @@ int usbmuxd_events_subscribe(usbmuxd_subscription_context_t *context, usbmuxd_ev
  *
  * @return 0 on success or a negative errno value.
  */
-int usbmuxd_events_unsubscribe(usbmuxd_subscription_context_t context);
+USBMUXD_API int usbmuxd_events_unsubscribe(usbmuxd_subscription_context_t context);
 
 /**
-*订阅回调（不建议使用）
-*
-* @param callback发生事件时执行的回调函数。
-* @param user_data传递给回调函数的自定义数据。 数据
-*需要保持可用状态，直到取消订阅回调函数为止。
-*
-* @如果成功则返回0，如果错误则返回负。
-*
-* @note已弃用。 请改用usbmuxd_events_subscribe和usbmuxd_events_unsubscribe。
-* @查看usbmuxd_events_subscribe
-*/
-int usbmuxd_subscribe(usbmuxd_event_cb_t callback, void *user_data);
+ * Subscribe a callback (deprecated)
+ *
+ * @param callback A callback function that is executed when an event occurs.
+ * @param user_data Custom data passed on to the callback function. The data
+ *    needs to be kept available until the callback function is unsubscribed.
+ *
+ * @return 0 on success or negative on error.
+ *
+ * @note Deprecated. Use usbmuxd_events_subscribe and usbmuxd_events_unsubscribe instead.
+ * @see usbmuxd_events_subscribe
+ */
+USBMUXD_API int usbmuxd_subscribe(usbmuxd_event_cb_t callback, void *user_data);
 
 /**
-*订阅回调（不建议使用）
-*
-* @param callback发生事件时执行的回调函数。
-* @param user_data传递给回调函数的自定义数据。 数据
-*需要保持可用状态，直到取消订阅回调函数为止。
-*
-* @如果成功则返回0，如果错误则返回负。
-*
-* @note已弃用。 请改用usbmuxd_events_subscribe和usbmuxd_events_unsubscribe。
-* @查看usbmuxd_events_subscribe
-*/
-int usbmuxd_unsubscribe(void);
+ * Unsubscribe callback (deprecated)
+ *
+ * @return 0 on success or negative on error.
+ *
+ * @note Deprecated. Use usbmuxd_events_subscribe and usbmuxd_events_unsubscribe instead.
+ * @see usbmuxd_events_unsubscribe
+ */
+USBMUXD_API int usbmuxd_unsubscribe(void);
 
 /**
  * Contacts usbmuxd and retrieves a list of connected devices.
@@ -149,7 +155,7 @@ int usbmuxd_unsubscribe(void);
  * @return number of attached devices, zero on no devices, or negative
  *   if an error occured.
  */
-int usbmuxd_get_device_list(usbmuxd_device_info_t **device_list);
+USBMUXD_API int usbmuxd_get_device_list(usbmuxd_device_info_t **device_list);
 
 /**
  * Frees the device list returned by an usbmuxd_get_device_list call
@@ -158,7 +164,7 @@ int usbmuxd_get_device_list(usbmuxd_device_info_t **device_list);
  *
  * @return 0 on success, -1 on error.
  */
-int usbmuxd_device_list_free(usbmuxd_device_info_t **device_list);
+USBMUXD_API int usbmuxd_device_list_free(usbmuxd_device_info_t **device_list);
 
 /**
  * Looks up the device specified by UDID and returns device information.
@@ -170,13 +176,13 @@ int usbmuxd_device_list_free(usbmuxd_device_info_t **device_list);
  *
  * @param udid A device UDID of the device to look for. If udid is NULL,
  *      This function will return the first device found.
- * @param device Pointer to a previously allocated (or static) 
+ * @param device Pointer to a previously allocated (or static)
  *      usbmuxd_device_info_t that will be filled with the device info.
  *
  * @return 0 if no matching device is connected, 1 if the device was found,
  *    or a negative value on error.
  */
-int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info_t *device);
+USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info_t *device);
 
 /**
  * Looks up the device specified by UDID with given options and returns
@@ -201,7 +207,7 @@ int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info_t *device);
  * @return 0 if no matching device is connected, 1 if the device was found,
  *    or a negative value on error.
  */
-int usbmuxd_get_device(const char *udid, usbmuxd_device_info_t *device, enum usbmux_lookup_options options);
+USBMUXD_API int usbmuxd_get_device(const char *udid, usbmuxd_device_info_t *device, enum usbmux_lookup_options options);
 
 /**
  * Request proxy connection to the specified device and port.
@@ -215,7 +221,7 @@ int usbmuxd_get_device(const char *udid, usbmuxd_device_info_t *device, enum usb
  * @return socket file descriptor of the connection, or a negative errno
  *    value on error.
  */
-int usbmuxd_connect(const uint32_t handle, const unsigned short tcp_port);
+USBMUXD_API int usbmuxd_connect(const uint32_t handle, const unsigned short tcp_port);
 
 /**
  * Disconnect. For now, this just closes the socket file descriptor.
@@ -224,7 +230,7 @@ int usbmuxd_connect(const uint32_t handle, const unsigned short tcp_port);
  *
  * @return 0 on success, -1 on error.
  */
-int usbmuxd_disconnect(int sfd);
+USBMUXD_API int usbmuxd_disconnect(int sfd);
 
 /**
  * Send data to the specified socket.
@@ -236,7 +242,7 @@ int usbmuxd_disconnect(int sfd);
  *
  * @return 0 on success, a negative errno value otherwise.
  */
-int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes);
+USBMUXD_API int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes);
 
 /**
  * Receive data from the specified socket.
@@ -249,7 +255,7 @@ int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes);
  *
  * @return 0 on success, a negative errno value otherwise.
  */
-int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes, unsigned int timeout);
+USBMUXD_API int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes, unsigned int timeout);
 
 /**
  * Receive data from the specified socket with a default timeout.
@@ -261,7 +267,7 @@ int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes
  *
  * @return 0 on success, a negative errno value otherwise.
  */
-int usbmuxd_recv(int sfd, char *data, uint32_t len, uint32_t *recv_bytes);
+USBMUXD_API int usbmuxd_recv(int sfd, char *data, uint32_t len, uint32_t *recv_bytes);
 
 /**
  * Reads the SystemBUID
@@ -271,7 +277,7 @@ int usbmuxd_recv(int sfd, char *data, uint32_t len, uint32_t *recv_bytes);
  *
  * @return 0 on success, a negative errno value otherwise.
  */
-int usbmuxd_read_buid(char** buid);
+USBMUXD_API int usbmuxd_read_buid(char** buid);
 
 /**
  * Read a pairing record
@@ -284,7 +290,7 @@ int usbmuxd_read_buid(char** buid);
  *
  * @return 0 on success, a negative error value otherwise.
  */
-int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t *record_size);
+USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t *record_size);
 
 /**
  * Save a pairing record
@@ -295,7 +301,7 @@ int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t
  *
  * @return 0 on success, a negative error value otherwise.
  */
-int usbmuxd_save_pair_record(const char* record_id, const char *record_data, uint32_t record_size);
+USBMUXD_API int usbmuxd_save_pair_record(const char* record_id, const char *record_data, uint32_t record_size);
 
 /**
  * Save a pairing record with device identifier
@@ -307,7 +313,7 @@ int usbmuxd_save_pair_record(const char* record_id, const char *record_data, uin
  *
  * @return 0 on success, a negative error value otherwise.
  */
-int usbmuxd_save_pair_record_with_device_id(const char* record_id, uint32_t device_id, const char *record_data, uint32_t record_size);
+USBMUXD_API int usbmuxd_save_pair_record_with_device_id(const char* record_id, uint32_t device_id, const char *record_data, uint32_t record_size);
 
 /**
  * Delete a pairing record
@@ -316,7 +322,7 @@ int usbmuxd_save_pair_record_with_device_id(const char* record_id, uint32_t devi
  *
  * @return 0 on success, a negative errno value otherwise.
  */
-int usbmuxd_delete_pair_record(const char* record_id);
+USBMUXD_API int usbmuxd_delete_pair_record(const char* record_id);
 
 /**
  * Enable or disable the use of inotify extension. Enabled by default.
@@ -324,9 +330,16 @@ int usbmuxd_delete_pair_record(const char* record_id);
  * This only has an effect on linux systems if inotify support has been built
  * in. Otherwise and on all other platforms this function has no effect.
  */
-void libusbmuxd_set_use_inotify(int set);
+USBMUXD_API void libusbmuxd_set_use_inotify(int set);
 
-void libusbmuxd_set_debug_level(int level);
+USBMUXD_API void libusbmuxd_set_debug_level(int level);
+
+/**
+ * Returns a static string of the libusbmuxd version.
+ *
+ * @return The libusbmuxd version as static ascii string
+ */
+USBMUXD_API const char* libusbmuxd_version();
 
 #ifdef __cplusplus
 }

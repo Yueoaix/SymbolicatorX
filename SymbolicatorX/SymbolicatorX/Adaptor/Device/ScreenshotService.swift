@@ -30,7 +30,7 @@ public struct ScreenshotService {
         }
         
         var pscreenshot: screenshotr_client_t? = nil
-        var screenshotError = screenshotr_client_start_service(device, &pscreenshot, label)
+        let screenshotError = screenshotr_client_start_service(device, &pscreenshot, label)
         
         if let error = ScreenshotError(rawValue: screenshotError.rawValue) {
             throw error
