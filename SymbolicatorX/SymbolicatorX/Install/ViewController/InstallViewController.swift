@@ -28,7 +28,6 @@ class InstallViewController: BaseViewController {
     }
     
     deinit {
-        disposable?.dispose()
     }
     
 }
@@ -83,7 +82,7 @@ extension InstallViewController {
                     
                     let statusStr = status?["Status"]?.string ?? ""
                     let errorStr = status?["Error"]?.string
-                    let percent = status?["PercentComplete"]?.uint ?? 0
+                    let percent = status?["PercentComplete"]?.int ?? 0
                     let percentf = Double(percent)
                     
                     DispatchQueue.main.async {
@@ -92,10 +91,12 @@ extension InstallViewController {
                             stopInstall()
                             afcClient.free()
                             install.free()
+                            self?.disposable?.dispose()
                         } else if let error = errorStr {
                             stopInstall()
                             afcClient.free()
                             install.free()
+                            self?.disposable?.dispose()
                             self?.view.window?.alert(message: error)
                         }
                     }
